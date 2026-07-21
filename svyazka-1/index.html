@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ИИ-ВИЗАЦИЯ: OPENCLAW — Связка 1: Личный ИИ-секретарь в Telegram</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0a0a0f;
+    --bg-card: #12121a;
+    --bg-card-hover: #181825;
+    --border: #1e1e2e;
+    --border-accent: #2a2a3e;
+    --text-primary: #e8e6f0;
+    --text-secondary: #8b879e;
+    --text-muted: #5a5670;
+    --accent: #7c5bf5;
+    --accent-glow: #9d7cff;
+    --accent-soft: rgba(124, 91, 245, 0.12);
+    --green: #34d399;
+    --green-glow: #6ee7b7;
+    --green-soft: rgba(52, 211, 153, 0.1);
+    --amber: #fbbf24;
+    --amber-soft: rgba(251, 191, 36, 0.1);
+    --red-soft: rgba(248, 113, 113, 0.1);
+    --red: #f87171;
+    --radius: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Onest', sans-serif; background: var(--bg-deep); color: var(--text-primary); line-height: 1.65; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: radial-gradient(circle at 20% 20%, rgba(124,91,245,0.04) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(52,211,153,0.03) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+  .wrapper { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  /* Шапка */
+  .header { text-align: center; margin-bottom: 48px; }
+  .header__badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-glow); background: var(--accent-soft); border: 1px solid rgba(124,91,245,0.2); padding: 6px 16px; border-radius: 100px; margin-bottom: 24px; animation: fadeDown .6s ease both; }
+  .header__title { font-size: clamp(28px,6vw,40px); font-weight: 800; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 12px; animation: fadeDown .6s ease .1s both; }
+  .header__title span { background: linear-gradient(135deg, var(--accent-glow), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .header__topics { list-style:none; display:flex; flex-direction:column; gap:7px; max-width:460px; margin:16px auto 0; animation:fadeDown .6s ease .3s both; }
+  .header__topics li { font-size:13.5px; color:var(--text-secondary); display:flex; align-items:flex-start; gap:8px; text-align:left; }
+  .header__topics li::before { content:'→'; color:var(--accent); flex-shrink:0; font-family:'JetBrains Mono',monospace; font-size:11px; margin-top:3px; }
+  .header__subtitle { font-size: 15px; color: var(--text-secondary); max-width: 500px; margin: 0 auto; animation: fadeDown .6s ease .2s both; }
+
+  /* Прогресс-бар (sticky) */
+  .progress-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 36px; position: sticky; top: 12px; z-index: 10; backdrop-filter: blur(16px); background: rgba(18,18,26,0.92); animation: fadeDown .6s ease .3s both; }
+  .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .progress-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-family: 'JetBrains Mono', monospace; }
+  .progress-count { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: var(--accent-glow); }
+  .progress-bar { width: 100%; height: 8px; background: var(--border); border-radius: 100px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 100px; transition: width .5s cubic-bezier(.34,1.56,.64,1); width: 0%; }
+
+  /* Секции */
+  .section { margin-bottom: 28px; }
+  .section__header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding-left: 2px; }
+  .section__num { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: var(--accent); background: var(--accent-soft); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; flex-shrink: 0; }
+  .section__title { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
+  .section__card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color .3s; }
+  .section__card:hover { border-color: var(--border-accent); }
+
+  /* Пункт чек-листа */
+  .item { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--border); transition: background .2s; cursor: pointer; user-select: none; }
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: var(--bg-card-hover); }
+  .item.checked .item__text { color: var(--text-muted); text-decoration: line-through; }
+  .item.checked .item__link { opacity: 0.4; }
+  .item__check { position: relative; width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px; }
+  .item__check input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 2; }
+  .item__check .cm { width: 22px; height: 22px; border: 2px solid var(--border-accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: all .25s cubic-bezier(.34,1.56,.64,1); }
+  .item__check .cm svg { width: 12px; height: 12px; opacity: 0; transform: scale(0); transition: all .25s cubic-bezier(.34,1.56,.64,1); }
+  .item__check input:checked + .cm { background: var(--green); border-color: var(--green); }
+  .item__check input:checked + .cm svg { opacity: 1; transform: scale(1); }
+  .item__body { flex: 1; min-width: 0; }
+  .item__text { font-size: 14.5px; font-weight: 500; color: var(--text-primary); transition: all .3s; }
+  .item__hint { font-size: 13px; color: var(--text-secondary); margin-top: 4px; line-height: 1.6; }
+  .item__hint a { color: var(--accent-glow); text-decoration: none; font-weight: 600; }
+  .item__hint a:hover { text-decoration: underline; }
+  .item__hint strong { color: var(--text-primary); }
+  .item__link { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--accent-glow); text-decoration: none; margin-top: 5px; transition: all .2s; word-break: break-all; }
+  .item__link:hover { color: #bba4ff; text-decoration: underline; }
+  .item__link svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .lnk { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--accent-glow); text-decoration: none; word-break: break-all; }
+  .lnk:hover { color: #bba4ff; text-decoration: underline; }
+
+  /* Заметки */
+  .note { display: flex; align-items: flex-start; gap: 10px; padding: 14px 20px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; border-bottom: 1px solid var(--border); }
+  .note:last-child { border-bottom: none; }
+  .note--warn { background: var(--amber-soft); color: var(--amber); }
+  .note--info { background: var(--accent-soft); }
+  .note--alert { background: var(--red-soft); color: var(--red); }
+  .note--green { background: var(--green-soft); color: var(--green-glow); }
+  .note__icon { flex-shrink: 0; font-size: 15px; }
+  .note a { color: var(--accent-glow); text-decoration: none; font-weight: 600; }
+  .note a:hover { text-decoration: underline; }
+  .note strong { color: inherit; }
+  .tg { color: #2dd4bf !important; font-weight: 700; text-decoration: underline; text-decoration-color: rgba(45,212,191,0.4); text-underline-offset: 2px; transition: all .2s; }
+  .tg:hover { color: #5eead4 !important; text-decoration-color: #5eead4; }
+
+  /* Спойлер */
+  .spoiler { border-bottom: 1px solid var(--border); }
+  .spoiler:last-child { border-bottom: none; }
+  .spoiler summary { padding: 14px 20px; font-size: 13.5px; font-weight: 600; color: var(--text-secondary); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; transition: color .2s; }
+  .spoiler summary:hover { color: var(--text-primary); }
+  .spoiler summary::before { content: '▸'; font-size: 12px; transition: transform .2s; }
+  .spoiler[open] summary::before { transform: rotate(90deg); }
+  .spoiler__content { padding: 0 20px 16px 34px; font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+  .spoiler__content p { margin-bottom: 8px; }
+  .spoiler__content strong { color: var(--text-primary); font-weight: 600; }
+
+  /* Таблицы */
+  .os-table { width: 100%; font-size: 13px; border-collapse: collapse; margin: 8px 0; }
+  .os-table th { text-align: left; font-weight: 600; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .os-table td { padding: 8px 0; border-bottom: 1px solid var(--border); color: var(--text-secondary); vertical-align: top; }
+  .os-table tr:last-child td { border-bottom: none; }
+  .os-table td:first-child { color: var(--text-primary); font-weight: 500; }
+  .data-table { width:100%; font-size:13px; border-collapse:collapse; }
+  .data-table th { text-align:left; font-weight:600; color:var(--text-muted); font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:1.2px; padding:10px 20px; border-bottom:1px solid var(--border); background:rgba(0,0,0,0.2); }
+  .data-table td { padding:11px 20px; border-bottom:1px solid var(--border); color:var(--text-secondary); vertical-align:top; line-height:1.5; }
+  .data-table tr:last-child td { border-bottom:none; }
+  .data-table td:first-child { color:var(--text-primary); font-weight:600; }
+
+  /* Промпт (копировать → в Claude Code) */
+  .prompt-block { background:rgba(0,0,0,0.25); border:1px solid var(--border-accent); border-radius:10px; padding:18px 20px; margin:12px 16px; }
+  .prompt-block__title { font-size:13px; font-weight:700; color:var(--accent-glow); margin-bottom:10px; display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:1px; }
+  .prompt-block__text { font-size:13px; color:var(--text-secondary); line-height:1.7; white-space:pre-wrap; margin-bottom:14px; word-break:break-word; }
+  .btn-copy { display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; color:var(--accent-glow); background:var(--accent-soft); border:1px solid rgba(124,91,245,0.3); padding:8px 16px; border-radius:8px; cursor:pointer; transition:all .2s; text-transform:uppercase; letter-spacing:1px; }
+  .btn-copy:hover { background:rgba(124,91,245,0.2); border-color:var(--accent); }
+  .btn-copy.copied { color:var(--green); background:var(--green-soft); border-color:rgba(52,211,153,0.3); }
+
+  /* Команды */
+  .code-block { background:rgba(0,0,0,0.4); border:1px solid var(--border-accent); border-radius:10px; padding:16px 20px; margin:12px 16px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--green-glow); line-height:1.8; white-space:pre-wrap; word-break:break-all; overflow-x:auto; }
+  .code-block__label { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; display:block; }
+  .code-block .btn-copy { margin-top:12px; }
+  .cmd-copy { background:rgba(0,0,0,0.35); border:1px solid var(--border-accent); border-radius:8px; padding:10px 14px; margin:8px 0; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .cmd-copy__text { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--green-glow); line-height:1.6; word-break:break-all; flex:1; white-space:pre-wrap; }
+  .cmd-copy .btn-copy { flex-shrink:0; padding:5px 12px; font-size:10px; }
+
+  /* Кнопка скачивания */
+  .btn-dl { display:inline-flex; align-items:center; gap:7px; font-family:'Onest',sans-serif; font-size:13px; font-weight:600; color:var(--accent-glow); background:var(--accent-soft); border:1px solid rgba(124,91,245,0.35); padding:9px 18px; border-radius:10px; text-decoration:none; transition:all .2s; cursor:pointer; }
+  .btn-dl:hover { background:rgba(124,91,245,0.2); border-color:var(--accent); }
+
+  /* Разделитель */
+  .section-divider { text-align:center; margin:48px 0 32px; padding:0 20px; }
+  .section-divider__line { height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent); margin-bottom:20px; }
+  .section-divider__title { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:var(--accent-glow); text-transform:uppercase; letter-spacing:3px; }
+
+  /* Футер */
+  .footer { text-align: center; margin-top: 48px; }
+  .footer__done { display: none; background: var(--green-soft); border: 1px solid rgba(52,211,153,0.25); border-radius: var(--radius); padding: 32px 24px; margin-bottom: 24px; }
+  .footer__done.visible { display: block; animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+  .footer__done-emoji { font-size: 48px; margin-bottom: 10px; }
+  .footer__done-text { font-size: 22px; font-weight: 800; color: var(--green); margin-bottom: 6px; }
+  .footer__done-sub { font-size: 15px; color: var(--text-secondary); }
+  .footer__contact { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; }
+  .footer__contact a { color: #2dd4bf; text-decoration: underline; text-decoration-color: rgba(45,212,191,0.4); font-weight: 700; }
+  .btn-reset { background: none; border: 1px solid var(--border); color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 8px 20px; border-radius: 100px; cursor: pointer; transition: all .2s; }
+  .btn-reset:hover { border-color: var(--red); color: var(--red); }
+  .footer__final-part3 { background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(219,39,119,0.08)); border:1px solid rgba(251,191,36,0.25); border-radius:var(--radius); padding:34px 24px; margin-bottom:24px; text-align:center; position:relative; overflow:hidden; }
+  .footer__final-part3::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 20% 0%, rgba(251,191,36,0.12), transparent 50%), radial-gradient(circle at 80% 100%, rgba(219,39,119,0.12), transparent 50%); pointer-events:none; }
+  .footer__final-emoji { font-size:54px; margin-bottom:12px; line-height:1; position:relative; }
+  .footer__final-text { font-size:24px; font-weight:800; background:linear-gradient(90deg,#fbbf24,#db2777); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:10px; letter-spacing:-0.4px; position:relative; }
+  .footer__final-sub { font-size:15px; color:var(--text-secondary); line-height:1.6; max-width:560px; margin:0 auto; position:relative; }
+
+  #confetti-canvas { position: fixed; inset: 0; z-index: 9999; pointer-events: none; }
+
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+  /* Клик по .item переключает только чекбокс; ссылки/кнопки кликабельны */
+  .item { cursor: default; }
+  .item__body { pointer-events: none; user-select: text; }
+  .item__body a, .item__body .item__link, .item__body .lnk, .item__body .tg,
+  .item__body .cmd-copy, .item__body .btn-copy { pointer-events: auto !important; cursor: pointer !important; }
+  .item__check { pointer-events: auto; cursor: pointer; }
+  .item__check:hover { cursor: pointer; }
+  .cm { cursor: pointer; }
+
+  @media (max-width: 480px) {
+    .wrapper { padding: 28px 14px 60px; }
+    .item { padding: 14px 16px; gap: 12px; }
+    .note { padding: 12px 16px; }
+    .spoiler summary { padding: 12px 16px; }
+    .spoiler__content { padding: 0 16px 14px 28px; }
+    .progress-wrap { padding: 16px 18px; top: 8px; }
+    .cmd-copy { padding:8px 12px; flex-direction:column; align-items:flex-start; }
+    .data-table th,.data-table td { padding:8px 14px; }
+    .prompt-block { margin:10px 12px; }
+    .code-block { margin:10px 12px; font-size:11px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="wrapper">
+
+  <header class="header">
+    <div class="header__badge">ИИ-ВИЗАЦИЯ: OPENCLAW · Связка 1</div>
+    <h1 class="header__title">Личный <span>ИИ-секретарь</span> в&nbsp;Telegram</h1>
+    <ul class="header__topics">
+      <li>Ставит, переносит и отменяет встречи голосом</li>
+      <li>Сам напоминает и присылает план дня и недели</li>
+      <li>Добавляет ссылку на видеовстречу</li>
+    </ul>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span class="progress-label">Прогресс</span>
+      <span class="progress-count" id="progressCount">0 / 0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div id="sections">
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">01</div><div class="section__title">Что вы получите</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">💡</span><span>Секретарь живёт в&nbsp;вашем Telegram и&nbsp;ведёт Google Календарь. Вы говорите голосом «встреча с&nbsp;Иваном завтра в&nbsp;15:00», встреча появляется в&nbsp;календаре со&nbsp;ссылкой на&nbsp;видеозвонок. Дальше он&nbsp;напоминает сам.<br><br>Планирование съедает внимание каждый день. Перенос одной встречи тянет за&nbsp;собой три. У&nbsp;кого был живой помощник, тот платил ему в&nbsp;основном за&nbsp;это.</span></div>
+
+        <table class="data-table">
+          <tr><th>Что говорите</th><th>Что делает секретарь</th></tr>
+          <tr><td>«Встреча с&nbsp;Иваном завтра в&nbsp;15:00»</td><td>Создаёт событие и&nbsp;добавляет ссылку на&nbsp;видеовстречу</td></tr>
+          <tr><td>«Перенеси Ивана на&nbsp;пятницу»</td><td>Двигает событие и&nbsp;переспрашивает перед изменением</td></tr>
+          <tr><td>«Отмени встречу в&nbsp;четверг»</td><td>Удаляет событие после подтверждения</td></tr>
+          <tr><td>«Что у&nbsp;меня на&nbsp;неделе»</td><td>Отвечает списком по&nbsp;дням</td></tr>
+          <tr><td>Ничего не&nbsp;говорите</td><td>Утром присылает план дня, в&nbsp;понедельник план недели, напоминает до&nbsp;встречи</td></tr>
+        </table>
+
+        <details class="spoiler">
+          <summary>➕ Что можно добавить вторым шагом</summary>
+          <div class="spoiler__content">
+            <p>Эти умения не&nbsp;обязательны для запуска, их&nbsp;добавляют, когда база уже работает.</p>
+            <table class="os-table">
+              <tr><th>Умение</th><th>Зачем</th></tr>
+              <tr><td>Проверка накладок</td><td>Предупреждает о&nbsp;пересечении и&nbsp;предлагает свободное окно</td></tr>
+              <tr><td>Поиск слота</td><td>«Найди час на&nbsp;этой неделе»</td></tr>
+              <tr><td>Часовые пояса</td><td>Считает время для встреч с&nbsp;другими странами</td></tr>
+              <tr><td>Вечерний итог</td><td>Что было, что перенеслось, что завтра</td></tr>
+            </table>
+          </div>
+        </details>
+
+        <div class="note note--green"><span class="note__icon">✅</span><span>Новых платных сервисов не&nbsp;нужно. Всё работает на&nbsp;том, что вы&nbsp;уже настроили. Расход только на&nbsp;токены модели. Сборка занимает около полутора часов.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">02</div><div class="section__title">Репозиторий и главный промпт</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">📦</span><span>Весь код и&nbsp;готовые файлы лежат в&nbsp;репозитории. Вам не&nbsp;нужно ничего писать руками: вы&nbsp;отдаёте ссылку Claude&nbsp;Code, а&nbsp;он&nbsp;делает всё по&nbsp;инструкции.</span></div>
+
+        <div class="item" data-key="repo-open"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Открыть репозиторий связки</div>
+            <div class="item__hint">Ссылку скопируйте, она понадобится в&nbsp;промпте ниже.</div>
+            <a href="[УТОЧНИТЬ]" target="_blank" class="item__link" onclick="event.stopPropagation()">Репозиторий связки 1</a>
+          </div>
+        </div>
+
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>Промпт рассчитан на&nbsp;готовую базу из&nbsp;блока&nbsp;03. Если чего-то не&nbsp;хватает, Claude&nbsp;Code остановится и&nbsp;скажет, чего именно.</span></div>
+
+        <div class="prompt-block">
+          <div class="prompt-block__title">📋 Промпт: собрать ИИ-секретаря (в Claude Code)</div>
+          <div class="prompt-block__text" id="promptMain">Ты настраиваешь мне личного ИИ-секретаря на OpenClaw. Работай по инструкции из репозитория: [УТОЧНИТЬ]
+
+Сначала проверь готовность и покажи мне результат каждой проверки:
+1. Запусти openclaw status и openclaw doctor --fix
+2. Проверь, подключён ли Telegram-канал и работает ли распознавание голосовых
+3. Проверь, есть ли доступ к моему Google Календарю
+
+Если чего-то не хватает, остановись и скажи, что именно мне нужно сделать. Не придумывай обходные пути.
+
+Когда всё готово, продолжай:
+4. Подключи Google Workspace MCP и включи из него только Календарь
+5. Создай скилл секретаря: мой часовой пояс, рабочие часы, длительность встречи по умолчанию
+6. Пропиши правило: перед созданием, переносом и отменой события всегда проговаривай, что именно делаешь, и жди моего подтверждения
+7. Включи добавление ссылки на видеовстречу к новым событиям
+8. Поставь два расписания: план дня в 08:00 и план недели по понедельникам в 09:00
+
+После каждого шага показывай, что получилось, и жди моего «дальше».</div>
+          <button class="btn-copy" onclick="copyBlock('promptMain', this)">📋 Скопировать промпт</button>
+        </div>
+
+        <div class="item" data-key="prompt-main-done"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Отправить промпт в Claude Code и получить результат первой проверки</div>
+            <div class="item__hint">Claude&nbsp;Code должен показать состояние сервера и&nbsp;список того, чего не&nbsp;хватает.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">03</div><div class="section__title">База: что должно быть готово</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">💡</span><span>Всё из&nbsp;этого списка вы&nbsp;уже настраивали раньше. Здесь только проверка, что оно живо.</span></div>
+
+        <div class="item" data-key="base-server"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Сервер с OpenClaw работает</div>
+            <div class="item__hint">Подключитесь к&nbsp;серверу и&nbsp;выполните команду ниже. Обе команды должны пройти без красных ошибок.</div>
+          </div>
+        </div>
+
+        <div class="cmd-copy"><span class="cmd-copy__text" id="cmdStatus">openclaw status</span><button class="btn-copy" onclick="copyBlock('cmdStatus',this)">📋 Скопировать</button></div>
+
+        <div class="item" data-key="base-telegram"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Бот отвечает в Telegram</div>
+            <div class="item__hint">Напишите боту «привет» и&nbsp;дождитесь ответа.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="base-voice"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Голосовые распознаются</div>
+            <div class="item__hint">Отправьте боту голосовое сообщение. В&nbsp;ответ он&nbsp;должен понять текст.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="base-google"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Доступ к Google на месте</div>
+            <div class="item__hint">Нужны три вещи: включённый Calendar&nbsp;API, созданный OAuth&nbsp;Client&nbsp;ID и&nbsp;приложение, переведённое в&nbsp;режим Production.</div>
+          </div>
+        </div>
+
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>Если приложение осталось в&nbsp;режиме Testing, доступ к&nbsp;календарю отвалится через семь дней. Это самая частая причина, по&nbsp;которой секретарь замолкает через неделю.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">04</div><div class="section__title">Настройка по шагам</div></div>
+      <div class="section__card">
+
+        <div class="item" data-key="setup-mcp"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Подключить Google Календарь</div>
+            <div class="item__hint">Claude&nbsp;Code делает это сам по&nbsp;промпту из&nbsp;блока&nbsp;02. Проверить подключение можно командой ниже: она покажет список инструментов календаря.</div>
+          </div>
+        </div>
+
+        <div class="cmd-copy"><span class="cmd-copy__text" id="cmdProbe">openclaw mcp doctor --probe</span><button class="btn-copy" onclick="copyBlock('cmdProbe',this)">📋 Скопировать</button></div>
+
+        <div class="item" data-key="setup-auth"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Разрешить доступ к своему календарю</div>
+            <div class="item__hint">Скажите боту «подключи календарь». Он&nbsp;пришлёт ссылку, вы&nbsp;открываете её&nbsp;и&nbsp;входите в&nbsp;свой Google-аккаунт. Больше ничего вводить не&nbsp;нужно.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="setup-skill"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Задать правила секретаря</div>
+            <div class="item__hint">Часовой пояс, рабочие часы, длительность встречи по&nbsp;умолчанию и&nbsp;обязательное подтверждение перед изменением события.</div>
+          </div>
+        </div>
+
+        <div class="note note--green"><span class="note__icon">✅</span><span>Правило подтверждения важнее, чем кажется. Без него секретарь однажды молча передвинет вам встречу.</span></div>
+
+        <div class="item" data-key="setup-meet"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Включить ссылку на видеовстречу</div>
+            <div class="item__hint">Google&nbsp;Meet добавляется к&nbsp;событию сразу. Zoom и&nbsp;другие сервисы подключаются отдельно, это показано в&nbsp;видео.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="setup-crons"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Поставить план дня и план недели</div>
+            <div class="item__hint">Проверить, что расписания встали, можно командой ниже.</div>
+          </div>
+        </div>
+
+        <div class="cmd-copy"><span class="cmd-copy__text" id="cmdCron">openclaw cron list</span><button class="btn-copy" onclick="copyBlock('cmdCron',this)">📋 Скопировать</button></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">05</div><div class="section__title">Проверьте, что всё работает</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">🎯</span><span>Пять действий. Если все пять проходят, связка собрана.</span></div>
+
+        <div class="item" data-key="check-create"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Голосовое создаёт встречу</div>
+            <div class="item__hint">Скажите боту голосом: «поставь встречу завтра в&nbsp;15:00, назови её&nbsp;проверка связки». Откройте календарь, событие на&nbsp;месте.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="check-meet"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">В событии есть ссылка на видеовстречу</div>
+            <div class="item__hint">Откройте созданное событие и&nbsp;убедитесь, что ссылка проставилась.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="check-move"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Перенос работает и требует подтверждения</div>
+            <div class="item__hint">«Перенеси проверку связки на&nbsp;пятницу». Секретарь должен переспросить до&nbsp;того, как двигать.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="check-week"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Отвечает на вопрос о расписании</div>
+            <div class="item__hint">«Что у&nbsp;меня на&nbsp;этой неделе». В&nbsp;ответе должен быть список по&nbsp;дням.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="check-cron"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">План дня приходит сам</div>
+            <div class="item__hint">Не&nbsp;ждите утра: попросите Claude&nbsp;Code запустить расписание вручную и&nbsp;проверьте, что сообщение пришло в&nbsp;Telegram.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">06</div><div class="section__title">Если что-то сломалось</div></div>
+      <div class="section__card">
+
+        <table class="data-table">
+          <tr><th>Что видите</th><th>Что делать</th></tr>
+          <tr><td>Секретарь не&nbsp;видит календарь</td><td>Выполните <code>openclaw mcp doctor --probe</code>. Если инструментов календаря нет, попросите Claude&nbsp;Code подключить его заново</td></tr>
+          <tr><td>Работал неделю и&nbsp;перестал</td><td>Приложение осталось в&nbsp;режиме Testing. Переведите его в&nbsp;Production и&nbsp;авторизуйтесь заново</td></tr>
+          <tr><td>Голосовые не&nbsp;понимает</td><td>Вернитесь к&nbsp;чек-листу урока&nbsp;3 и&nbsp;проверьте распознавание речи</td></tr>
+          <tr><td>Встречи встают не&nbsp;в&nbsp;то&nbsp;время</td><td>Не&nbsp;задан часовой пояс. Допишите его в&nbsp;правила секретаря</td></tr>
+          <tr><td>План дня не&nbsp;приходит</td><td>Выполните <code>openclaw cron list</code> и&nbsp;проверьте, куда настроена доставка</td></tr>
+        </table>
+
+        <div class="note note--info"><span class="note__icon">💬</span><span>Любую ошибку можно просто отправить в&nbsp;Claude&nbsp;Code целиком, вместе с&nbsp;текстом из&nbsp;терминала. Он&nbsp;разберёт и&nbsp;починит.</span></div>
+
+        <div class="note note--green"><span class="note__icon">💡</span><span><strong>На будущее:</strong> секретарь это первый сотрудник вашего AI-офиса. Тот&nbsp;же приём работает для задач, финансов и&nbsp;почты: один агент, один понятный набор правил, одно расписание.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ФУТЕР: заполнить под урок. @stavzzz — только здесь, один раз на странице -->
+  <div class="footer">
+    <div class="footer__done" id="doneBlock">
+      <div class="footer__done-emoji">🎉</div>
+      <div class="footer__done-text">Секретарь на посту!</div>
+      <div class="footer__done-sub">Все пункты закрыты. Календарь теперь ведёт агент.</div>
+    </div>
+    <div class="footer__final-part3">
+      <div class="footer__final-emoji">🗓</div>
+      <div class="footer__final-text">Связка 1 собрана!</div>
+      <div class="footer__final-sub">У&nbsp;вас работает личный секретарь: ставит и&nbsp;переносит встречи голосом, добавляет ссылку на&nbsp;созвон, напоминает и&nbsp;присылает план дня. Календарь больше не&nbsp;нужно держать в&nbsp;голове.</div>
+    </div>
+    <div class="footer__contact">Возникли вопросы? Напишите <a href="https://t.me/stavzzz" target="_blank" class="tg">@stavzzz</a> в&nbsp;Telegram</div>
+    <button class="btn-reset" onclick="resetProgress()">Сбросить прогресс</button>
+  </div>
+
+</div>
+
+<script>
+// ====== CONFETTI ======
+const C = document.getElementById('confetti-canvas');
+const ctx = C.getContext('2d');
+let particles = [];
+let confettiActive = false;
+function resizeCanvas() { C.width = window.innerWidth; C.height = window.innerHeight; }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+const COLORS = ['#7c5bf5','#9d7cff','#34d399','#6ee7b7','#fbbf24','#f87171','#fb7185','#38bdf8','#facc15','#a78bfa','#f472b6','#4ade80'];
+function rand(a,b){ return Math.random()*(b-a)+a; }
+function createBurst(x, y, count) {
+  for(let i=0;i<count;i++){
+    const angle=rand(0,Math.PI*2),speed=rand(4,14),size=rand(4,10);
+    particles.push({x,y,vx:Math.cos(angle)*speed+rand(-2,2),vy:Math.sin(angle)*speed*-0.8-rand(2,6),size,color:COLORS[Math.floor(Math.random()*COLORS.length)],rotation:rand(0,Math.PI*2),rotSpeed:rand(-0.2,0.2),gravity:rand(0.12,0.25),friction:rand(0.97,0.995),opacity:1,fadeSpeed:rand(0.005,0.015),shape:Math.random()>0.4?'rect':'circle'});
+  }
+}
+function launchConfetti(){
+  if(confettiActive)return;confettiActive=true;particles=[];
+  const W=C.width,H=C.height;
+  [[W*0.5,H*0.3,120],[W*0.15,H*0.2,80],[W*0.85,H*0.2,80],[W*0.5,H*0.1,100],[W*0.3,H*0.5,60],[W*0.7,H*0.5,60],[0,H*0.6,50],[W,H*0.6,50],[W*0.5,H*0.6,80]].forEach(([x,y,c],i)=>{setTimeout(()=>createBurst(x,y,c),i*150)});
+  setTimeout(()=>{createBurst(W*0.2,H*0.15,90);createBurst(W*0.8,H*0.15,90);createBurst(W*0.5,H*0.05,100)},1500);
+  setTimeout(()=>{createBurst(W*0.5,H*0.25,120);createBurst(W*0.1,H*0.4,60);createBurst(W*0.9,H*0.4,60)},2500);
+  animate();setTimeout(()=>{confettiActive=false},8000);
+}
+function animate(){
+  ctx.clearRect(0,0,C.width,C.height);
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i];p.vx*=p.friction;p.vy*=p.friction;p.vy+=p.gravity;p.x+=p.vx;p.y+=p.vy;p.rotation+=p.rotSpeed;p.opacity-=p.fadeSpeed;
+    if(p.opacity<=0){particles.splice(i,1);continue}
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rotation);ctx.globalAlpha=p.opacity;ctx.fillStyle=p.color;
+    if(p.shape==='rect'){ctx.fillRect(-p.size/2,-p.size/4,p.size,p.size/2)}else{ctx.beginPath();ctx.arc(0,0,p.size/2,0,Math.PI*2);ctx.fill()}
+    ctx.restore();
+  }
+  if(particles.length>0||confettiActive){requestAnimationFrame(animate)}else{ctx.clearRect(0,0,C.width,C.height)}
+}
+
+// ====== CHECKLIST ======
+const STORAGE_KEY='iivizaciya_checklist_svyazka1_v1';
+const items=document.querySelectorAll('.item[data-key]');
+const totalCount=items.length;
+let wasComplete=false;
+function loadState(){
+  try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');let c=0;items.forEach(item=>{const cb=item.querySelector('input[type="checkbox"]');if(s[item.dataset.key]){cb.checked=true;item.classList.add('checked');c++}});wasComplete=c===totalCount}catch(e){}
+  updateProgress(false);
+}
+function saveState(){const s={};items.forEach(item=>{s[item.dataset.key]=item.querySelector('input[type="checkbox"]').checked});try{localStorage.setItem(STORAGE_KEY,JSON.stringify(s))}catch(e){}}
+function updateProgress(canCelebrate=true){
+  let c=0;items.forEach(item=>{if(item.querySelector('input[type="checkbox"]').checked)c++});
+  document.getElementById('progressCount').textContent=`${c} / ${totalCount}`;
+  document.getElementById('progressFill').style.width=(totalCount>0?(c/totalCount)*100:0)+'%';
+  const done=document.getElementById('doneBlock');
+  if(c===totalCount){done.classList.add('visible');if(canCelebrate&&!wasComplete){launchConfetti()}wasComplete=true}else{done.classList.remove('visible');wasComplete=false}
+}
+items.forEach(item=>{
+  const cb=item.querySelector('input[type="checkbox"]');
+  item.addEventListener('click',function(e){
+    if(e.target.closest('a'))return;
+    if(e.target!==cb){cb.checked=!cb.checked;cb.dispatchEvent(new Event('change'))}
+  });
+  cb.addEventListener('change',function(){item.classList.toggle('checked',this.checked);saveState();updateProgress(true)});
+});
+function resetProgress(){if(!confirm('Сбросить весь прогресс?'))return;items.forEach(item=>{const cb=item.querySelector('input[type="checkbox"]');cb.checked=false;item.classList.remove('checked')});wasComplete=false;saveState();updateProgress(false)}
+loadState();
+
+// ====== COPY (промпты и команды) ======
+function copyBlock(id, btn){
+  const text=document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const orig=btn.innerHTML;
+    btn.classList.add('copied');
+    btn.innerHTML='✅ Скопировано!';
+    setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML=orig;},2000);
+  });
+}
+</script>
+
+<script>
+// клик по .item не срабатывает на вложенных ссылках
+(function() {
+  document.querySelectorAll('.item').forEach(function(item) {
+    var check = item.querySelector('.item__check');
+    if (!check) return;
+    item.addEventListener('click', function(e) {
+      if (e.target.closest('a')) return;
+      if (check.contains(e.target)) return;
+      e.preventDefault();
+      e.stopPropagation();
+    }, true);
+  });
+})();
+</script>
+
+</body>
+</html>
