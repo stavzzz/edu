@@ -222,7 +222,21 @@
 
         <div class="note note--alert"><span class="note__icon">🚫</span><span><strong>Планирование съедает внимание каждый день.</strong><br>Переписка «когда вам удобно», забытые встречи, перенос одной встречи тянет за&nbsp;собой три. У&nbsp;кого был живой помощник, тот платил ему в&nbsp;основном за&nbsp;ведение календаря.</span></div>
 
-        <div class="note note--info"><span class="note__icon">💡</span><span><strong>ИИ-секретарь живёт в&nbsp;вашем Telegram и&nbsp;ведёт Google Календарь.</strong><br><br>Вы говорите голосом «встреча с&nbsp;Иваном завтра в&nbsp;15:00 по&nbsp;Москве». Встреча появляется в&nbsp;календаре со&nbsp;ссылкой на&nbsp;видеозвонок. Дальше он&nbsp;напоминает сам: за&nbsp;сутки, за&nbsp;час и&nbsp;за&nbsp;пять минут, прямо вам в&nbsp;личку.</span></div>
+        <div class="note note--info"><span class="note__icon">💡</span><span><strong>ИИ-секретарь живёт в&nbsp;вашем Telegram и&nbsp;ведёт Google Календарь.</strong><br><br>
+        •&nbsp;Понимает голос и&nbsp;текст. Сказали «встреча с&nbsp;Иваном завтра в&nbsp;15:00 по&nbsp;Москве», встреча в&nbsp;календаре.<br>
+        •&nbsp;Ставит, переносит и&nbsp;отменяет встречи.<br>
+        •&nbsp;Меняет у&nbsp;встречи длительность, описание, место и&nbsp;участников.<br>
+        •&nbsp;Добавляет ссылку на&nbsp;видеовстречу: Google&nbsp;Meet или Zoom.<br>
+        •&nbsp;Приглашает участников по&nbsp;email, приглашение уходит им&nbsp;на&nbsp;почту.<br>
+        •&nbsp;Показывает расписание на&nbsp;сегодня, завтра, неделю или конкретную дату.<br>
+        •&nbsp;Считает часовые пояса и&nbsp;показывает обе зоны, когда встреча в&nbsp;другом городе.<br>
+        •&nbsp;Переключает вашу зону, когда вы&nbsp;переехали или улетели.<br>
+        •&nbsp;Ловит накладку на&nbsp;занятое время и&nbsp;предлагает три варианта: поставить всё&nbsp;равно, перенести, отменить.<br>
+        •&nbsp;Находит свободное окно, если попросить.<br>
+        •&nbsp;Переспрашивает время, если вы&nbsp;его не&nbsp;назвали, вместо того чтобы придумать своё.<br>
+        •&nbsp;Показывает карточку и&nbsp;ждёт подтверждения перед любым изменением.<br>
+        •&nbsp;Напоминает за&nbsp;сутки, за&nbsp;час и&nbsp;за&nbsp;пять минут, прямо вам в&nbsp;личку.<br>
+        •&nbsp;Утром присылает план дня, в&nbsp;понедельник план недели.</span></div>
 
         <table class="data-table">
           <tr><th>Что вы говорите</th><th>Что делает ИИ-секретарь</th></tr>
@@ -235,15 +249,6 @@
           <tr><td>«Переключи мой часовой пояс на&nbsp;Тбилиси»</td><td>Меняет зону календаря, дальше считает всё в&nbsp;ней</td></tr>
           <tr><td>«Какая у&nbsp;меня сейчас зона?»</td><td>Показывает зону и&nbsp;текущее время</td></tr>
         </table>
-
-        <div class="note note--info"><span class="note__icon">⚙️</span><span><strong>Работает само, без ваших команд:</strong><br>
-        •&nbsp;Утром присылает план дня<br>
-        •&nbsp;В&nbsp;понедельник присылает план недели<br>
-        •&nbsp;Напоминает за&nbsp;сутки, за&nbsp;час и&nbsp;за&nbsp;пять минут до&nbsp;встречи<br>
-        •&nbsp;Ловит накладку и&nbsp;предлагает выбор: поставить всё&nbsp;равно, перенести или отменить<br>
-        •&nbsp;Находит свободное окно, если попросить<br>
-        •&nbsp;Считает часовые пояса и&nbsp;показывает обе зоны, когда встреча в&nbsp;другом городе<br>
-        •&nbsp;Переспрашивает время, если вы&nbsp;его не&nbsp;назвали, вместо того чтобы придумать своё</span></div>
 
         <div class="note note--green"><span class="note__icon">✅</span><span>Программный код руками писать не&nbsp;нужно. Вы&nbsp;отдаёте ссылку и&nbsp;промпт в&nbsp;Claude&nbsp;Code, дальше он&nbsp;всё делает сам и&nbsp;ведёт вас по&nbsp;шагам.</span></div>
       </div>
@@ -274,7 +279,8 @@
 
 Шаг 1. Проверь, что сервер и агент живы, Telegram отвечает, голосовые распознаются. Если что-то не работает, скажи, что именно чинить.
 
-Шаг 2. Подключи Google Workspace MCP и включи из него только Календарь. OAuth Client ID я уже создал, Calendar API включил.
+Шаг 2. Подключи Google Workspace MCP, официальный репозиторий: https://github.com/taylorwilsdon/google_workspace_mcp
+Включи из него только Календарь, остальные сервисы не подключай. OAuth Client ID я уже создал, Calendar API включил.
 
 Шаг 3. Дай мне ссылку для входа в мой Google-аккаунт и дождись, пока я авторизуюсь.
 
@@ -309,30 +315,63 @@
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">03</div><div class="section__title">Доступ к Google: три вещи</div></div>
+      <div class="section__header"><div class="section__num">03</div><div class="section__title">Доступ к Google: делаем руками</div></div>
       <div class="section__card">
 
-        <div class="note note--warn"><span class="note__icon">⚠</span><span>Это единственная часть, которую нужно сделать руками в&nbsp;браузере. Claude&nbsp;Code не&nbsp;может зайти в&nbsp;вашу консоль Google вместо вас.</span></div>
-        <div class="item" data-key="google-api"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>Единственная часть, которую нельзя поручить Claude&nbsp;Code: он&nbsp;не&nbsp;может зайти в&nbsp;вашу консоль Google. Дальше каждый шаг со&nbsp;ссылкой, которая открывает сразу нужный экран. Займёт минут пятнадцать.</span></div>
+
+        <div class="note note--info"><span class="note__icon">💡</span><span>Google периодически переносит эти экраны и&nbsp;переименовывает разделы. Если увидите другое название, ориентируйтесь по&nbsp;смыслу: нужен доступ к&nbsp;календарю, согласие приложения и&nbsp;пара ключей.</span></div>
+        <div class="item" data-key="g-project"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Включить Calendar API</div>
-            <div class="item__hint">Откройте console.cloud.google.com, выберите свой проект, найдите Google&nbsp;Calendar&nbsp;API и&nbsp;нажмите «Включить».</div>
+            <div class="item__text">Шаг 1. Открыть консоль и выбрать проект</div>
+            <div class="item__hint">Слева сверху выпадающий список проектов. Если проект уже заводили в&nbsp;уроке&nbsp;5, выберите его и&nbsp;ничего не&nbsp;создавайте. Если проекта нет, нажмите «Создать проект», имя любое, например&nbsp;secretary.</div>
+            <a href="https://console.cloud.google.com/" target="_blank" class="item__link" onclick="event.stopPropagation()">console.cloud.google.com</a>
           </div>
         </div>
-        <div class="item" data-key="google-oauth"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="g-api"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Создать OAuth Client ID</div>
-            <div class="item__hint">В&nbsp;разделе «Учётные данные» создайте OAuth&nbsp;Client&nbsp;ID типа «Веб-приложение». Сохраните Client&nbsp;ID и&nbsp;Client&nbsp;Secret, они понадобятся Claude&nbsp;Code.</div>
+            <div class="item__text">Шаг 2. Включить Google Calendar API</div>
+            <div class="item__hint">Ссылка открывает сразу карточку нужного API. Нажмите синюю кнопку «Включить». Если вместо неё написано «Управлять», значит API уже включён, идите дальше.</div>
+            <a href="https://console.cloud.google.com/apis/library/calendar-json.googleapis.com" target="_blank" class="item__link" onclick="event.stopPropagation()">Открыть Google Calendar API</a>
           </div>
         </div>
-        <div class="item" data-key="google-prod"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="g-consent"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Перевести приложение в режим Production</div>
-            <div class="item__hint">На&nbsp;экране согласия переключите статус с&nbsp;Testing на&nbsp;Production.</div>
+            <div class="item__text">Шаг 3. Заполнить экран согласия</div>
+            <div class="item__hint">Тип пользователя выберите «Внешний» и&nbsp;нажмите «Создать». Заполните три поля: название приложения, ваша почта для&nbsp;поддержки, ваша почта разработчика. Название увидите только вы, можно написать «Мой секретарь».</div>
+            <a href="https://console.cloud.google.com/apis/credentials/consent" target="_blank" class="item__link" onclick="event.stopPropagation()">Экран согласия OAuth</a>
+          </div>
+        </div>
+        <div class="item" data-key="g-scopes"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 4. Выдать права на календарь</div>
+            <div class="item__hint">На&nbsp;шаге «Области доступа» нажмите «Добавить или удалить области». В&nbsp;поиске наберите calendar и&nbsp;отметьте две строки: <strong>.../auth/calendar</strong> и&nbsp;<strong>.../auth/calendar.events</strong>. Нажмите «Обновить», затем «Сохранить и&nbsp;продолжить».</div>
+          </div>
+        </div>
+        <div class="item" data-key="g-publish"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 5. Опубликовать приложение</div>
+            <div class="item__hint">Вернитесь на&nbsp;экран согласия. В&nbsp;блоке «Статус публикации» нажмите «Опубликовать приложение» и&nbsp;подтвердите. Статус должен смениться с&nbsp;«Тестирование» на&nbsp;«В&nbsp;эксплуатации».</div>
+            <a href="https://console.cloud.google.com/apis/credentials/consent" target="_blank" class="item__link" onclick="event.stopPropagation()">Статус публикации</a>
+          </div>
+        </div>
+        <div class="item" data-key="g-client"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 6. Создать OAuth Client ID</div>
+            <div class="item__hint">Нажмите «Создать учётные данные», выберите «Идентификатор клиента OAuth». Тип приложения: <strong>Веб-приложение</strong>. В&nbsp;разделе «Разрешённые URI перенаправления» добавьте адрес, который даст Claude&nbsp;Code на&nbsp;втором шаге промпта. Нажмите «Создать».</div>
+            <a href="https://console.cloud.google.com/apis/credentials" target="_blank" class="item__link" onclick="event.stopPropagation()">Учётные данные</a>
+          </div>
+        </div>
+        <div class="item" data-key="g-keys"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 7. Сохранить два ключа</div>
+            <div class="item__hint">После создания появится окно с&nbsp;двумя строками: «Идентификатор клиента» и&nbsp;«Секрет клиента». Скопируйте обе в&nbsp;надёжное место. Позже их&nbsp;можно посмотреть там&nbsp;же, в&nbsp;списке учётных данных.</div>
           </div>
         </div>
 
-        <div class="note note--alert"><span class="note__icon">🚫</span><span>Если оставить режим Testing, доступ к&nbsp;календарю отвалится ровно через семь дней. Это самая частая причина, по&nbsp;которой секретарь замолкает через неделю.</span></div>
+        <div class="note note--alert"><span class="note__icon">🚫</span><span>Не&nbsp;пропускайте шаг&nbsp;5. Если приложение останется в&nbsp;режиме тестирования, доступ к&nbsp;календарю отвалится ровно через семь дней, и&nbsp;секретарь замолчит. Это самая частая причина поломки.</span></div>
+
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>Секрет клиента это пароль от&nbsp;доступа к&nbsp;вашему календарю. Не&nbsp;выкладывайте его в&nbsp;открытый репозиторий и&nbsp;не&nbsp;пересылайте в&nbsp;общие чаты.</span></div>
       </div>
     </div>
 
