@@ -255,7 +255,75 @@
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">02</div><div class="section__title">Репозиторий и главный промпт</div></div>
+      <div class="section__header"><div class="section__num">02</div><div class="section__title">Что нужно иметь до старта</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">💡</span><span>Всё из&nbsp;этого списка вы&nbsp;уже настраивали на&nbsp;курсе. Пробегитесь и&nbsp;отметьте, что живо. Если чего-то нет, сначала закройте этот пункт, иначе сборка встанет посередине.</span></div>
+        <div class="item" data-key="pre-vpn"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">VPN</div>
+            <div class="item__hint">Нужен для&nbsp;доступа к&nbsp;зарубежным сервисам.</div>
+          </div>
+        </div>
+        <div class="item" data-key="pre-mail"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Почта для регистраций</div>
+            <div class="item__hint">Gmail или другая, к&nbsp;которой у&nbsp;вас есть доступ.</div>
+          </div>
+        </div>
+        <div class="item" data-key="pre-phone"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Зарубежный номер телефона</div>
+            <div class="item__hint">Для&nbsp;приёма СМС при&nbsp;регистрации в&nbsp;Claude.</div>
+          </div>
+        </div>
+        <div class="item" data-key="pre-card"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Зарубежная карта</div>
+            <div class="item__hint">Для&nbsp;оплаты подписки Claude.</div>
+          </div>
+        </div>
+        <div class="item" data-key="pre-cc"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Claude Code</div>
+            <div class="item__hint">Установлен и&nbsp;запускается на&nbsp;вашем компьютере.</div>
+          </div>
+        </div>
+        <div class="item" data-key="pre-vps"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Сервер VPS с установленным OpenClaw</div>
+            <div class="item__hint">Агент отвечает, сервер живой.</div>
+          </div>
+        </div>
+        <div class="item" data-key="pre-gpt"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Подписка ChatGPT, подключённая к OpenClaw</div>
+            <div class="item__hint">Модель, на&nbsp;которой работает агент.</div>
+          </div>
+        </div>
+        <div class="item" data-key="pre-bot"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Telegram-бот через @BotFather</div>
+            <div class="item__hint">Бот создан и&nbsp;отвечает вам в&nbsp;личке.</div>
+          </div>
+        </div>
+        <div class="item" data-key="pre-voice"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Groq Whisper для распознавания голосовых</div>
+            <div class="item__hint">Отправьте боту голосовое: он&nbsp;должен понять текст.</div>
+          </div>
+        </div>
+
+        <div class="note note--green"><span class="note__icon">✅</span><span><strong>Это настроим дальше по&nbsp;чек-листу, заранее ничего делать не&nbsp;нужно:</strong><br>
+        •&nbsp;Google&nbsp;OAuth и&nbsp;Calendar&nbsp;API<br>
+        •&nbsp;Workspace&nbsp;MCP<br>
+        •&nbsp;Кроны в&nbsp;OpenClaw<br>
+        •&nbsp;Ключи API от&nbsp;Zoom</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">03</div><div class="section__title">Репозиторий и главный промпт</div></div>
       <div class="section__card">
 
         <div class="note note--info"><span class="note__icon">📦</span><span>Все файлы и&nbsp;инструкция лежат в&nbsp;репозитории. Вы&nbsp;отдаёте ссылку и&nbsp;промпт в&nbsp;Claude&nbsp;Code, он&nbsp;делает всё по&nbsp;инструкции и&nbsp;ведёт вас за&nbsp;руку.</span></div>
@@ -267,7 +335,7 @@
           </div>
         </div>
 
-        <div class="note note--warn"><span class="note__icon">⚠</span><span>Сначала пройдите блок&nbsp;03 и&nbsp;настройте доступ к&nbsp;Google. Без этого промпт остановится на&nbsp;втором шаге.</span></div>
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>Сначала пройдите блок&nbsp;04 и&nbsp;настройте доступ к&nbsp;Google. Без этого промпт остановится на&nbsp;втором шаге.</span></div>
 
         <div class="prompt-block">
           <div class="prompt-block__title">📋 Промпт: собрать ИИ-секретаря (в Claude Code)</div>
@@ -315,7 +383,7 @@
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">03</div><div class="section__title">Доступ к Google: делаем руками</div></div>
+      <div class="section__header"><div class="section__num">04</div><div class="section__title">Доступ к Google: делаем руками</div></div>
       <div class="section__card">
 
         <div class="note note--warn"><span class="note__icon">⚠</span><span>Единственная часть, которую нельзя поручить Claude&nbsp;Code: он&nbsp;не&nbsp;может зайти в&nbsp;вашу консоль Google. Дальше каждый шаг со&nbsp;ссылкой, которая открывает сразу нужный экран. Займёт минут пятнадцать.</span></div>
@@ -376,10 +444,10 @@
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">04</div><div class="section__title">Настройка секретаря</div></div>
+      <div class="section__header"><div class="section__num">05</div><div class="section__title">Настройка секретаря</div></div>
       <div class="section__card">
 
-        <div class="note note--info"><span class="note__icon">💡</span><span>Всё в&nbsp;этом блоке делает Claude&nbsp;Code по&nbsp;промпту из&nbsp;блока&nbsp;02. Ваша задача: подтверждать шаги и&nbsp;проверять результат.</span></div>
+        <div class="note note--info"><span class="note__icon">💡</span><span>Всё в&nbsp;этом блоке делает Claude&nbsp;Code по&nbsp;промпту из&nbsp;блока&nbsp;03. Ваша задача: подтверждать шаги и&nbsp;проверять результат.</span></div>
         <div class="item" data-key="setup-mcp"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Подключить Google Календарь</div>
@@ -434,7 +502,7 @@
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">05</div><div class="section__title">Zoom вместо Google Meet</div></div>
+      <div class="section__header"><div class="section__num">06</div><div class="section__title">Zoom вместо Google Meet</div></div>
       <div class="section__card">
 
         <div class="note note--info"><span class="note__icon">💡</span><span>Google&nbsp;Meet подключается сам и&nbsp;работает сразу. Этот блок нужен, только если вы&nbsp;проводите встречи в&nbsp;Zoom. Можно пропустить и&nbsp;вернуться позже.</span></div>
@@ -474,7 +542,7 @@
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">06</div><div class="section__title">Проверьте, что всё работает</div></div>
+      <div class="section__header"><div class="section__num">07</div><div class="section__title">Проверьте, что всё работает</div></div>
       <div class="section__card">
 
         <div class="note note--info"><span class="note__icon">🎯</span><span>Отправляйте фразы боту одну за&nbsp;другой и&nbsp;отмечайте, что получилось. Голосом и&nbsp;текстом результат должен быть одинаковый.</span></div>
@@ -566,7 +634,7 @@
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">07</div><div class="section__title">Если что-то пошло не так</div></div>
+      <div class="section__header"><div class="section__num">08</div><div class="section__title">Если что-то пошло не так</div></div>
       <div class="section__card">
 
         <table class="data-table">
