@@ -370,7 +370,7 @@
 
 Шаг 2. Спроси меня, какая у меня модель-классификатор, и настрой в .env ровно один вариант (образец — .env.example):
 — MiniMax: MODEL_FORMAT=minimax плюс мой API-ключ;
-— подписка ChatGPT (Codex) через OpenClaw: MODEL_FORMAT=openai, MODEL_BASE_URL=http://172.17.0.1:18789/v1, MODEL_API_KEY=gateway-токен OpenClaw, MODEL_NAME=openclaw/default. Где лежит gateway-токен — сверься через скилл openclaw-docs.
+— подписка ChatGPT (Codex) через OpenClaw: MODEL_FORMAT=openai, MODEL_BASE_URL=http://172.17.0.1:18789/v1, MODEL_API_KEY=gateway-токен OpenClaw, MODEL_NAME=openclaw/default. Тут 172.17.0.1 — стандартный адрес хоста из docker-контейнера (одинаковый на любом Linux-сервере), а 18789 — стандартный порт gateway OpenClaw. Менять их не нужно. Где лежит gateway-токен — сверься через скилл openclaw-docs.
 
 Шаг 3. Заполни остальной .env: токен бота от BotFather, мой Telegram id (OWNER_CHAT_ID — узнать у @userinfobot), ключ Groq для голосовых.
 
