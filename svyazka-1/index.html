@@ -231,12 +231,15 @@
         •&nbsp;Показывает расписание на&nbsp;сегодня, завтра, неделю или конкретную дату.<br>
         •&nbsp;Считает часовые пояса и&nbsp;показывает обе зоны, когда встреча в&nbsp;другом городе.<br>
         •&nbsp;Переключает вашу зону, когда вы&nbsp;переехали или улетели.<br>
-        •&nbsp;Ловит накладку на&nbsp;занятое время и&nbsp;предлагает три варианта: поставить всё&nbsp;равно, перенести, отменить.<br>
-        •&nbsp;Находит свободное окно, если попросить.<br>
+        •&nbsp;Ловит накладку на&nbsp;занятое время, предлагает три варианта (поставить всё&nbsp;равно, перенести, отменить) и&nbsp;сразу показывает свободные окна дня, куда встреча влезает.<br>
+        •&nbsp;Показывает свободные окна: на&nbsp;сегодня, на&nbsp;эту неделю и&nbsp;на&nbsp;следующую.<br>
+        •&nbsp;Удаляет только после подтверждения кнопками «Да» и&nbsp;«Нет» — случайно ничего не&nbsp;снесёт.<br>
+        •&nbsp;Если встреч с&nbsp;одним названием несколько, даёт выбрать кнопкой с&nbsp;номером.<br>
+        •&nbsp;Понимает массовые команды: «удали все встречи сегодня», «перенеси все встречи на&nbsp;неделю вперёд».<br>
         •&nbsp;Переспрашивает время, если вы&nbsp;его не&nbsp;назвали, вместо того чтобы придумать своё.<br>
         •&nbsp;Показывает карточку и&nbsp;ждёт подтверждения перед любым изменением.<br>
-        •&nbsp;Напоминает за&nbsp;сутки, за&nbsp;час и&nbsp;за&nbsp;пять минут, прямо вам в&nbsp;личку.<br>
-        •&nbsp;Утром присылает план дня, в&nbsp;понедельник план недели.</span></div>
+        •&nbsp;Напоминает перед встречей прямо в&nbsp;личку: за&nbsp;сутки, за&nbsp;час, за&nbsp;30, 10&nbsp;или 5&nbsp;минут — какие включите в&nbsp;настройках.<br>
+        •&nbsp;Утром присылает план дня, в&nbsp;понедельник план недели. Дни и&nbsp;время меняются кнопками в&nbsp;настройках.</span></div>
 
         <table class="data-table">
           <tr><th>Что вы говорите</th><th>Что делает ИИ-секретарь</th></tr>
@@ -248,6 +251,20 @@
           <tr><td>«Добавь во&nbsp;встречу описание и&nbsp;позови petya@mail.ru»</td><td>Дописывает описание и&nbsp;отправляет приглашение на&nbsp;почту</td></tr>
           <tr><td>«Переключи мой часовой пояс на&nbsp;Тбилиси»</td><td>Меняет зону календаря, дальше считает всё в&nbsp;ней</td></tr>
           <tr><td>«Какая у&nbsp;меня сейчас зона?»</td><td>Показывает зону и&nbsp;текущее время</td></tr>
+        </table>
+
+        <div class="note note--info"><span class="note__icon">📱</span><span><strong>А&nbsp;ещё у&nbsp;бота есть меню.</strong><br>Слева внизу в&nbsp;чате — синяя кнопка «Меню». Эти команды отрабатывают мгновенно, программным кодом, без обращения к&nbsp;модели — токены не&nbsp;тратятся.</span></div>
+
+        <table class="data-table">
+          <tr><th>Кнопка в&nbsp;меню</th><th>Что делает</th></tr>
+          <tr><td>/today · /tomorrow · /week</td><td>Расписание на&nbsp;сегодня, на&nbsp;завтра и&nbsp;на&nbsp;неделю</td></tr>
+          <tr><td>/free · /free_week · /free_next</td><td>Свободные окна: сегодня, на&nbsp;этой неделе, на&nbsp;следующей</td></tr>
+          <tr><td>/next</td><td>Ближайшая встреча со&nbsp;ссылками на&nbsp;созвон</td></tr>
+          <tr><td>/add</td><td>Добавить встречу: бот сам спросит, что и&nbsp;когда</td></tr>
+          <tr><td>/reminders</td><td>Настройки напоминаний кнопками: дни, время, за&nbsp;сколько предупреждать</td></tr>
+          <tr><td>/tz</td><td>Показать текущую часовую зону</td></tr>
+          <tr><td>/new</td><td>Сброс: начать с&nbsp;чистого листа</td></tr>
+          <tr><td>/help</td><td>Напомнить, что умеет бот</td></tr>
         </table>
 
         <div class="note note--green"><span class="note__icon">✅</span><span>Программный код руками писать не&nbsp;нужно. Вы&nbsp;отдаёте ссылку и&nbsp;промпт в&nbsp;Claude&nbsp;Code, дальше он&nbsp;всё делает сам и&nbsp;ведёт вас по&nbsp;шагам.</span></div>
@@ -628,7 +645,7 @@
         <div class="item" data-key="t-cancel"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">«Отмени встречу с Петей в четверг»</div>
-            <div class="item__hint">Секретарь переспрашивает и&nbsp;только потом удаляет.</div>
+            <div class="item__hint">Секретарь показывает карточку с&nbsp;кнопками «Да, удалить» и&nbsp;«Нет». Удаляет только после «Да». После нажатия кнопки исчезают, в&nbsp;карточке остаётся выбранный статус.</div>
           </div>
         </div>
         <div class="item" data-key="t-reminder"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
@@ -641,6 +658,36 @@
           <div class="item__body">
             <div class="item__text">Проверить план дня</div>
             <div class="item__hint">Не&nbsp;ждите утра: попросите Claude&nbsp;Code запустить рассылку вручную и&nbsp;убедитесь, что сообщение пришло.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-menu"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Открыть меню и нажать /free</div>
+            <div class="item__hint">Синяя кнопка «Меню» слева внизу. Приходят свободные окна на&nbsp;сегодня с&nbsp;длительностью каждого. Заодно проверьте /next и&nbsp;/week.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-pick"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Создать две встречи с одинаковым названием и попросить удалить</div>
+            <div class="item__hint">Секретарь спрашивает «какую именно?» и&nbsp;даёт кнопки с&nbsp;номерами. Есть и&nbsp;кнопка «Удалить все».</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-bulk"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">«Удали все встречи сегодня»</div>
+            <div class="item__hint">Секретарь показывает список всего за&nbsp;день и&nbsp;спрашивает подтверждение. Нажмите «Нет» — ничего не&nbsp;удалится. Так&nbsp;же работает «перенеси все встречи на&nbsp;неделю вперёд».</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-details"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Ответить на вопрос о времени голосом с деталями</div>
+            <div class="item__hint">Например: «на&nbsp;22:00, на&nbsp;полтора часа, место — офис». Время, длительность и&nbsp;место должны попасть в&nbsp;одну встречу, ничего не&nbsp;теряется.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-reminders-menu"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Открыть /reminders и выключить субботу</div>
+            <div class="item__hint">Настройки меняются кнопками прямо в&nbsp;карточке: дни и&nbsp;время плана дня, план недели, за&nbsp;сколько напоминать. Нажали — карточка обновилась.</div>
           </div>
         </div>
         <div class="item" data-key="t-deterministic"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
