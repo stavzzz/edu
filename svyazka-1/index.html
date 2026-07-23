@@ -308,14 +308,14 @@
         </div>
         <div class="item" data-key="pre-vps"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Сервер VPS с установленным OpenClaw</div>
-            <div class="item__hint">Агент отвечает, сервер живой.</div>
+            <div class="item__text">Сервер VPS (для варианта Codex — с установленным OpenClaw)</div>
+            <div class="item__hint">OpenClaw обязателен только если модель — подписка ChatGPT (Codex). Для&nbsp;варианта MiniMax достаточно VPS с&nbsp;Docker, OpenClaw не&nbsp;нужен.</div>
           </div>
         </div>
         <div class="item" data-key="pre-gpt"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Подписка ChatGPT, подключённая к OpenClaw</div>
-            <div class="item__hint">Модель, на&nbsp;которой работает агент.</div>
+            <div class="item__text">Модель на выбор: подписка ChatGPT ИЛИ ключ MiniMax</div>
+            <div class="item__hint">Вариант&nbsp;1 — подписка ChatGPT (Codex) через OpenClaw: отдельно за&nbsp;токены не&nbsp;платите. Вариант&nbsp;2 — API-ключ MiniMax: работает напрямую, без&nbsp;OpenClaw.</div>
           </div>
         </div>
         <div class="item" data-key="pre-bot"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
@@ -352,7 +352,7 @@
           </div>
         </div>
 
-        <div class="note note--info"><span class="note__icon">🧠</span><span><strong>Как устроен секретарь внутри.</strong><br><br>Модель нужна ровно для&nbsp;одного: понять вашу фразу и&nbsp;превратить её&nbsp;в&nbsp;команду. Голосом вы&nbsp;только вызываете действие.<br><br>Всё остальное делает программный код: считает часовые пояса, проверяет накладки, собирает ответы по&nbsp;готовым шаблонам. Поэтому секретарь отвечает всегда одинаково и&nbsp;не&nbsp;фантазирует.</span></div>
+        <div class="note note--info"><span class="note__icon">🧠</span><span><strong>Как устроен секретарь внутри.</strong><br><br>Сам агент — <strong>самописный код</strong> в&nbsp;докер-контейнере на&nbsp;вашем VPS. Модель (LLM) нужна ровно для&nbsp;одного: понять вашу фразу и&nbsp;превратить её&nbsp;в&nbsp;команду. Голосом вы&nbsp;только вызываете действие.<br><br>Всё остальное делает программный код: считает часовые пояса, проверяет накладки, собирает ответы по&nbsp;готовым шаблонам. Поэтому секретарь отвечает всегда одинаково и&nbsp;не&nbsp;фантазирует.<br><br><strong>Модель подключается на&nbsp;выбор:</strong><br>•&nbsp;<strong>Подписка ChatGPT (Codex) через OpenClaw</strong> — у&nbsp;подписки нет своего API, поэтому мостом работает OpenClaw: он&nbsp;авторизуется в&nbsp;вашу подписку и&nbsp;выдаёт боту обычный API-эндпоинт. OpenClaw на&nbsp;сервере обязателен, зато за&nbsp;токены отдельно платить не&nbsp;нужно.<br>•&nbsp;<strong>MiniMax по&nbsp;API-ключу</strong> — бот ходит в&nbsp;API напрямую, OpenClaw не&nbsp;нужен вообще. Классификация стоит копейки.</span></div>
 
         <div class="note note--warn"><span class="note__icon">⚠</span><span>Сначала пройдите блок&nbsp;04 и&nbsp;настройте доступ к&nbsp;Google. Без этого промпт остановится на&nbsp;втором шаге.</span></div>
 
@@ -366,23 +366,27 @@
 
 Веди меня по шагам. После каждого шага показывай результат и жди моего «дальше».
 
-Шаг 1. Проверь, что сервер жив и Docker установлен. Склонируй репозиторий, поставь зависимости и прогони тесты: npm install и npm test. Все 98 тестов должны быть зелёными.
+Шаг 1. САМЫЙ ПЕРВЫЙ ВОПРОС: спроси меня, какую модель-классификатор я хочу использовать, и дальше веди по выбранной ветке:
+— Вариант 1: подписка ChatGPT (Codex) через OpenClaw. Для этого варианта OpenClaw на сервере ОБЯЗАТЕЛЕН (он — мост к подписке, отдельно за токены платить не нужно).
+— Вариант 2: MiniMax по API-ключу. OpenClaw для этого варианта НЕ НУЖЕН вообще — бот ходит в API напрямую.
 
-Шаг 2. Спроси меня, какая у меня модель-классификатор, и настрой в .env ровно один вариант (образец — .env.example):
-— MiniMax: MODEL_FORMAT=minimax плюс мой API-ключ;
-— подписка ChatGPT (Codex) через OpenClaw: MODEL_FORMAT=openai, MODEL_BASE_URL=http://172.17.0.1:18789/v1, MODEL_API_KEY=gateway-токен OpenClaw, MODEL_NAME=openclaw/default. Тут 172.17.0.1 — стандартный адрес хоста из docker-контейнера (одинаковый на любом Linux-сервере), а 18789 — стандартный порт gateway OpenClaw. Менять их не нужно. Где лежит gateway-токен — сверься через скилл openclaw-docs.
+Шаг 2. Проверь, что сервер жив и Docker установлен. Склонируй репозиторий, поставь зависимости и прогони тесты: npm install и npm test. Все 108 тестов должны быть зелёными.
 
-Шаг 3. Заполни остальной .env: токен бота от BotFather, мой Telegram id (OWNER_CHAT_ID — узнать у @userinfobot), ключ Groq для голосовых.
+Шаг 3. Настрой выбранную модель (образец — .env.example, подробности — README репозитория, раздел «Модель-классификатор»):
+— Вариант 1 (Codex через OpenClaw): (а) подключи мою подписку командой openclaw models auth login --provider openai — я залогинюсь в браузере; (б) в ~/.openclaw/openclaw.json включи gateway.http.endpoints.chatCompletions.enabled: true и добавь лёгкого агента-классификатора secretary-clf по готовому образцу из README; (в) скопируй docs/SOUL-classifier.md из репозитория в воркспейс этого агента как SOUL.md; (г) перезапусти gateway: openclaw gateway restart; (д) в .env: MODEL_FORMAT=openai, MODEL_BASE_URL=http://127.0.0.1:18789/v1 (контейнер работает в host-сети, это уже настроено в docker-compose.yml), MODEL_API_KEY=gateway-токен (gateway.auth.token из ~/.openclaw/openclaw.json), MODEL_NAME=openclaw/secretary-clf. Проверь мост тестовым запросом: в ответ должен прийти строгий JSON.
+— Вариант 2 (MiniMax): в .env MODEL_FORMAT=minimax плюс мой API-ключ. OpenClaw не трогай.
 
-Шаг 4. Подключи Google Календарь: возьми креды (client_id, client_secret, refresh_token) — например, из файла кредов Google Workspace MCP — и пропиши путь к этому файлу в docker-compose.yml. OAuth Client ID я уже создал и Calendar API включил (блок 04).
+Шаг 4. Заполни остальной .env: токен бота от BotFather, мой Telegram id (OWNER_CHAT_ID — узнать у @userinfobot), ключ Groq для голосовых.
 
-Шаг 5. Zoom (опционально): я дам Account ID, Client ID и Client Secret от Server-to-Server приложения — впиши их в .env. Если пропускаем — во встречах будет только Google Meet.
+Шаг 5. Подключи Google Календарь: возьми креды (client_id, client_secret, refresh_token) — например, из файла кредов Google Workspace MCP — и пропиши путь к этому файлу в docker-compose.yml. OAuth Client ID я уже создал и Calendar API включил (блок 04).
 
-Шаг 6. Запусти бота: docker compose up -d --build. В логах должно появиться «calendar tz: …» и «menu registered». Затем прогони живую проверку: docker compose run --rm secretary-bot node scripts/live-smoke.js — все пункты зелёные.
+Шаг 6. Zoom (опционально): я дам Account ID, Client ID и Client Secret от Server-to-Server приложения — впиши их в .env. Если пропускаем — во встречах будет только Google Meet.
 
-Шаг 7. Я нажимаю Start у бота. Покажи мне, что проверить руками: меню из 12 кнопок, создание встречи голосом, конфликт с тремя кнопками и свободными окнами, настройки /reminders.
+Шаг 7. Запусти бота: docker compose up -d --build. В логах должно появиться «calendar tz: …» и «menu registered». Затем прогони живую проверку: docker compose run --rm secretary-bot node scripts/live-smoke.js — все пункты зелёные. Кстати, в docker logs secretary-bot теперь виден весь диалог: msg (фраза) → intent (JSON) → done — так удобно дебажить.
 
-Шаг 8. Прогони со мной чек-лист приёмки docs/ТЕСТЫ-ПРИЁМКИ.md из репозитория (44 пункта) и покажи результат по каждому блоку.</div>
+Шаг 8. Я нажимаю Start у бота. Покажи мне, что проверить руками: меню из 12 кнопок, создание встречи голосом, вопрос «Как назвать встречу?» если название не сказано, поиск «найди встречу …», конфликт с тремя кнопками и свободными окнами, настройки /reminders, день недели в каждой карточке.
+
+Шаг 9. Прогони со мной чек-лист приёмки docs/ТЕСТЫ-ПРИЁМКИ.md из репозитория и покажи результат по каждому блоку.</div>
           <button class="btn-copy" onclick="copyBlock('promptMain', this)">📋 Скопировать промпт</button>
         </div>
         <div class="item" data-key="prompt-main-done"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
@@ -580,6 +584,24 @@
           <div class="item__body">
             <div class="item__text">«Поставь встречу с Петей в четверг»</div>
             <div class="item__hint">Время не&nbsp;названо. Секретарь обязан переспросить, а&nbsp;не&nbsp;выдумать время сам.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-notitle"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">«Поставь встречу завтра на 23:00» — без названия</div>
+            <div class="item__hint">Название не&nbsp;прозвучало. Секретарь обязан спросить «Как назвать встречу?», а&nbsp;не&nbsp;создать безликую «Встречу». Ответьте названием — оно попадёт в&nbsp;календарь.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-find"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">«Найди встречу &lt;название&gt;»</div>
+            <div class="item__hint">Секретарь показывает карточку найденной встречи. Падежи не&nbsp;мешают: «найди встречУ тест» найдёт «Тест».</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-weekday"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">День недели в каждой карточке</div>
+            <div class="item__hint">Во&nbsp;всех сообщениях с&nbsp;датой она пишется с&nbsp;днём недели: «ЧТ, 23&nbsp;июля 2026» — в&nbsp;карточках создания, напоминаниях, плане дня и&nbsp;списках.</div>
           </div>
         </div>
         <div class="item" data-key="t-conflict"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
