@@ -370,7 +370,7 @@
 — Вариант 1: подписка ChatGPT (Codex) через OpenClaw. Для этого варианта OpenClaw на сервере ОБЯЗАТЕЛЕН (он — мост к подписке, отдельно за токены платить не нужно).
 — Вариант 2: MiniMax по API-ключу. OpenClaw для этого варианта НЕ НУЖЕН вообще — бот ходит в API напрямую.
 
-Шаг 2. Проверь, что сервер жив и Docker установлен. Склонируй репозиторий, поставь зависимости и прогони тесты: npm install и npm test. Все 108 тестов должны быть зелёными.
+Шаг 2. Проверь, что сервер жив и Docker установлен. Склонируй репозиторий, поставь зависимости и прогони тесты: npm install и npm test. Все 118 тестов должны быть зелёными.
 
 Шаг 3. Настрой выбранную модель (образец — .env.example, подробности — README репозитория, раздел «Модель-классификатор»):
 — Вариант 1 (Codex через OpenClaw): (а) подключи мою подписку командой openclaw models auth login --provider openai — я залогинюсь в браузере; (б) в ~/.openclaw/openclaw.json включи gateway.http.endpoints.chatCompletions.enabled: true и добавь лёгкого агента-классификатора secretary-clf по готовому образцу из README; (в) скопируй docs/SOUL-classifier.md из репозитория в воркспейс этого агента как SOUL.md; (г) перезапусти gateway: openclaw gateway restart; (д) в .env: MODEL_FORMAT=openai, MODEL_BASE_URL=http://127.0.0.1:18789/v1 (контейнер работает в host-сети, это уже настроено в docker-compose.yml), MODEL_API_KEY=gateway-токен (gateway.auth.token из ~/.openclaw/openclaw.json), MODEL_NAME=openclaw/secretary-clf. Проверь мост тестовым запросом: в ответ должен прийти строгий JSON.
