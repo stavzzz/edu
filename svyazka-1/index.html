@@ -236,6 +236,9 @@
         •&nbsp;Удаляет только после подтверждения кнопками «Да» и&nbsp;«Нет» — случайно ничего не&nbsp;снесёт.<br>
         •&nbsp;Если встреч с&nbsp;одним названием несколько, даёт выбрать кнопкой с&nbsp;номером.<br>
         •&nbsp;Понимает массовые команды: «удали все встречи сегодня», «перенеси все встречи на&nbsp;неделю вперёд».<br>
+        •&nbsp;Ведёт повторяющиеся встречи: «йога каждый ПН и&nbsp;ПТ с&nbsp;11:00 на&nbsp;8&nbsp;недель» — серия одной фразой; чего не&nbsp;хватает (как часто, во&nbsp;сколько, докуда) — доспросит по&nbsp;одному.<br>
+        •&nbsp;При удалении и&nbsp;переносе серии спрашивает объём кнопками: только эту, эту и&nbsp;все следующие или всю серию.<br>
+        •&nbsp;Конфликты серии видит по&nbsp;датам и&nbsp;умеет «Пропустить эти дни» — серия встаёт, занятые даты остаются пустыми.<br>
         •&nbsp;Переспрашивает время, если вы&nbsp;его не&nbsp;назвали, вместо того чтобы придумать своё.<br>
         •&nbsp;Показывает карточку и&nbsp;ждёт подтверждения перед любым изменением.<br>
         •&nbsp;Напоминает перед встречей прямо в&nbsp;личку: за&nbsp;сутки, за&nbsp;час, за&nbsp;30, 10&nbsp;или 5&nbsp;минут — какие включите в&nbsp;настройках.<br>
@@ -251,6 +254,8 @@
           <tr><td>«Добавь во&nbsp;встречу описание и&nbsp;позови petya@mail.ru»</td><td>Дописывает описание и&nbsp;отправляет приглашение на&nbsp;почту</td></tr>
           <tr><td>«Переключи мой часовой пояс на&nbsp;Тбилиси»</td><td>Меняет зону календаря, дальше считает всё в&nbsp;ней</td></tr>
           <tr><td>«Какая у&nbsp;меня сейчас зона?»</td><td>Показывает зону и&nbsp;текущее время</td></tr>
+          <tr><td>«Йога каждый ПН и&nbsp;ПТ с&nbsp;11:00 до&nbsp;12:30 на&nbsp;8&nbsp;недель»</td><td>Ставит серию: карточка «еженедельно по&nbsp;ПН и&nbsp;ПТ · до&nbsp;… (16&nbsp;занятий)» с&nbsp;подтверждением</td></tr>
+          <tr><td>«Удали йогу»</td><td>Спрашивает объём: только эту / эту и&nbsp;все следующие / всю серию</td></tr>
         </table>
 
         <div class="note note--info"><span class="note__icon">📱</span><span><strong>А&nbsp;ещё у&nbsp;бота есть меню.</strong><br>Слева внизу в&nbsp;чате — синяя кнопка «Меню». Эти команды отрабатывают мгновенно, программным кодом, без обращения к&nbsp;модели — токены не&nbsp;тратятся.</span></div>
@@ -370,7 +375,7 @@
 — Вариант 1: подписка ChatGPT (Codex) через OpenClaw. Для этого варианта OpenClaw на сервере ОБЯЗАТЕЛЕН (он — мост к подписке, отдельно за токены платить не нужно).
 — Вариант 2: MiniMax по API-ключу. OpenClaw для этого варианта НЕ НУЖЕН вообще — бот ходит в API напрямую.
 
-Шаг 2. Проверь, что сервер жив и Docker установлен. Склонируй репозиторий, поставь зависимости и прогони тесты: npm install и npm test. Все 118 тестов должны быть зелёными.
+Шаг 2. Проверь, что сервер жив и Docker установлен. Склонируй репозиторий, поставь зависимости и прогони тесты: npm install и npm test. Все 190 тестов должны быть зелёными.
 
 Шаг 3. Настрой выбранную модель (образец — .env.example, подробности — README репозитория, раздел «Модель-классификатор»):
 — Вариант 1 (Codex через OpenClaw): (а) подключи мою подписку командой openclaw models auth login --provider openai — я залогинюсь в браузере; (б) в ~/.openclaw/openclaw.json включи gateway.http.endpoints.chatCompletions.enabled: true и добавь лёгкого агента-классификатора secretary-clf по готовому образцу из README; (в) скопируй docs/SOUL-classifier.md из репозитория в воркспейс этого агента как SOUL.md; (г) перезапусти gateway: openclaw gateway restart; (д) в .env: MODEL_FORMAT=openai, MODEL_BASE_URL=http://127.0.0.1:18789/v1 (контейнер работает в host-сети, это уже настроено в docker-compose.yml), MODEL_API_KEY=gateway-токен (gateway.auth.token из ~/.openclaw/openclaw.json), MODEL_NAME=openclaw/secretary-clf. Проверь мост тестовым запросом: в ответ должен прийти строгий JSON.
@@ -686,6 +691,30 @@
           <div class="item__body">
             <div class="item__text">«Удали все встречи сегодня»</div>
             <div class="item__hint">Секретарь показывает список всего за&nbsp;день и&nbsp;спрашивает подтверждение. Нажмите «Нет» — ничего не&nbsp;удалится. Так&nbsp;же работает «перенеси все встречи на&nbsp;неделю вперёд».</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-recur-create"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">«Поставь йогу каждый ПН и ПТ с 11:00 до 12:30 на 8 недель»</div>
+            <div class="item__hint">Секретарь показывает карточку серии: «Первая встреча в&nbsp;…», «еженедельно по&nbsp;ПН и&nbsp;ПТ · до&nbsp;… (16&nbsp;занятий)». После подтверждения серия появляется в&nbsp;Google Календаре.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-recur-ask"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">«Поставь повторяющуюся встречу Ретро» — без деталей</div>
+            <div class="item__hint">Секретарь доспрашивает по&nbsp;одному: как часто → во&nbsp;сколько → докуда повторять («до&nbsp;конца августа», «10&nbsp;раз» или «бессрочно»).</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-recur-scope"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">«Удали йогу» (серия) — потом то же с переносом: «перенеси йогу на 12:00»</div>
+            <div class="item__hint">Секретарь спрашивает объём кнопками: только эту / эту и&nbsp;все следующие / всю серию. «Удали серию йоги» — сработает сразу, без вопроса.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-recur-conflict"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Поставить серию поверх занятых дней</div>
+            <div class="item__hint">Секретарь перечисляет конфликтные даты и&nbsp;предлагает: поставить всё&nbsp;равно / пропустить эти дни (серия встаёт, занятые даты остаются пустыми) / отменить.</div>
           </div>
         </div>
         <div class="item" data-key="t-details"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
