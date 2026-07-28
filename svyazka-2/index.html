@@ -265,7 +265,7 @@
         <div class="item" data-key="pre-vps"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Сервер VPS с&nbsp;установленным OpenClaw</div>
-            <div class="item__hint">Тот&nbsp;же, что и&nbsp;в&nbsp;связке&nbsp;1. Здесь OpenClaw обязателен: он&nbsp;распознаёт вашу речь и&nbsp;зовёт нужный инструмент.</div>
+            <div class="item__hint">Тот&nbsp;же, что и&nbsp;в&nbsp;связке&nbsp;1. Здесь OpenClaw обязателен: он&nbsp;распознаёт вашу речь и&nbsp;зовёт нужный инструмент. Docker тоже нужен — бот живёт в&nbsp;двух контейнерах; на&nbsp;вашем сервере он&nbsp;уже стоит с&nbsp;курса.</div>
           </div>
         </div>
         <div class="item" data-key="pre-model"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
@@ -378,7 +378,7 @@
           </div>
         </div>
 
-        <div class="note note--info"><span class="note__icon">🧠</span><span><strong>Как устроен бот внутри.</strong><br><br>Сам бот — <strong>самописный код</strong> на&nbsp;вашем сервере. Модель нужна ровно для&nbsp;одного: понять вашу фразу и&nbsp;превратить её&nbsp;в&nbsp;команду. Все тексты, кнопки и&nbsp;бланки рисует код по&nbsp;готовым шаблонам, поэтому бот отвечает всегда одинаково и&nbsp;не&nbsp;фантазирует.<br><br>Между Telegram и&nbsp;ботом стоит <strong>привратник</strong>: он&nbsp;решает, кого пускать, перехватывает частые команды и&nbsp;отвечает на&nbsp;них мгновенно, не&nbsp;тратя токены. К&nbsp;модели уходит только живая речь.</span></div>
+        <div class="note note--info"><span class="note__icon">🧠</span><span><strong>Как устроен бот внутри.</strong><br><br>Сам бот — <strong>самописный код</strong> на&nbsp;вашем сервере. Модель нужна ровно для&nbsp;одного: понять вашу фразу и&nbsp;превратить её&nbsp;в&nbsp;команду. Все тексты, кнопки и&nbsp;бланки рисует код по&nbsp;готовым шаблонам, поэтому бот отвечает всегда одинаково и&nbsp;не&nbsp;фантазирует.<br><br>Между Telegram и&nbsp;ботом стоит <strong>привратник</strong>: он&nbsp;решает, кого пускать, перехватывает частые команды и&nbsp;отвечает на&nbsp;них мгновенно, не&nbsp;тратя токены. К&nbsp;модели уходит только живая речь.<br><br>Ещё две вещи бот делает сам, без вас:<br>•&nbsp;<strong>знакомится</strong> с&nbsp;новым человеком — просит настоящие имя и&nbsp;фамилию, потому что в&nbsp;профиле Telegram у&nbsp;людей бывает что угодно, а&nbsp;задачи вы&nbsp;ставите по&nbsp;имени;<br>•&nbsp;<strong>следит за&nbsp;доской</strong> — если карточку перетащили руками в&nbsp;Trello, исполнитель узнает об&nbsp;этом в&nbsp;течение полминуты.</span></div>
 
         <div class="prompt-block">
           <div class="prompt-block__title">📋 Промпт: собрать бота-менеджера (в Claude Code)</div>
@@ -397,15 +397,19 @@
 — Вариант 2: MiniMax по API-ключу.
 Спроси меня, какой вариант выбираю, и настрой его.
 
-Шаг 6. Запусти привратника и движок Trello как службы systemd, чтобы они поднимались сами после перезагрузки. Покажи мне статус обеих служб.
+Шаг 6. Подними бота в докере: docker compose up -d --build. Это два контейнера — привратник и движок Trello. Покажи мне docker compose ps: оба должны быть healthy. Проверяй именно порты 8003 и 8002 (ss -ltnp), а не «сервис запущен»: контейнер, падающий по кругу, между падениями выглядит работающим.
 
-Шаг 7. Прогони автотесты из репозитория и покажи результат. Все должны быть зелёными. Если что-то падает — чини, к следующему шагу не переходи.
+Шаг 7. Поставь сторожа: скопируй systemd/taskbot-watchdog.service и .timer в /etc/systemd/system, включи таймер. Он раз в 5 минут стучится в порты, поднимает упавшее и пишет мне в Telegram. Проверь разок вручную: останови движок, дождись сторожа, покажи, что он поднял его и прислал сообщение.
 
-Шаг 8. Я нажимаю Start у бота. Проведи меня по живой проверке: поставить задачу голосом, посмотреть её на доске Trello, отчитаться кнопкой от лица исполнителя, спросить «что по задачам».
+Шаг 8. Прогони автотесты из репозитория и покажи результат. Все должны быть зелёными. Если что-то падает — чини, к следующему шагу не переходи.
 
-Шаг 9. Проверь доступы: я приглашаю второго человека, ему приходит заявка, я одобряю кнопкой, бот просит у него почту и приглашает его на доску Trello. Убедись, что человек получил письмо и видит доску.
+Шаг 9. Я нажимаю Start у бота. Проведи меня по живой проверке: поставить задачу голосом, посмотреть её на доске Trello, отчитаться кнопкой от лица исполнителя, спросить «что по задачам».
 
-Шаг 10. Прогони со мной чек-лист приёмки docs/05-ТЕСТ-ПЛАН.md и покажи результат по каждому блоку.</div>
+Шаг 10. Проверь доступы целиком: я приглашаю второго человека, ему приходит заявка, я одобряю кнопкой. Дальше бот сам просит у него настоящие имя и фамилию (в профиле Telegram у людей бывает что угодно, а задачи ищутся по имени), потом почту — и зовёт его на доску Trello. Убедись, что имя записалось в реестр, письмо пришло и доска у человека открывается.
+
+Шаг 11. Проверь, что бот замечает ручные перемещения: я перетаскиваю карточку на доске Trello из колонки в колонку, а исполнителю в течение полминуты приходит уведомление. И наоборот: когда карточку двигает сам бот по кнопке, второго сообщения быть не должно.
+
+Шаг 12. Прогони со мной чек-лист приёмки docs/05-ТЕСТ-ПЛАН.md и покажи результат по каждому блоку.</div>
           <button class="btn-copy" onclick="copyBlock('promptMain', this)">📋 Копировать промпт</button>
         </div>
 
@@ -448,6 +452,12 @@
             <div class="item__hint">Карточка на&nbsp;доске переезжает В&nbsp;ПРОЦЕССЕ, затем СДЕЛАНО. Статус в&nbsp;сообщении меняется на&nbsp;месте, новых сообщений не&nbsp;плодится.</div>
           </div>
         </div>
+        <div class="item" data-key="t-drag"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Перетащить карточку руками на доске Trello</div>
+            <div class="item__hint">Бот читает доску раз в&nbsp;полминуты: исполнителю придёт уведомление о&nbsp;новом статусе — тем&nbsp;же бланком, что и&nbsp;от&nbsp;кнопок. А&nbsp;когда карточку двигает сам бот, второго сообщения не&nbsp;приходит.</div>
+          </div>
+        </div>
         <div class="item" data-key="t-ask"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">🎙 «Что по задачам»</div>
@@ -463,13 +473,13 @@
         <div class="item" data-key="t-invite"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Позвать второго человека</div>
-            <div class="item__hint">Он&nbsp;пишет боту → вам приходит заявка с&nbsp;кнопками → жмёте «Одобрить» → бот просит у&nbsp;него почту → приглашает на&nbsp;доску. Проверьте, что письмо пришло и&nbsp;доска у&nbsp;него открывается.</div>
+            <div class="item__hint">Он&nbsp;пишет боту → вам приходит заявка с&nbsp;кнопками → жмёте «Одобрить» → бот сам знакомится: просит <strong>имя и&nbsp;фамилию</strong>, потом почту → зовёт на&nbsp;доску. Проверьте, что письмо пришло и&nbsp;доска у&nbsp;него открывается.</div>
           </div>
         </div>
         <div class="item" data-key="t-assign"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">🎙 Поставить задачу этому человеку по имени</div>
-            <div class="item__hint">«Поставь Ивану…» — бот опознаёт его по&nbsp;профилю Telegram. Ему приходит карточка со&nbsp;ссылкой на&nbsp;Trello.</div>
+            <div class="item__hint">«Поставь Ивану…» — бот узнаёт его по&nbsp;тому имени, которым тот назвался. Ему приходит карточка со&nbsp;ссылкой на&nbsp;Trello и&nbsp;кнопками.</div>
           </div>
         </div>
         <div class="item" data-key="t-fail"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
@@ -481,7 +491,7 @@
         <div class="item" data-key="t-team"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Команда /team</div>
-            <div class="item__hint">Список людей, у&nbsp;каждого число открытых задач и&nbsp;кнопка «Забрать доступ».</div>
+            <div class="item__hint">Список людей, у&nbsp;каждого число открытых задач и&nbsp;кнопки «Изменить имя» и&nbsp;«Забрать доступ». Кто ещё не&nbsp;назвался — с&nbsp;пометкой «не&nbsp;представился»: жмёте «Вписать имя» и&nbsp;наговариваете имя за&nbsp;него.</div>
           </div>
         </div>
         <div class="item" data-key="t-overdue"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
@@ -504,11 +514,14 @@
       <div class="section__card">
         <table class="data-table">
           <tr><th>Что видите</th><th>Что делать</th></tr>
-          <tr><td>Бот не&nbsp;отвечает вообще</td><td>Попросите Claude&nbsp;Code показать статус служб и&nbsp;последние строки журнала</td></tr>
+          <tr><td>Бот не&nbsp;отвечает вообще</td><td>Попросите Claude&nbsp;Code проверить <strong>порты</strong> 8003 и&nbsp;8002 и&nbsp;показать последние строки журнала: <code>docker compose ps</code> и&nbsp;<code>docker compose logs</code></td></tr>
+          <tr><td>Кнопки и&nbsp;списки работают, а&nbsp;на&nbsp;задачу бот молчит</td><td>Упал движок Trello — привратник-то живой, он&nbsp;и&nbsp;рисует кнопки. Проверьте порт&nbsp;8002 и&nbsp;поднимите движок; сторож сделает это сам в&nbsp;течение пяти минут</td></tr>
+          <tr><td>После пересборки перестало запускаться</td><td>Почти всегда — обновилась внешняя библиотека. Версии в&nbsp;<code>requirements.txt</code> закреплены намеренно, не&nbsp;снимайте верхнюю границу «чтобы посвежее»</td></tr>
           <tr><td>Задачи не&nbsp;появляются на&nbsp;доске</td><td>Проверьте ключ и&nbsp;токен Trello в&nbsp;.env и&nbsp;что доска та&nbsp;самая</td></tr>
           <tr><td>«Не&nbsp;нашёл такую колонку»</td><td>Названия колонок должны совпадать буква в&nbsp;букву: БЭКЛОГ, СДЕЛАТЬ, В&nbsp;ПРОЦЕССЕ, СДЕЛАНО, ОТМЕНА</td></tr>
           <tr><td>Доступ к&nbsp;доске внезапно пропал</td><td>Токен Trello был выдан не&nbsp;навсегда. Выпустите заново по&nbsp;ссылке из&nbsp;блока&nbsp;03 — с&nbsp;кусочком expiration=never</td></tr>
-          <tr><td>Бот путает имена людей</td><td>В&nbsp;профиле Telegram должны стоять настоящие имя и&nbsp;фамилия и&nbsp;быть заполнен юзернейм</td></tr>
+          <tr><td>Бот не&nbsp;находит человека по&nbsp;имени</td><td>Откройте <code>/team</code>: если у&nbsp;него пометка «не&nbsp;представился», нажмите «Вписать имя» и&nbsp;продиктуйте имя и&nbsp;фамилию за&nbsp;него</td></tr>
+          <tr><td>Человек не&nbsp;отвечает на&nbsp;просьбу назваться</td><td>Так бывает — задачи ему при&nbsp;этом приходят как обычно. Бот напомнит сам раз в&nbsp;10&nbsp;минут, а&nbsp;вы&nbsp;можете вписать имя из&nbsp;<code>/team</code></td></tr>
           <tr><td>Голосовые не&nbsp;понимает</td><td>Проверьте, что ключ Groq вписан в&nbsp;.env</td></tr>
           <tr><td>Долго думает над&nbsp;командой</td><td>Так и&nbsp;должно быть: разбор живой речи занимает 15–25&nbsp;секунд. Быстрые ответы даёт код</td></tr>
         </table>
