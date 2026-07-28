@@ -283,13 +283,73 @@
         </div>
 
         <div class="note note--green"><span class="note__icon">✅</span><span><strong>Это настроим дальше по&nbsp;чек-листу, заранее ничего делать не&nbsp;нужно:</strong><br>
-        •&nbsp;<strong>Аккаунт Trello и&nbsp;доска задач</strong> <span style="opacity:.6">(блок&nbsp;03)</span><br>
-        •&nbsp;<strong>Telegram-бот</strong> — заводим нового, отдельно под&nbsp;менеджера <span style="opacity:.6">(блок&nbsp;04, по&nbsp;промпту)</span></span></div>
+        •&nbsp;<strong>Аккаунт Trello и&nbsp;доска задач</strong> <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
+        •&nbsp;<strong>Telegram-бот</strong> — заводим нового, отдельно под&nbsp;менеджера <span style="opacity:.6">(блок&nbsp;03, по&nbsp;промпту)</span></span></div>
       </div>
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">03</div><div class="section__title">Trello: доска и ключи</div></div>
+      <div class="section__header"><div class="section__num">03</div><div class="section__title">Репозиторий и главный промпт</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">📦</span><span>Весь код и&nbsp;инструкция лежат в&nbsp;репозитории. Вы&nbsp;отдаёте ссылку и&nbsp;промпт в&nbsp;Claude&nbsp;Code, он&nbsp;делает всё по&nbsp;инструкции и&nbsp;ведёт вас за&nbsp;руку.</span></div>
+
+        <div class="item" data-key="repo-open"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Открыть репозиторий связки</div>
+            <div class="item__hint">Ссылка понадобится в&nbsp;промпте ниже.</div>
+            <a href="https://github.com/stavzzz/svyazka-2" target="_blank" class="item__link" onclick="event.stopPropagation()">Репозиторий связки 2</a>
+          </div>
+        </div>
+
+        <div class="note note--info"><span class="note__icon">🧠</span><span><strong>Как устроен бот внутри.</strong><br><br>Сам бот — <strong>самописный код</strong> на&nbsp;вашем сервере. Модель нужна ровно для&nbsp;одного: понять вашу фразу и&nbsp;превратить её&nbsp;в&nbsp;команду. Все тексты, кнопки и&nbsp;бланки рисует код по&nbsp;готовым шаблонам, поэтому бот отвечает всегда одинаково и&nbsp;не&nbsp;фантазирует.<br><br>Между Telegram и&nbsp;ботом стоит <strong>привратник</strong>: он&nbsp;решает, кого пускать, перехватывает частые команды и&nbsp;отвечает на&nbsp;них мгновенно, не&nbsp;тратя токены. К&nbsp;модели уходит только живая речь.<br><br>Ещё две вещи бот делает сам, без вас:<br>•&nbsp;<strong>знакомится</strong> с&nbsp;новым человеком — просит настоящие имя и&nbsp;фамилию, потому что в&nbsp;профиле Telegram у&nbsp;людей бывает что угодно, а&nbsp;задачи вы&nbsp;ставите по&nbsp;имени;<br>•&nbsp;<strong>следит за&nbsp;доской</strong> — если карточку перетащили руками в&nbsp;Trello, исполнитель узнает об&nbsp;этом в&nbsp;течение полминуты.</span></div>
+
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>Сначала пройдите блок&nbsp;04 и&nbsp;заведите доску Trello с&nbsp;ключами. Без них промпт остановится на&nbsp;третьем шаге.</span></div>
+
+        <div class="prompt-block">
+          <div class="prompt-block__title">📋 Промпт: собрать бота-менеджера (в Claude Code)</div>
+          <div class="prompt-block__text" id="promptMain">Ты разворачиваешь мне бота-менеджера задач в Telegram. Готовый код, тесты и документация лежат здесь: https://github.com/stavzzz/svyazka-2 — с нуля ничего не пиши, работай с этим репозиторием. Веди меня по шагам, после каждого шага показывай результат и жди подтверждения.
+
+Шаг 1. Проверь, что сервер жив, Python 3 и OpenClaw на месте. Склонируй репозиторий в /root/taskbot, прочитай docs/ целиком — там ТЗ, роли, тест-план и инструкция агента.
+
+Шаг 2. Заведи Telegram-бота: нужен НОВЫЙ бот отдельно под менеджера задач, даже если у меня уже есть другие. Продиктуй, что нажимать в @BotFather (/newbot, имя, username), забери у меня токен. Затем подскажи написать @userinfobot и забери мой Telegram id — это будет GK_REVIEWER, то есть я, руководитель.
+
+Шаг 3. Спроси у меня ключ Trello, токен Trello и адрес доски — я их уже сделал руками (блок 04). Из адреса вида trello.com/b/XXXXXXXX/название сам достань идентификатор доски. Проверь связку запросом к Trello API: убедись, что доска открывается и что на ней ровно пять колонок — БЭКЛОГ, СДЕЛАТЬ, В ПРОЦЕССЕ, СДЕЛАНО, ОТМЕНА. Если какой-то колонки нет или она названа иначе — скажи мне, какую именно поправить, дальше не иди.
+
+Шаг 4. Заполни .env по образцу .env.example: токен бота, мой id, ключ и токен Trello, идентификатор доски, ключ Groq для голосовых (спроси у меня). Файл .env в git не коммить.
+
+Шаг 5. Подключи модель-классификатор в OpenClaw — это мозг, который разбирает мою речь:
+— Вариант 1: подписка ChatGPT через OpenClaw. Заведи отдельного лёгкого агента без лишних инструментов, скопируй ему инструкцию из docs/AGENTS-instrukcija-agenta.md, поставь уровень рассуждений high — здесь важно правильно разбирать имена и падежи («Ивану», «Анне»).
+— Вариант 2: MiniMax по API-ключу.
+Спроси меня, какой вариант выбираю, и настрой его.
+
+Шаг 6. Подними бота в докере: docker compose up -d --build. Это два контейнера — привратник и движок Trello. Покажи мне docker compose ps: оба должны быть healthy. Проверяй именно порты 8003 и 8002 (ss -ltnp), а не «сервис запущен»: контейнер, падающий по кругу, между падениями выглядит работающим.
+
+Шаг 7. Поставь сторожа: скопируй systemd/taskbot-watchdog.service и .timer в /etc/systemd/system, включи таймер. Он раз в 5 минут стучится в порты, поднимает упавшее и пишет мне в Telegram. Проверь разок вручную: останови движок, дождись сторожа, покажи, что он поднял его и прислал сообщение.
+
+Шаг 8. Прогони автотесты из репозитория и покажи результат. Все должны быть зелёными. Если что-то падает — чини, к следующему шагу не переходи.
+
+Шаг 9. Я нажимаю Start у бота. Проведи меня по живой проверке: поставить задачу голосом, посмотреть её на доске Trello, отчитаться кнопкой от лица исполнителя, спросить «что по задачам».
+
+Шаг 10. Проверь доступы целиком: я приглашаю второго человека, ему приходит заявка, я одобряю кнопкой. Дальше бот сам просит у него настоящие имя и фамилию (в профиле Telegram у людей бывает что угодно, а задачи ищутся по имени), потом почту — и зовёт его на доску Trello. Убедись, что имя записалось в реестр, письмо пришло и доска у человека открывается.
+
+Шаг 11. Проверь, что бот замечает ручные перемещения: я перетаскиваю карточку на доске Trello из колонки в колонку, а исполнителю в течение полминуты приходит уведомление. И наоборот: когда карточку двигает сам бот по кнопке, второго сообщения быть не должно.
+
+Шаг 12. Прогони со мной чек-лист приёмки docs/05-ТЕСТ-ПЛАН.md и покажи результат по каждому блоку.</div>
+          <button class="btn-copy" onclick="copyBlock('promptMain', this)">📋 Копировать промпт</button>
+        </div>
+
+        <div class="item" data-key="prompt-main-done"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Отправить промпт в Claude Code</div>
+            <div class="item__hint">Скопируйте промпт целиком и&nbsp;вставьте в&nbsp;Claude&nbsp;Code. Дальше отвечайте на&nbsp;его вопросы и&nbsp;подтверждайте шаги.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">04</div><div class="section__title">Trello: доска и ключи</div></div>
       <div class="section__card">
 
         <div class="note note--info"><span class="note__icon">📋</span><span>Trello — бесплатная доска с&nbsp;карточками. Здесь будут жить задачи. Всё, что нужно на&nbsp;бесплатном тарифе, — до&nbsp;10&nbsp;человек в&nbsp;команде и&nbsp;до&nbsp;10&nbsp;досок, этого хватает с&nbsp;запасом.</span></div>
@@ -361,65 +421,7 @@
         •&nbsp;ключ (32&nbsp;символа)<br>
         •&nbsp;токен (длинный, начинается с&nbsp;ATTA)<br>
         •&nbsp;адрес доски<br><br>
-        Они понадобятся в&nbsp;следующем блоке. В&nbsp;чат никому не&nbsp;пересылайте.</span></div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section__header"><div class="section__num">04</div><div class="section__title">Репозиторий и главный промпт</div></div>
-      <div class="section__card">
-
-        <div class="note note--info"><span class="note__icon">📦</span><span>Весь код и&nbsp;инструкция лежат в&nbsp;репозитории. Вы&nbsp;отдаёте ссылку и&nbsp;промпт в&nbsp;Claude&nbsp;Code, он&nbsp;делает всё по&nbsp;инструкции и&nbsp;ведёт вас за&nbsp;руку.</span></div>
-
-        <div class="item" data-key="repo-open"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Открыть репозиторий связки</div>
-            <div class="item__hint">Ссылка понадобится в&nbsp;промпте ниже.</div>
-            <a href="https://github.com/stavzzz/svyazka-2" target="_blank" class="item__link" onclick="event.stopPropagation()">Репозиторий связки 2</a>
-          </div>
-        </div>
-
-        <div class="note note--info"><span class="note__icon">🧠</span><span><strong>Как устроен бот внутри.</strong><br><br>Сам бот — <strong>самописный код</strong> на&nbsp;вашем сервере. Модель нужна ровно для&nbsp;одного: понять вашу фразу и&nbsp;превратить её&nbsp;в&nbsp;команду. Все тексты, кнопки и&nbsp;бланки рисует код по&nbsp;готовым шаблонам, поэтому бот отвечает всегда одинаково и&nbsp;не&nbsp;фантазирует.<br><br>Между Telegram и&nbsp;ботом стоит <strong>привратник</strong>: он&nbsp;решает, кого пускать, перехватывает частые команды и&nbsp;отвечает на&nbsp;них мгновенно, не&nbsp;тратя токены. К&nbsp;модели уходит только живая речь.<br><br>Ещё две вещи бот делает сам, без вас:<br>•&nbsp;<strong>знакомится</strong> с&nbsp;новым человеком — просит настоящие имя и&nbsp;фамилию, потому что в&nbsp;профиле Telegram у&nbsp;людей бывает что угодно, а&nbsp;задачи вы&nbsp;ставите по&nbsp;имени;<br>•&nbsp;<strong>следит за&nbsp;доской</strong> — если карточку перетащили руками в&nbsp;Trello, исполнитель узнает об&nbsp;этом в&nbsp;течение полминуты.</span></div>
-
-        <div class="prompt-block">
-          <div class="prompt-block__title">📋 Промпт: собрать бота-менеджера (в Claude Code)</div>
-          <div class="prompt-block__text" id="promptMain">Ты разворачиваешь мне бота-менеджера задач в Telegram. Готовый код, тесты и документация лежат здесь: https://github.com/stavzzz/svyazka-2 — с нуля ничего не пиши, работай с этим репозиторием. Веди меня по шагам, после каждого шага показывай результат и жди подтверждения.
-
-Шаг 1. Проверь, что сервер жив, Python 3 и OpenClaw на месте. Склонируй репозиторий в /root/taskbot, прочитай docs/ целиком — там ТЗ, роли, тест-план и инструкция агента.
-
-Шаг 2. Заведи Telegram-бота: нужен НОВЫЙ бот отдельно под менеджера задач, даже если у меня уже есть другие. Продиктуй, что нажимать в @BotFather (/newbot, имя, username), забери у меня токен. Затем подскажи написать @userinfobot и забери мой Telegram id — это будет GK_REVIEWER, то есть я, руководитель.
-
-Шаг 3. Спроси у меня ключ Trello, токен Trello и адрес доски. Из адреса вида trello.com/b/XXXXXXXX/название сам достань идентификатор доски. Проверь связку запросом к Trello API: убедись, что доска открывается и что на ней ровно пять колонок — БЭКЛОГ, СДЕЛАТЬ, В ПРОЦЕССЕ, СДЕЛАНО, ОТМЕНА. Если какой-то колонки нет или она названа иначе — скажи мне, какую именно поправить, дальше не иди.
-
-Шаг 4. Заполни .env по образцу .env.example: токен бота, мой id, ключ и токен Trello, идентификатор доски, ключ Groq для голосовых (спроси у меня). Файл .env в git не коммить.
-
-Шаг 5. Подключи модель-классификатор в OpenClaw — это мозг, который разбирает мою речь:
-— Вариант 1: подписка ChatGPT через OpenClaw. Заведи отдельного лёгкого агента без лишних инструментов, скопируй ему инструкцию из docs/AGENTS-instrukcija-agenta.md, поставь уровень рассуждений high — здесь важно правильно разбирать имена и падежи («Ивану», «Анне»).
-— Вариант 2: MiniMax по API-ключу.
-Спроси меня, какой вариант выбираю, и настрой его.
-
-Шаг 6. Подними бота в докере: docker compose up -d --build. Это два контейнера — привратник и движок Trello. Покажи мне docker compose ps: оба должны быть healthy. Проверяй именно порты 8003 и 8002 (ss -ltnp), а не «сервис запущен»: контейнер, падающий по кругу, между падениями выглядит работающим.
-
-Шаг 7. Поставь сторожа: скопируй systemd/taskbot-watchdog.service и .timer в /etc/systemd/system, включи таймер. Он раз в 5 минут стучится в порты, поднимает упавшее и пишет мне в Telegram. Проверь разок вручную: останови движок, дождись сторожа, покажи, что он поднял его и прислал сообщение.
-
-Шаг 8. Прогони автотесты из репозитория и покажи результат. Все должны быть зелёными. Если что-то падает — чини, к следующему шагу не переходи.
-
-Шаг 9. Я нажимаю Start у бота. Проведи меня по живой проверке: поставить задачу голосом, посмотреть её на доске Trello, отчитаться кнопкой от лица исполнителя, спросить «что по задачам».
-
-Шаг 10. Проверь доступы целиком: я приглашаю второго человека, ему приходит заявка, я одобряю кнопкой. Дальше бот сам просит у него настоящие имя и фамилию (в профиле Telegram у людей бывает что угодно, а задачи ищутся по имени), потом почту — и зовёт его на доску Trello. Убедись, что имя записалось в реестр, письмо пришло и доска у человека открывается.
-
-Шаг 11. Проверь, что бот замечает ручные перемещения: я перетаскиваю карточку на доске Trello из колонки в колонку, а исполнителю в течение полминуты приходит уведомление. И наоборот: когда карточку двигает сам бот по кнопке, второго сообщения быть не должно.
-
-Шаг 12. Прогони со мной чек-лист приёмки docs/05-ТЕСТ-ПЛАН.md и покажи результат по каждому блоку.</div>
-          <button class="btn-copy" onclick="copyBlock('promptMain', this)">📋 Копировать промпт</button>
-        </div>
-
-        <div class="item" data-key="prompt-main-done"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Отправить промпт в Claude Code</div>
-            <div class="item__hint">Скопируйте промпт целиком и&nbsp;вставьте в&nbsp;Claude&nbsp;Code. Дальше отвечайте на&nbsp;его вопросы и&nbsp;подтверждайте шаги.</div>
-          </div>
-        </div>
+        Их спросит Claude&nbsp;Code на&nbsp;третьем шаге промпта из&nbsp;блока&nbsp;03. В&nbsp;чат никому не&nbsp;пересылайте.</span></div>
       </div>
     </div>
 
@@ -520,7 +522,7 @@
           <tr><td>После пересборки перестало запускаться</td><td>Почти всегда — обновилась внешняя библиотека. Версии в&nbsp;<code>requirements.txt</code> закреплены намеренно, не&nbsp;снимайте верхнюю границу «чтобы посвежее»</td></tr>
           <tr><td>Задачи не&nbsp;появляются на&nbsp;доске</td><td>Проверьте ключ и&nbsp;токен Trello в&nbsp;.env и&nbsp;что доска та&nbsp;самая</td></tr>
           <tr><td>«Не&nbsp;нашёл такую колонку»</td><td>Названия колонок должны совпадать буква в&nbsp;букву: БЭКЛОГ, СДЕЛАТЬ, В&nbsp;ПРОЦЕССЕ, СДЕЛАНО, ОТМЕНА</td></tr>
-          <tr><td>Доступ к&nbsp;доске внезапно пропал</td><td>Токен Trello был выдан не&nbsp;навсегда. Выпустите заново по&nbsp;ссылке из&nbsp;блока&nbsp;03 — с&nbsp;кусочком expiration=never</td></tr>
+          <tr><td>Доступ к&nbsp;доске внезапно пропал</td><td>Токен Trello был выдан не&nbsp;навсегда. Выпустите заново по&nbsp;ссылке из&nbsp;блока&nbsp;04 — с&nbsp;кусочком expiration=never</td></tr>
           <tr><td>Бот не&nbsp;находит человека по&nbsp;имени</td><td>Откройте <code>/team</code>: если у&nbsp;него пометка «не&nbsp;представился», нажмите «Вписать имя» и&nbsp;продиктуйте имя и&nbsp;фамилию за&nbsp;него</td></tr>
           <tr><td>Человек не&nbsp;отвечает на&nbsp;просьбу назваться</td><td>Так бывает — задачи ему при&nbsp;этом приходят как обычно. Бот напомнит сам раз в&nbsp;10&nbsp;минут, а&nbsp;вы&nbsp;можете вписать имя из&nbsp;<code>/team</code></td></tr>
           <tr><td>Голосовые не&nbsp;понимает</td><td>Проверьте, что ключ Groq вписан в&nbsp;.env</td></tr>
