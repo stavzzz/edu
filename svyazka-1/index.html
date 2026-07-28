@@ -290,28 +290,10 @@
             <div class="item__hint">Нужен для&nbsp;доступа к&nbsp;зарубежным сервисам.</div>
           </div>
         </div>
-        <div class="item" data-key="pre-mail"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Почта для регистраций</div>
-            <div class="item__hint">Gmail или другая, к&nbsp;которой у&nbsp;вас есть доступ.</div>
-          </div>
-        </div>
-        <div class="item" data-key="pre-phone"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Зарубежный номер телефона</div>
-            <div class="item__hint">Для&nbsp;приёма СМС при&nbsp;регистрации в&nbsp;Claude.</div>
-          </div>
-        </div>
-        <div class="item" data-key="pre-card"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Зарубежная карта</div>
-            <div class="item__hint">Для&nbsp;оплаты подписки Claude.</div>
-          </div>
-        </div>
         <div class="item" data-key="pre-cc"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Claude Code</div>
-            <div class="item__hint">Установлен и&nbsp;запускается на&nbsp;вашем компьютере.</div>
+            <div class="item__hint">Установлен и&nbsp;запускается на&nbsp;вашем компьютере. Для&nbsp;регистрации нужны почта, зарубежный номер для&nbsp;СМС и&nbsp;зарубежная карта — вы&nbsp;это уже проходили на&nbsp;курсе.</div>
           </div>
         </div>
         <div class="item" data-key="pre-vps"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
@@ -326,20 +308,9 @@
             <div class="item__hint">Вариант&nbsp;1 — подписка ChatGPT (Codex) через OpenClaw: отдельно за&nbsp;токены не&nbsp;платите. Вариант&nbsp;2 — API-ключ MiniMax: работает напрямую, без&nbsp;OpenClaw.</div>
           </div>
         </div>
-        <div class="item" data-key="pre-bot"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Telegram-бот через @BotFather</div>
-            <div class="item__hint">Бот создан и&nbsp;отвечает вам в&nbsp;личке.</div>
-          </div>
-        </div>
-        <div class="item" data-key="pre-voice"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Groq Whisper для распознавания голосовых</div>
-            <div class="item__hint">Отправьте боту голосовое: он&nbsp;должен понять текст.</div>
-          </div>
-        </div>
 
         <div class="note note--green"><span class="note__icon">✅</span><span><strong>Это настроим дальше по&nbsp;чек-листу, заранее ничего делать не&nbsp;нужно:</strong><br>
+        •&nbsp;<strong>Telegram-бот через @BotFather</strong> — заводим нового, отдельно под&nbsp;секретаря<br>
         •&nbsp;Google&nbsp;OAuth и&nbsp;Calendar&nbsp;API<br>
         •&nbsp;Workspace&nbsp;MCP<br>
         •&nbsp;Кроны в&nbsp;OpenClaw<br>
@@ -384,7 +355,11 @@
 — Вариант 1 (Codex через OpenClaw): (а) подключи мою подписку командой openclaw models auth login --provider openai — я залогинюсь в браузере; (б) в ~/.openclaw/openclaw.json включи gateway.http.endpoints.chatCompletions.enabled: true и добавь лёгкого агента-классификатора secretary-clf по готовому образцу из README; (в) скопируй docs/SOUL-classifier.md из репозитория в воркспейс этого агента как SOUL.md; (г) перезапусти gateway: openclaw gateway restart; (д) в .env: MODEL_FORMAT=openai, MODEL_BASE_URL=http://127.0.0.1:18789/v1 (контейнер работает в host-сети, это уже настроено в docker-compose.yml), MODEL_API_KEY=gateway-токен (gateway.auth.token из ~/.openclaw/openclaw.json), MODEL_NAME=openclaw/secretary-clf. Проверь мост тестовым запросом: в ответ должен прийти строгий JSON.
 — Вариант 2 (MiniMax): в .env MODEL_FORMAT=minimax плюс мой API-ключ. OpenClaw не трогай.
 
-Шаг 4. Заполни остальной .env: токен бота от BotFather, мой Telegram id (OWNER_CHAT_ID — узнать у @userinfobot), ключ Groq для голосовых.
+Шаг 4. Заведи Telegram-бота и распознавание голоса, веди меня по шагам:
+— Бот: нужен НОВЫЙ бот отдельно под секретаря, даже если у меня уже есть другие боты. Продиктуй, что нажимать в @BotFather (/newbot, имя, username), и забери у меня токен.
+— Мой Telegram id: подскажи написать @userinfobot и пришли мне, что оттуда скопировать (OWNER_CHAT_ID).
+— Голосовые: ключ Groq у меня уже есть с курса — попроси его и впиши. Если я его потерял, проведи меня по шагам на console.groq.com (вход, раздел API Keys, создать ключ) — он бесплатный.
+Затем впиши всё это в .env.
 
 Шаг 5. Подключи Google Календарь: возьми креды (client_id, client_secret, refresh_token) — например, из файла кредов Google Workspace MCP — и пропиши путь к этому файлу в docker-compose.yml. OAuth Client ID я уже создал и Calendar API включил (блок 04).
 
@@ -749,7 +724,7 @@
           <tr><th>Что видите</th><th>Что делать</th></tr>
           <tr><td>Секретарь не&nbsp;видит календарь</td><td>Попросите Claude&nbsp;Code проверить подключение календаря и&nbsp;переподключить его</td></tr>
           <tr><td>Работал неделю и&nbsp;перестал</td><td>Приложение осталось в&nbsp;режиме Testing. Переведите в&nbsp;Production и&nbsp;войдите в&nbsp;Google заново</td></tr>
-          <tr><td>Голосовые не&nbsp;понимает</td><td>Вернитесь к&nbsp;чек-листу урока&nbsp;3 и&nbsp;проверьте распознавание речи</td></tr>
+          <tr><td>Голосовые не&nbsp;понимает</td><td>Проверьте, что ключ Groq вписан в&nbsp;.env</td></tr>
           <tr><td>Встречи встают не&nbsp;в&nbsp;то&nbsp;время</td><td>Не&nbsp;задан часовой пояс. Попросите дописать его в&nbsp;правила секретаря</td></tr>
           <tr><td>Ставит встречи молча, без подтверждения</td><td>Потерялось правило подтверждения. Попросите вернуть его в&nbsp;скилл</td></tr>
           <tr><td>Zoom не&nbsp;создаёт конференции</td><td>Проверьте, что приложение активировано и&nbsp;выданы права на&nbsp;встречи</td></tr>
