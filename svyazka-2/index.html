@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ИИ-ВИЗАЦИЯ — Связка 2: Бот-менеджер задач в Telegram</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0a0a0f;
+    --bg-card: #12121a;
+    --bg-card-hover: #181825;
+    --border: #1e1e2e;
+    --border-accent: #2a2a3e;
+    --text-primary: #e8e6f0;
+    --text-secondary: #8b879e;
+    --text-muted: #5a5670;
+    --accent: #7c5bf5;
+    --accent-glow: #9d7cff;
+    --accent-soft: rgba(124, 91, 245, 0.12);
+    --green: #34d399;
+    --green-glow: #6ee7b7;
+    --green-soft: rgba(52, 211, 153, 0.1);
+    --amber: #fbbf24;
+    --amber-soft: rgba(251, 191, 36, 0.1);
+    --red-soft: rgba(248, 113, 113, 0.1);
+    --red: #f87171;
+    --radius: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Onest', sans-serif; background: var(--bg-deep); color: var(--text-primary); line-height: 1.65; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: radial-gradient(circle at 20% 20%, rgba(124,91,245,0.04) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(52,211,153,0.03) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+  .wrapper { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  /* Шапка */
+  .header { text-align: center; margin-bottom: 48px; }
+  .header__badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-glow); background: var(--accent-soft); border: 1px solid rgba(124,91,245,0.2); padding: 6px 16px; border-radius: 100px; margin-bottom: 24px; animation: fadeDown .6s ease both; }
+  .header__title { font-size: clamp(28px,6vw,40px); font-weight: 800; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 12px; animation: fadeDown .6s ease .1s both; }
+  .header__title span { background: linear-gradient(135deg, var(--accent-glow), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .header__topics { list-style:none; display:flex; flex-direction:column; gap:7px; max-width:460px; margin:16px auto 0; animation:fadeDown .6s ease .3s both; }
+  .header__topics li { font-size:13.5px; color:var(--text-secondary); display:flex; align-items:flex-start; gap:8px; text-align:left; }
+  .header__topics li::before { content:'→'; color:var(--accent); flex-shrink:0; font-family:'JetBrains Mono',monospace; font-size:11px; margin-top:3px; }
+  .header__subtitle { font-size: 15px; color: var(--text-secondary); max-width: 500px; margin: 0 auto; animation: fadeDown .6s ease .2s both; }
+
+  /* Прогресс-бар (sticky) */
+  .progress-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 36px; position: sticky; top: 12px; z-index: 10; backdrop-filter: blur(16px); background: rgba(18,18,26,0.92); animation: fadeDown .6s ease .3s both; }
+  .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .progress-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-family: 'JetBrains Mono', monospace; }
+  .progress-count { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: var(--accent-glow); }
+  .progress-bar { width: 100%; height: 8px; background: var(--border); border-radius: 100px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 100px; transition: width .5s cubic-bezier(.34,1.56,.64,1); width: 0%; }
+
+  /* Секции */
+  .section { margin-bottom: 28px; }
+  .section__header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding-left: 2px; }
+  .section__num { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: var(--accent); background: var(--accent-soft); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; flex-shrink: 0; }
+  .section__title { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
+  .section__card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color .3s; }
+  .section__card:hover { border-color: var(--border-accent); }
+
+  /* Пункт чек-листа */
+  .item { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--border); transition: background .2s; cursor: pointer; user-select: none; }
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: var(--bg-card-hover); }
+  .item.checked .item__text { color: var(--text-muted); text-decoration: line-through; }
+  .item.checked .item__link { opacity: 0.4; }
+  .item__check { position: relative; width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px; }
+  .item__check input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 2; }
+  .item__check .cm { width: 22px; height: 22px; border: 2px solid var(--border-accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: all .25s cubic-bezier(.34,1.56,.64,1); }
+  .item__check .cm svg { width: 12px; height: 12px; opacity: 0; transform: scale(0); transition: all .25s cubic-bezier(.34,1.56,.64,1); }
+  .item__check input:checked + .cm { background: var(--green); border-color: var(--green); }
+  .item__check input:checked + .cm svg { opacity: 1; transform: scale(1); }
+  .item__body { flex: 1; min-width: 0; }
+  .item__text { font-size: 14.5px; font-weight: 500; color: var(--text-primary); transition: all .3s; }
+  .item__hint { font-size: 13px; color: var(--text-secondary); margin-top: 4px; line-height: 1.6; }
+  .item__hint a { color: var(--accent-glow); text-decoration: none; font-weight: 600; }
+  .item__hint a:hover { text-decoration: underline; }
+  .item__hint strong { color: var(--text-primary); }
+  .item__link { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--accent-glow); text-decoration: none; margin-top: 5px; transition: all .2s; word-break: break-all; }
+  .item__link:hover { color: #bba4ff; text-decoration: underline; }
+  .item__link svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .lnk { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--accent-glow); text-decoration: none; word-break: break-all; }
+  .lnk:hover { color: #bba4ff; text-decoration: underline; }
+
+  /* Заметки */
+  .note { display: flex; align-items: flex-start; gap: 10px; padding: 14px 20px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; border-bottom: 1px solid var(--border); }
+  .note:last-child { border-bottom: none; }
+  .note--warn { background: var(--amber-soft); color: var(--amber); }
+  .note--info { background: var(--accent-soft); }
+  .note--alert { background: var(--red-soft); color: var(--red); }
+  .note--green { background: var(--green-soft); color: var(--green-glow); }
+  .note__icon { flex-shrink: 0; font-size: 15px; }
+  .note a { color: var(--accent-glow); text-decoration: none; font-weight: 600; }
+  .note a:hover { text-decoration: underline; }
+  .note strong { color: inherit; }
+  .tg { color: #2dd4bf !important; font-weight: 700; text-decoration: underline; text-decoration-color: rgba(45,212,191,0.4); text-underline-offset: 2px; transition: all .2s; }
+  .tg:hover { color: #5eead4 !important; text-decoration-color: #5eead4; }
+
+  /* Спойлер */
+  .spoiler { border-bottom: 1px solid var(--border); }
+  .spoiler:last-child { border-bottom: none; }
+  .spoiler summary { padding: 14px 20px; font-size: 13.5px; font-weight: 600; color: var(--text-secondary); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; transition: color .2s; }
+  .spoiler summary:hover { color: var(--text-primary); }
+  .spoiler summary::before { content: '▸'; font-size: 12px; transition: transform .2s; }
+  .spoiler[open] summary::before { transform: rotate(90deg); }
+  .spoiler__content { padding: 0 20px 16px 34px; font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+  .spoiler__content p { margin-bottom: 8px; }
+  .spoiler__content strong { color: var(--text-primary); font-weight: 600; }
+
+  /* Таблицы */
+  .os-table { width: 100%; font-size: 13px; border-collapse: collapse; margin: 8px 0; }
+  .os-table th { text-align: left; font-weight: 600; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .os-table td { padding: 8px 0; border-bottom: 1px solid var(--border); color: var(--text-secondary); vertical-align: top; }
+  .os-table tr:last-child td { border-bottom: none; }
+  .os-table td:first-child { color: var(--text-primary); font-weight: 500; }
+  .data-table { width:100%; font-size:13px; border-collapse:collapse; }
+  .data-table th { text-align:left; font-weight:600; color:var(--text-muted); font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:1.2px; padding:10px 20px; border-bottom:1px solid var(--border); background:rgba(0,0,0,0.2); }
+  .data-table td { padding:11px 20px; border-bottom:1px solid var(--border); color:var(--text-secondary); vertical-align:top; line-height:1.5; }
+  .data-table tr:last-child td { border-bottom:none; }
+  .data-table td:first-child { color:var(--text-primary); font-weight:600; }
+
+  /* Промпт (копировать → в Claude Code) */
+  .prompt-block { background:rgba(0,0,0,0.25); border:1px solid var(--border-accent); border-radius:10px; padding:18px 20px; margin:12px 16px; }
+  .prompt-block__title { font-size:13px; font-weight:700; color:var(--accent-glow); margin-bottom:10px; display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:1px; }
+  .prompt-block__text { font-size:13px; color:var(--text-secondary); line-height:1.7; white-space:pre-wrap; margin-bottom:14px; word-break:break-word; }
+  .btn-copy { display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; color:var(--accent-glow); background:var(--accent-soft); border:1px solid rgba(124,91,245,0.3); padding:8px 16px; border-radius:8px; cursor:pointer; transition:all .2s; text-transform:uppercase; letter-spacing:1px; }
+  .btn-copy:hover { background:rgba(124,91,245,0.2); border-color:var(--accent); }
+  .btn-copy.copied { color:var(--green); background:var(--green-soft); border-color:rgba(52,211,153,0.3); }
+
+  /* Команды */
+  .code-block { background:rgba(0,0,0,0.4); border:1px solid var(--border-accent); border-radius:10px; padding:16px 20px; margin:12px 16px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--green-glow); line-height:1.8; white-space:pre-wrap; word-break:break-all; overflow-x:auto; }
+  .code-block__label { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; display:block; }
+  .code-block .btn-copy { margin-top:12px; }
+  .cmd-copy { background:rgba(0,0,0,0.35); border:1px solid var(--border-accent); border-radius:8px; padding:10px 14px; margin:8px 0; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .cmd-copy__text { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--green-glow); line-height:1.6; word-break:break-all; flex:1; white-space:pre-wrap; }
+  .cmd-copy .btn-copy { flex-shrink:0; padding:5px 12px; font-size:10px; }
+
+  /* Кнопка скачивания */
+  .btn-dl { display:inline-flex; align-items:center; gap:7px; font-family:'Onest',sans-serif; font-size:13px; font-weight:600; color:var(--accent-glow); background:var(--accent-soft); border:1px solid rgba(124,91,245,0.35); padding:9px 18px; border-radius:10px; text-decoration:none; transition:all .2s; cursor:pointer; }
+  .btn-dl:hover { background:rgba(124,91,245,0.2); border-color:var(--accent); }
+
+  /* Разделитель */
+  .section-divider { text-align:center; margin:48px 0 32px; padding:0 20px; }
+  .section-divider__line { height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent); margin-bottom:20px; }
+  .section-divider__title { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:var(--accent-glow); text-transform:uppercase; letter-spacing:3px; }
+
+  /* Футер */
+  .footer { text-align: center; margin-top: 48px; }
+  .footer__done { display: none; background: var(--green-soft); border: 1px solid rgba(52,211,153,0.25); border-radius: var(--radius); padding: 32px 24px; margin-bottom: 24px; }
+  .footer__done.visible { display: block; animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+  .footer__done-emoji { font-size: 48px; margin-bottom: 10px; }
+  .footer__done-text { font-size: 22px; font-weight: 800; color: var(--green); margin-bottom: 6px; }
+  .footer__done-sub { font-size: 15px; color: var(--text-secondary); }
+  .footer__contact { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; }
+  .footer__contact a { color: #2dd4bf; text-decoration: underline; text-decoration-color: rgba(45,212,191,0.4); font-weight: 700; }
+  .btn-reset { background: none; border: 1px solid var(--border); color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 8px 20px; border-radius: 100px; cursor: pointer; transition: all .2s; }
+  .btn-reset:hover { border-color: var(--red); color: var(--red); }
+  .footer__final-part3 { background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(219,39,119,0.08)); border:1px solid rgba(251,191,36,0.25); border-radius:var(--radius); padding:34px 24px; margin-bottom:24px; text-align:center; position:relative; overflow:hidden; }
+  .footer__final-part3::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 20% 0%, rgba(251,191,36,0.12), transparent 50%), radial-gradient(circle at 80% 100%, rgba(219,39,119,0.12), transparent 50%); pointer-events:none; }
+  .footer__final-emoji { font-size:54px; margin-bottom:12px; line-height:1; position:relative; }
+  .footer__final-text { font-size:24px; font-weight:800; background:linear-gradient(90deg,#fbbf24,#db2777); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:10px; letter-spacing:-0.4px; position:relative; }
+  .footer__final-sub { font-size:15px; color:var(--text-secondary); line-height:1.6; max-width:560px; margin:0 auto; position:relative; }
+
+  #confetti-canvas { position: fixed; inset: 0; z-index: 9999; pointer-events: none; }
+
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+  /* Клик по .item переключает только чекбокс; ссылки/кнопки кликабельны */
+  .item { cursor: default; }
+  .item__body { pointer-events: none; user-select: text; }
+  .item__body a, .item__body .item__link, .item__body .lnk, .item__body .tg,
+  .item__body .cmd-copy, .item__body .btn-copy { pointer-events: auto !important; cursor: pointer !important; }
+  .item__check { pointer-events: auto; cursor: pointer; }
+  .item__check:hover { cursor: pointer; }
+  .cm { cursor: pointer; }
+
+  @media (max-width: 480px) {
+    .wrapper { padding: 28px 14px 60px; }
+    .item { padding: 14px 16px; gap: 12px; }
+    .note { padding: 12px 16px; }
+    .spoiler summary { padding: 12px 16px; }
+    .spoiler__content { padding: 0 16px 14px 28px; }
+    .progress-wrap { padding: 16px 18px; top: 8px; }
+    .cmd-copy { padding:8px 12px; flex-direction:column; align-items:flex-start; }
+    .data-table th,.data-table td { padding:8px 14px; }
+    .prompt-block { margin:10px 12px; }
+    .code-block { margin:10px 12px; font-size:11px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="wrapper">
+
+  <header class="header">
+    <div class="header__badge">ИИ-ВИЗАЦИЯ · СВЯЗКА 2</div>
+    <h1 class="header__title">Бот-<span>менеджер задач</span> в&nbsp;Telegram</h1>
+    <ul class="header__topics">
+      <li>Вы&nbsp;ставите задачи голосом: «Поставь Ивану подготовить отчёт, срок завтра к&nbsp;шести»</li>
+      <li>Задачи живут на&nbsp;доске Trello и&nbsp;двигаются по&nbsp;колонкам сами</li>
+      <li>Исполнитель отчитывается кнопками: «Взял в&nbsp;работу» · «Сделал» · «Не&nbsp;получается»</li>
+      <li>Новый человек запрашивает доступ, вы&nbsp;одобряете одной кнопкой</li>
+      <li>После одобрения бот берёт почту и&nbsp;сам приглашает человека на&nbsp;доску</li>
+      <li>Спрашивайте голосом: «что по&nbsp;задачам», «что у&nbsp;Ивана», «что просрочено»</li>
+    </ul>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span class="progress-label">Прогресс</span>
+      <span class="progress-count" id="progressCount">0 / 0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div id="sections">
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">01</div><div class="section__title">Зачем это нужно</div></div>
+      <div class="section__card">
+        <div class="note note--info"><span class="note__icon">🎯</span><span>Задачи перестают теряться в&nbsp;переписке. Вы&nbsp;говорите голосом — задача появляется на&nbsp;доске, у&nbsp;неё есть исполнитель и&nbsp;срок. Человек отчитывается кнопкой, вы&nbsp;видите статус, не&nbsp;спрашивая «ну&nbsp;что там».</span></div>
+
+        <div class="note"><span class="note__icon">👔</span><span><strong>Что вы&nbsp;говорите боту:</strong><br>
+        •&nbsp;«Поставь Ивану подготовить отчёт, срок завтра к&nbsp;шести»<br>
+        •&nbsp;«Перенеси срок по&nbsp;отчёту на&nbsp;пятницу»<br>
+        •&nbsp;«Переназначь на&nbsp;Анну» · «Закинь в&nbsp;бэклог» · «Закрой задачу»<br>
+        •&nbsp;«Что по&nbsp;задачам» · «Что у&nbsp;Ивана» · «Что просрочено» · «Кто в&nbsp;команде»</span></div>
+
+        <div class="note"><span class="note__icon">🔧</span><span><strong>Что видит исполнитель:</strong> карточку задачи со&nbsp;сроком и&nbsp;ссылкой на&nbsp;Trello, а&nbsp;под&nbsp;ней три кнопки. Голосовые от&nbsp;него бот не&nbsp;принимает намеренно — отчёт кнопкой не&nbsp;теряется и&nbsp;не&nbsp;понимается неверно.</span></div>
+
+        <table class="data-table">
+          <tr><th>Вы говорите</th><th>Что происходит</th></tr>
+          <tr><td>«Поставь Ивану подготовить отчёт, срок завтра к&nbsp;шести»</td><td>Карточка в&nbsp;колонке СДЕЛАТЬ, Ивану уходит задача с&nbsp;кнопками</td></tr>
+          <tr><td>«Что у&nbsp;Ивана»</td><td>Список его задач со&nbsp;статусами и&nbsp;сроками</td></tr>
+          <tr><td>«Что просрочено»</td><td>Только те, у&nbsp;кого вышел срок, с&nbsp;именами</td></tr>
+          <tr><td>«Отмени задачу про отчёт»</td><td>Карточка уезжает в&nbsp;ОТМЕНА, исполнителю приходит уведомление</td></tr>
+          <tr><td>Исполнитель жмёт «Не&nbsp;получается»</td><td>Бот спрашивает причину и&nbsp;присылает её&nbsp;вам одним бланком</td></tr>
+        </table>
+
+        <div class="note note--green"><span class="note__icon">✅</span><span>Программный код руками писать не&nbsp;нужно. Вы&nbsp;отдаёте ссылку и&nbsp;промпт в&nbsp;Claude&nbsp;Code, дальше он&nbsp;всё делает сам и&nbsp;ведёт вас по&nbsp;шагам.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">02</div><div class="section__title">Что нужно иметь до старта</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">💡</span><span>Всё из&nbsp;этого списка вы&nbsp;уже настраивали на&nbsp;курсе и&nbsp;в&nbsp;связке&nbsp;1. Пробегитесь и&nbsp;отметьте, что живо.</span></div>
+        <div class="item" data-key="pre-vpn"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">VPN</div>
+            <div class="item__hint">Нужен для&nbsp;доступа к&nbsp;зарубежным сервисам.</div>
+          </div>
+        </div>
+        <div class="item" data-key="pre-cc"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Claude Code</div>
+            <div class="item__hint">Установлен и&nbsp;запускается на&nbsp;вашем компьютере.</div>
+          </div>
+        </div>
+        <div class="item" data-key="pre-vps"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Сервер VPS с&nbsp;установленным OpenClaw</div>
+            <div class="item__hint">Тот&nbsp;же, что и&nbsp;в&nbsp;связке&nbsp;1. Здесь OpenClaw обязателен: он&nbsp;распознаёт вашу речь и&nbsp;зовёт нужный инструмент.</div>
+          </div>
+        </div>
+        <div class="item" data-key="pre-model"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Модель на выбор: подписка ChatGPT ИЛИ ключ MiniMax</div>
+            <div class="item__hint">Подключается к&nbsp;OpenClaw так&nbsp;же, как в&nbsp;связке&nbsp;1. <strong>Совет:</strong> здесь модель разбирает имена и&nbsp;падежи («Ивану», «Анне»), поэтому ChatGPT справляется заметно точнее.</div>
+          </div>
+        </div>
+        <div class="item" data-key="pre-groq"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Ключ Groq для распознавания голосовых</div>
+            <div class="item__hint">Тот&nbsp;же ключ, что делали на&nbsp;курсе (console.groq.com). Держите под&nbsp;рукой: Claude&nbsp;Code сам попросит его.</div>
+          </div>
+        </div>
+
+        <div class="note note--green"><span class="note__icon">✅</span><span><strong>Это настроим дальше по&nbsp;чек-листу, заранее ничего делать не&nbsp;нужно:</strong><br>
+        •&nbsp;<strong>Аккаунт Trello и&nbsp;доска задач</strong> <span style="opacity:.6">(блок&nbsp;03)</span><br>
+        •&nbsp;<strong>Telegram-бот</strong> — заводим нового, отдельно под&nbsp;менеджера <span style="opacity:.6">(блок&nbsp;04, по&nbsp;промпту)</span></span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">03</div><div class="section__title">Trello: доска и ключи</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">📋</span><span>Trello — бесплатная доска с&nbsp;карточками. Здесь будут жить задачи. Всё, что нужно на&nbsp;бесплатном тарифе, — до&nbsp;10&nbsp;человек в&nbsp;команде и&nbsp;до&nbsp;10&nbsp;досок, этого хватает с&nbsp;запасом.</span></div>
+
+        <div class="item" data-key="tr-signup"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 1. Зарегистрироваться в Trello</div>
+            <div class="item__hint">Заходите, жмёте «Sign up», регистрируетесь по&nbsp;почте или через Google. Тариф оставляйте бесплатный — платный не&nbsp;нужен.</div>
+            <a href="https://trello.com/signup" target="_blank" class="item__link" onclick="event.stopPropagation()">trello.com/signup</a>
+          </div>
+        </div>
+
+        <div class="item" data-key="tr-board"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 2. Создать доску</div>
+            <div class="item__hint">Кнопка <strong>Create</strong> вверху → <strong>Create board</strong>. Название любое, например «Задачи команды». Видимость оставьте <strong>Private</strong> — доска не&nbsp;должна быть видна посторонним.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="tr-lists"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 3. Сделать ровно пять колонок</div>
+            <div class="item__hint">Это важно: бот двигает карточки именно по&nbsp;этим колонкам и&nbsp;ищет их&nbsp;<strong>по&nbsp;названию</strong>. Пишите заглавными, слово в&nbsp;слово, по&nbsp;порядку слева направо.</div>
+          </div>
+        </div>
+
+        <div class="code-block"><span class="code-block__label">Колонки доски — скопируйте названия точь-в-точь</span>БЭКЛОГ · СДЕЛАТЬ · В ПРОЦЕССЕ · СДЕЛАНО · ОТМЕНА</div>
+
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>Если назвать колонку иначе («Готово» вместо «СДЕЛАНО») — бот не&nbsp;найдёт её&nbsp;и&nbsp;не&nbsp;сможет двигать задачи. Проверьте буквы перед тем, как идти дальше.</span></div>
+
+        <div class="item" data-key="tr-app"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 4. Создать приложение (Power-Up)</div>
+            <div class="item__hint">Так Trello выдаёт ключи для&nbsp;бота. Открываете ссылку → кнопка <strong>New</strong> → заполняете: <strong>App name</strong> любое («Бот-менеджер»), <strong>Workspace</strong> — ваше, <strong>Email</strong> и&nbsp;<strong>Support contact</strong> — ваша почта, <strong>Author</strong> — ваше имя. Поле <strong>Iframe connector URL</strong> оставьте пустым. Жмёте <strong>Create</strong>.</div>
+            <a href="https://trello.com/power-ups/admin" target="_blank" class="item__link" onclick="event.stopPropagation()">trello.com/power-ups/admin</a>
+          </div>
+        </div>
+
+        <div class="note note--info"><span class="note__icon">💡</span><span>Кнопка <strong>Create</strong> остаётся серой, пока не&nbsp;заполнены Email, Support contact и&nbsp;Author. Это единственная причина, по&nbsp;которой она не&nbsp;нажимается.</span></div>
+
+        <div class="item" data-key="tr-key"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 5. Взять ключ (API Key)</div>
+            <div class="item__hint">В&nbsp;созданном приложении — вкладка <strong>API Key</strong> → кнопка <strong>Generate a new API Key</strong>. Появится строка из&nbsp;32&nbsp;символов. Скопируйте её&nbsp;в&nbsp;блокнот, это <strong>ключ</strong>.</div>
+          </div>
+        </div>
+
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>Рядом с&nbsp;ключом лежит <strong>Secret</strong> — длинная строка из&nbsp;64&nbsp;символов. Она нам <strong>не&nbsp;нужна</strong>, и&nbsp;её&nbsp;легко перепутать с&nbsp;токеном из&nbsp;следующего шага. Secret не&nbsp;копируйте.</span></div>
+
+        <div class="item" data-key="tr-token"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 6. Выдать токен и сделать его вечным</div>
+            <div class="item__hint">Возьмите ссылку ниже, <strong>вместо ВАШ_КЛЮЧ подставьте ключ из&nbsp;шага&nbsp;5</strong> и&nbsp;откройте в&nbsp;браузере. Появится экран «приложение просит доступ» → внизу зелёная кнопка <strong>Allow</strong> → откроется страница с&nbsp;длинной строкой. Это <strong>токен</strong>, скопируйте его.</div>
+          </div>
+        </div>
+
+        <div class="cmd-copy"><div class="cmd-copy__text" id="trelloAuth">https://trello.com/1/authorize?expiration=never&scope=read,write&response_type=token&name=TaskBot&key=ВАШ_КЛЮЧ</div><button class="btn-copy" onclick="copyBlock('trelloAuth', this)">📋 Копировать</button></div>
+
+        <div class="note note--info"><span class="note__icon">🔒</span><span><strong>Почему именно так.</strong> Кусочек <code>expiration=never</code> в&nbsp;ссылке делает токен бессрочным. Если выдать токен обычным способом, он&nbsp;протухнет, и&nbsp;бот однажды молча перестанет видеть доску. Ключ и&nbsp;токен вместе дают полный доступ к&nbsp;вашему Trello — храните их&nbsp;как пароль и&nbsp;никому не&nbsp;показывайте.</span></div>
+
+        <div class="item" data-key="tr-boardid"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 7. Скопировать адрес доски</div>
+            <div class="item__hint">Просто откройте свою доску и&nbsp;скопируйте адрес из&nbsp;браузера — он&nbsp;выглядит как <code>trello.com/b/xHGdFKGU/задачи</code>. Больше ничего искать не&nbsp;нужно: Claude&nbsp;Code сам достанет из&nbsp;него номер доски.</div>
+          </div>
+        </div>
+
+        <div class="note note--green"><span class="note__icon">📝</span><span><strong>К концу блока у&nbsp;вас в&nbsp;блокноте три строки:</strong><br>
+        •&nbsp;ключ (32&nbsp;символа)<br>
+        •&nbsp;токен (длинный, начинается с&nbsp;ATTA)<br>
+        •&nbsp;адрес доски<br><br>
+        Они понадобятся в&nbsp;следующем блоке. В&nbsp;чат никому не&nbsp;пересылайте.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">04</div><div class="section__title">Репозиторий и главный промпт</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">📦</span><span>Весь код и&nbsp;инструкция лежат в&nbsp;репозитории. Вы&nbsp;отдаёте ссылку и&nbsp;промпт в&nbsp;Claude&nbsp;Code, он&nbsp;делает всё по&nbsp;инструкции и&nbsp;ведёт вас за&nbsp;руку.</span></div>
+
+        <div class="item" data-key="repo-open"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Открыть репозиторий связки</div>
+            <div class="item__hint">Ссылка понадобится в&nbsp;промпте ниже.</div>
+            <a href="https://github.com/stavzzz/svyazka-2" target="_blank" class="item__link" onclick="event.stopPropagation()">Репозиторий связки 2</a>
+          </div>
+        </div>
+
+        <div class="note note--info"><span class="note__icon">🧠</span><span><strong>Как устроен бот внутри.</strong><br><br>Сам бот — <strong>самописный код</strong> на&nbsp;вашем сервере. Модель нужна ровно для&nbsp;одного: понять вашу фразу и&nbsp;превратить её&nbsp;в&nbsp;команду. Все тексты, кнопки и&nbsp;бланки рисует код по&nbsp;готовым шаблонам, поэтому бот отвечает всегда одинаково и&nbsp;не&nbsp;фантазирует.<br><br>Между Telegram и&nbsp;ботом стоит <strong>привратник</strong>: он&nbsp;решает, кого пускать, перехватывает частые команды и&nbsp;отвечает на&nbsp;них мгновенно, не&nbsp;тратя токены. К&nbsp;модели уходит только живая речь.</span></div>
+
+        <div class="prompt-block">
+          <div class="prompt-block__title">📋 Промпт: собрать бота-менеджера (в Claude Code)</div>
+          <div class="prompt-block__text" id="promptMain">Ты разворачиваешь мне бота-менеджера задач в Telegram. Готовый код, тесты и документация лежат здесь: https://github.com/stavzzz/svyazka-2 — с нуля ничего не пиши, работай с этим репозиторием. Веди меня по шагам, после каждого шага показывай результат и жди подтверждения.
+
+Шаг 1. Проверь, что сервер жив, Python 3 и OpenClaw на месте. Склонируй репозиторий в /root/taskbot, прочитай docs/ целиком — там ТЗ, роли, тест-план и инструкция агента.
+
+Шаг 2. Заведи Telegram-бота: нужен НОВЫЙ бот отдельно под менеджера задач, даже если у меня уже есть другие. Продиктуй, что нажимать в @BotFather (/newbot, имя, username), забери у меня токен. Затем подскажи написать @userinfobot и забери мой Telegram id — это будет GK_REVIEWER, то есть я, руководитель.
+
+Шаг 3. Спроси у меня ключ Trello, токен Trello и адрес доски. Из адреса вида trello.com/b/XXXXXXXX/название сам достань идентификатор доски. Проверь связку запросом к Trello API: убедись, что доска открывается и что на ней ровно пять колонок — БЭКЛОГ, СДЕЛАТЬ, В ПРОЦЕССЕ, СДЕЛАНО, ОТМЕНА. Если какой-то колонки нет или она названа иначе — скажи мне, какую именно поправить, дальше не иди.
+
+Шаг 4. Заполни .env по образцу .env.example: токен бота, мой id, ключ и токен Trello, идентификатор доски, ключ Groq для голосовых (спроси у меня). Файл .env в git не коммить.
+
+Шаг 5. Подключи модель-классификатор в OpenClaw — это мозг, который разбирает мою речь:
+— Вариант 1: подписка ChatGPT через OpenClaw. Заведи отдельного лёгкого агента без лишних инструментов, скопируй ему инструкцию из docs/AGENTS-instrukcija-agenta.md, поставь уровень рассуждений high — здесь важно правильно разбирать имена и падежи («Ивану», «Анне»).
+— Вариант 2: MiniMax по API-ключу.
+Спроси меня, какой вариант выбираю, и настрой его.
+
+Шаг 6. Запусти привратника и движок Trello как службы systemd, чтобы они поднимались сами после перезагрузки. Покажи мне статус обеих служб.
+
+Шаг 7. Прогони автотесты из репозитория и покажи результат. Все должны быть зелёными. Если что-то падает — чини, к следующему шагу не переходи.
+
+Шаг 8. Я нажимаю Start у бота. Проведи меня по живой проверке: поставить задачу голосом, посмотреть её на доске Trello, отчитаться кнопкой от лица исполнителя, спросить «что по задачам».
+
+Шаг 9. Проверь доступы: я приглашаю второго человека, ему приходит заявка, я одобряю кнопкой, бот просит у него почту и приглашает его на доску Trello. Убедись, что человек получил письмо и видит доску.
+
+Шаг 10. Прогони со мной чек-лист приёмки docs/05-ТЕСТ-ПЛАН.md и покажи результат по каждому блоку.</div>
+          <button class="btn-copy" onclick="copyBlock('promptMain', this)">📋 Копировать промпт</button>
+        </div>
+
+        <div class="item" data-key="prompt-main-done"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Отправить промпт в Claude Code</div>
+            <div class="item__hint">Скопируйте промпт целиком и&nbsp;вставьте в&nbsp;Claude&nbsp;Code. Дальше отвечайте на&nbsp;его вопросы и&nbsp;подтверждайте шаги.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">05</div><div class="section__title">Проверьте, что всё работает</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">🧪</span><span>Проверяйте по&nbsp;порядку: пункты опираются друг на&nbsp;друга. Говорите боту голосом — так&nbsp;и&nbsp;задумано.</span></div>
+
+        <div class="item" data-key="t-create"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">🎙 «Поставь задачу подготовить отчёт, срок завтра к шести»</div>
+            <div class="item__hint">Бот спросит, кому ставим (пока в&nbsp;команде никого) — выберите себя. Придёт бланк «ЗАДАЧА ПОСТАВЛЕНА» со&nbsp;сроком.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-board"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Открыть доску Trello</div>
+            <div class="item__hint">Карточка появилась в&nbsp;колонке СДЕЛАТЬ, у&nbsp;неё стоит срок. Значит бот и&nbsp;доска связаны.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-tasks"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Команда /tasks</div>
+            <div class="item__hint">Задачи по&nbsp;колонкам, у&nbsp;каждой исполнитель, срок и&nbsp;ссылка на&nbsp;карточку.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-status"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Нажать «Взял в работу», потом «Сделал»</div>
+            <div class="item__hint">Карточка на&nbsp;доске переезжает В&nbsp;ПРОЦЕССЕ, затем СДЕЛАНО. Статус в&nbsp;сообщении меняется на&nbsp;месте, новых сообщений не&nbsp;плодится.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-ask"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">🎙 «Что по задачам»</div>
+            <div class="item__hint">Сводка приходит мгновенно — этот вопрос обрабатывает код, модель не&nbsp;зовётся.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-move"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">🎙 «Перенеси срок по отчёту на пятницу»</div>
+            <div class="item__hint">Бланк «СРОК ИЗМЕНЁН», на&nbsp;карточке в&nbsp;Trello новая дата.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-invite"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Позвать второго человека</div>
+            <div class="item__hint">Он&nbsp;пишет боту → вам приходит заявка с&nbsp;кнопками → жмёте «Одобрить» → бот просит у&nbsp;него почту → приглашает на&nbsp;доску. Проверьте, что письмо пришло и&nbsp;доска у&nbsp;него открывается.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-assign"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">🎙 Поставить задачу этому человеку по имени</div>
+            <div class="item__hint">«Поставь Ивану…» — бот опознаёт его по&nbsp;профилю Telegram. Ему приходит карточка со&nbsp;ссылкой на&nbsp;Trello.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-fail"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Нажать «Не получается» и написать причину</div>
+            <div class="item__hint">Причина приходит вам одним бланком вместе с&nbsp;задачей.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-team"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Команда /team</div>
+            <div class="item__hint">Список людей, у&nbsp;каждого число открытых задач и&nbsp;кнопка «Забрать доступ».</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-overdue"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Команда /overdue</div>
+            <div class="item__hint">Только просроченные задачи. Поставьте задачу вчерашним сроком, чтобы проверить.</div>
+          </div>
+        </div>
+        <div class="item" data-key="t-cancel"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">🎙 «Отмени задачу про отчёт»</div>
+            <div class="item__hint">Карточка уезжает в&nbsp;колонку ОТМЕНА, исполнителю приходит уведомление.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">06</div><div class="section__title">Если что-то пошло не так</div></div>
+      <div class="section__card">
+        <table class="data-table">
+          <tr><th>Что видите</th><th>Что делать</th></tr>
+          <tr><td>Бот не&nbsp;отвечает вообще</td><td>Попросите Claude&nbsp;Code показать статус служб и&nbsp;последние строки журнала</td></tr>
+          <tr><td>Задачи не&nbsp;появляются на&nbsp;доске</td><td>Проверьте ключ и&nbsp;токен Trello в&nbsp;.env и&nbsp;что доска та&nbsp;самая</td></tr>
+          <tr><td>«Не&nbsp;нашёл такую колонку»</td><td>Названия колонок должны совпадать буква в&nbsp;букву: БЭКЛОГ, СДЕЛАТЬ, В&nbsp;ПРОЦЕССЕ, СДЕЛАНО, ОТМЕНА</td></tr>
+          <tr><td>Доступ к&nbsp;доске внезапно пропал</td><td>Токен Trello был выдан не&nbsp;навсегда. Выпустите заново по&nbsp;ссылке из&nbsp;блока&nbsp;03 — с&nbsp;кусочком expiration=never</td></tr>
+          <tr><td>Бот путает имена людей</td><td>В&nbsp;профиле Telegram должны стоять настоящие имя и&nbsp;фамилия и&nbsp;быть заполнен юзернейм</td></tr>
+          <tr><td>Голосовые не&nbsp;понимает</td><td>Проверьте, что ключ Groq вписан в&nbsp;.env</td></tr>
+          <tr><td>Долго думает над&nbsp;командой</td><td>Так и&nbsp;должно быть: разбор живой речи занимает 15–25&nbsp;секунд. Быстрые ответы даёт код</td></tr>
+        </table>
+
+        <div class="note note--info"><span class="note__icon">💬</span><span>Любую ошибку отправляйте в&nbsp;Claude&nbsp;Code целиком, вместе с&nbsp;текстом из&nbsp;терминала. Он&nbsp;разберёт и&nbsp;починит.</span></div>
+
+        <div class="note note--green"><span class="note__icon">💡</span><span><strong>На будущее:</strong> это второй сотрудник вашего AI-офиса. Секретарь ведёт ваш календарь, менеджер — задачи команды. Дальше тем&nbsp;же приёмом собираются финансы, почта и&nbsp;отчёты.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+<!-- ФУТЕР: заполнить под урок. @stavzzz — только здесь, один раз на странице -->
+  <div class="footer">
+    <div class="footer__done" id="doneBlock">
+      <div class="footer__done-emoji">🎉</div>
+      <div class="footer__done-text">Менеджер на посту!</div>
+      <div class="footer__done-sub">Все пункты закрыты. Задачи теперь ведёт бот.</div>
+    </div>
+    <div class="footer__final-part3">
+      <div class="footer__final-emoji">📋</div>
+      <div class="footer__final-text">Связка 2 собрана!</div>
+      <div class="footer__final-sub">У&nbsp;вас работает бот-менеджер: вы&nbsp;ставите задачи голосом, команда отчитывается кнопками, всё видно на&nbsp;доске. Больше не&nbsp;нужно спрашивать «ну&nbsp;что там по&nbsp;задачам».</div>
+    </div>
+    <div class="footer__contact">Возникли вопросы? Напишите <a href="https://t.me/stavzzz" target="_blank" class="tg">@stavzzz</a> в&nbsp;Telegram</div>
+    <button class="btn-reset" onclick="resetProgress()">Сбросить прогресс</button>
+  </div>
+
+</div>
+
+<script>
+// ====== CONFETTI ======
+const C = document.getElementById('confetti-canvas');
+const ctx = C.getContext('2d');
+let particles = [];
+let confettiActive = false;
+function resizeCanvas() { C.width = window.innerWidth; C.height = window.innerHeight; }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+const COLORS = ['#7c5bf5','#9d7cff','#34d399','#6ee7b7','#fbbf24','#f87171','#fb7185','#38bdf8','#facc15','#a78bfa','#f472b6','#4ade80'];
+function rand(a,b){ return Math.random()*(b-a)+a; }
+function createBurst(x, y, count) {
+  for(let i=0;i<count;i++){
+    const angle=rand(0,Math.PI*2),speed=rand(4,14),size=rand(4,10);
+    particles.push({x,y,vx:Math.cos(angle)*speed+rand(-2,2),vy:Math.sin(angle)*speed*-0.8-rand(2,6),size,color:COLORS[Math.floor(Math.random()*COLORS.length)],rotation:rand(0,Math.PI*2),rotSpeed:rand(-0.2,0.2),gravity:rand(0.12,0.25),friction:rand(0.97,0.995),opacity:1,fadeSpeed:rand(0.005,0.015),shape:Math.random()>0.4?'rect':'circle'});
+  }
+}
+function launchConfetti(){
+  if(confettiActive)return;confettiActive=true;particles=[];
+  const W=C.width,H=C.height;
+  [[W*0.5,H*0.3,120],[W*0.15,H*0.2,80],[W*0.85,H*0.2,80],[W*0.5,H*0.1,100],[W*0.3,H*0.5,60],[W*0.7,H*0.5,60],[0,H*0.6,50],[W,H*0.6,50],[W*0.5,H*0.6,80]].forEach(([x,y,c],i)=>{setTimeout(()=>createBurst(x,y,c),i*150)});
+  setTimeout(()=>{createBurst(W*0.2,H*0.15,90);createBurst(W*0.8,H*0.15,90);createBurst(W*0.5,H*0.05,100)},1500);
+  setTimeout(()=>{createBurst(W*0.5,H*0.25,120);createBurst(W*0.1,H*0.4,60);createBurst(W*0.9,H*0.4,60)},2500);
+  animate();setTimeout(()=>{confettiActive=false},8000);
+}
+function animate(){
+  ctx.clearRect(0,0,C.width,C.height);
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i];p.vx*=p.friction;p.vy*=p.friction;p.vy+=p.gravity;p.x+=p.vx;p.y+=p.vy;p.rotation+=p.rotSpeed;p.opacity-=p.fadeSpeed;
+    if(p.opacity<=0){particles.splice(i,1);continue}
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rotation);ctx.globalAlpha=p.opacity;ctx.fillStyle=p.color;
+    if(p.shape==='rect'){ctx.fillRect(-p.size/2,-p.size/4,p.size,p.size/2)}else{ctx.beginPath();ctx.arc(0,0,p.size/2,0,Math.PI*2);ctx.fill()}
+    ctx.restore();
+  }
+  if(particles.length>0||confettiActive){requestAnimationFrame(animate)}else{ctx.clearRect(0,0,C.width,C.height)}
+}
+
+// ====== CHECKLIST ======
+const STORAGE_KEY='iivizaciya_checklist_svyazka1_v1';
+const items=document.querySelectorAll('.item[data-key]');
+const totalCount=items.length;
+let wasComplete=false;
+function loadState(){
+  try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');let c=0;items.forEach(item=>{const cb=item.querySelector('input[type="checkbox"]');if(s[item.dataset.key]){cb.checked=true;item.classList.add('checked');c++}});wasComplete=c===totalCount}catch(e){}
+  updateProgress(false);
+}
+function saveState(){const s={};items.forEach(item=>{s[item.dataset.key]=item.querySelector('input[type="checkbox"]').checked});try{localStorage.setItem(STORAGE_KEY,JSON.stringify(s))}catch(e){}}
+function updateProgress(canCelebrate=true){
+  let c=0;items.forEach(item=>{if(item.querySelector('input[type="checkbox"]').checked)c++});
+  document.getElementById('progressCount').textContent=`${c} / ${totalCount}`;
+  document.getElementById('progressFill').style.width=(totalCount>0?(c/totalCount)*100:0)+'%';
+  const done=document.getElementById('doneBlock');
+  if(c===totalCount){done.classList.add('visible');if(canCelebrate&&!wasComplete){launchConfetti()}wasComplete=true}else{done.classList.remove('visible');wasComplete=false}
+}
+items.forEach(item=>{
+  const cb=item.querySelector('input[type="checkbox"]');
+  item.addEventListener('click',function(e){
+    if(e.target.closest('a'))return;
+    if(e.target!==cb){cb.checked=!cb.checked;cb.dispatchEvent(new Event('change'))}
+  });
+  cb.addEventListener('change',function(){item.classList.toggle('checked',this.checked);saveState();updateProgress(true)});
+});
+function resetProgress(){if(!confirm('Сбросить весь прогресс?'))return;items.forEach(item=>{const cb=item.querySelector('input[type="checkbox"]');cb.checked=false;item.classList.remove('checked')});wasComplete=false;saveState();updateProgress(false)}
+loadState();
+
+// ====== COPY (промпты и команды) ======
+function copyBlock(id, btn){
+  const text=document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const orig=btn.innerHTML;
+    btn.classList.add('copied');
+    btn.innerHTML='✅ Скопировано!';
+    setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML=orig;},2000);
+  });
+}
+</script>
+
+<script>
+// клик по .item не срабатывает на вложенных ссылках
+(function() {
+  document.querySelectorAll('.item').forEach(function(item) {
+    var check = item.querySelector('.item__check');
+    if (!check) return;
+    item.addEventListener('click', function(e) {
+      if (e.target.closest('a')) return;
+      if (check.contains(e.target)) return;
+      e.preventDefault();
+      e.stopPropagation();
+    }, true);
+  });
+})();
+</script>
+
+</body>
+</html>
