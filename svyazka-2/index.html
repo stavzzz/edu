@@ -327,7 +327,7 @@
 
 Шаг 7. Поставь сторожа: скопируй systemd/taskbot-watchdog.service и .timer в /etc/systemd/system, включи таймер. Он раз в 5 минут стучится в порты, поднимает упавшее и пишет мне в Telegram. Проверь разок вручную: останови движок, дождись сторожа, покажи, что он поднял его и прислал сообщение.
 
-Шаг 8. Прогони автотесты из репозитория и покажи результат. Все должны быть зелёными. Если что-то падает — чини, к следующему шагу не переходи.
+Шаг 8. Прогони автотесты из репозитория и покажи результат. Падать не должно ничего. Три теста ходят в живой Trello и сами пропускаются, пока на доске нет открытых задач — это нормально, вернись к ним после шага 9, когда первая задача уже поставлена.
 
 Шаг 9. Я нажимаю Start у бота. Проведи меня по живой проверке: поставить задачу голосом, посмотреть её на доске Trello, отчитаться кнопкой от лица исполнителя, спросить «что по задачам».
 
@@ -413,7 +413,7 @@
         <div class="item" data-key="tr-boardid"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Шаг 7. Скопировать адрес доски</div>
-            <div class="item__hint">Просто откройте свою доску и&nbsp;скопируйте адрес из&nbsp;браузера — он&nbsp;выглядит как <code>trello.com/b/xHGdFKGU/задачи</code>. Больше ничего искать не&nbsp;нужно: Claude&nbsp;Code сам достанет из&nbsp;него номер доски.</div>
+            <div class="item__hint">Просто откройте свою доску и&nbsp;скопируйте адрес из&nbsp;браузера — он&nbsp;выглядит как <code>trello.com/b/AbCdEfGh/задачи</code>. Больше ничего искать не&nbsp;нужно: Claude&nbsp;Code сам достанет из&nbsp;него номер доски.</div>
           </div>
         </div>
 
@@ -487,6 +487,8 @@
             <div class="item__hint">«Поставь Ивану…» — бот узнаёт его по&nbsp;тому имени, которым тот назвался. Ему приходит карточка со&nbsp;ссылкой на&nbsp;Trello и&nbsp;кнопками.</div>
           </div>
         </div>
+
+        <div class="note note--info"><span class="note__icon">👤</span><span><strong>Как исполнитель виден на&nbsp;карточке.</strong> Кто дал почту и&nbsp;принял приглашение — тот стоит <strong>участником карточки</strong>, его аватарка видна на&nbsp;доске. Кто почту не&nbsp;дал — тому бот вешает <strong>метку с&nbsp;именем</strong>, чтобы задача не&nbsp;осталась ничьей. В&nbsp;боте оба работают одинаково: задачи приходят, кнопки те&nbsp;же.</span></div>
         <div class="item" data-key="t-fail"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Нажать «Не получается» и написать причину</div>
