@@ -201,7 +201,7 @@
     <h1 class="header__title">Личный <span>ИИ-секретарь</span> в&nbsp;Telegram</h1>
     <ul class="header__topics">
       <li>Ведёт Google Календарь голосом и&nbsp;текстом: ставит, переносит, отменяет</li>
-      <li>Вшивает в&nbsp;каждую встречу ссылки Google&nbsp;Meet и&nbsp;Zoom, приглашает участников по&nbsp;email</li>
+      <li>Вшивает в&nbsp;каждую встречу ссылку Google&nbsp;Meet (Zoom — по&nbsp;желанию, если дадите его ключи), приглашает участников по&nbsp;email</li>
       <li>Понимает повторяющиеся серии: «йога каждый ПН и&nbsp;ПТ на&nbsp;8&nbsp;недель»</li>
       <li>Считает часовые пояса, ловит накладки и&nbsp;сразу предлагает свободные окна</li>
       <li>Напоминает перед встречей, утром присылает план дня, в&nbsp;понедельник — план недели</li>
@@ -229,7 +229,7 @@
         •&nbsp;Понимает голос и&nbsp;текст. Сказали «встреча с&nbsp;Иваном завтра в&nbsp;15:00 по&nbsp;Москве», встреча в&nbsp;календаре.<br>
         •&nbsp;Ставит, переносит и&nbsp;отменяет встречи.<br>
         •&nbsp;Меняет у&nbsp;встречи длительность, описание, место и&nbsp;участников.<br>
-        •&nbsp;Добавляет ссылку на&nbsp;видеовстречу: Google&nbsp;Meet или Zoom.<br>
+        •&nbsp;Добавляет ссылку на&nbsp;видеовстречу: Google&nbsp;Meet — всегда, Zoom — если настроен.<br>
         •&nbsp;Приглашает участников по&nbsp;email, приглашение уходит им&nbsp;на&nbsp;почту.<br>
         •&nbsp;Показывает расписание на&nbsp;сегодня, завтра, неделю или конкретную дату.<br>
         •&nbsp;Считает часовые пояса и&nbsp;показывает обе зоны, когда встреча в&nbsp;другом городе.<br>
@@ -243,7 +243,7 @@
         •&nbsp;При удалении и&nbsp;переносе серии спрашивает объём кнопками: только эту, эту и&nbsp;все следующие или всю серию.<br>
         •&nbsp;Конфликты серии видит по&nbsp;датам и&nbsp;умеет «Пропустить эти дни» — серия встаёт, занятые даты остаются пустыми.<br>
         •&nbsp;Переспрашивает время, если вы&nbsp;его не&nbsp;назвали, вместо того чтобы придумать своё.<br>
-        •&nbsp;Показывает карточку и&nbsp;ждёт подтверждения перед любым изменением.<br>
+        •&nbsp;Обычную встречу ставит и&nbsp;переносит сразу, карточка приходит уже как результат. Подтверждения спрашивает там, где цена ошибки высока: удаление, накладка по&nbsp;времени, время в&nbsp;прошлом.<br>
         •&nbsp;Напоминает перед встречей прямо в&nbsp;личку: за&nbsp;сутки, за&nbsp;час, за&nbsp;30, 10&nbsp;или 5&nbsp;минут — какие включите в&nbsp;настройках.<br>
         •&nbsp;Утром присылает план дня, в&nbsp;понедельник план недели. Дни и&nbsp;время меняются кнопками в&nbsp;настройках.</span></div>
 
@@ -254,7 +254,7 @@
           <tr><td>«Отмени встречу с&nbsp;Петей в&nbsp;четверг»</td><td>Удаляет после подтверждения</td></tr>
           <tr><td>«Какие встречи у&nbsp;меня на&nbsp;неделе?»</td><td>Присылает список по&nbsp;дням</td></tr>
           <tr><td>«Увеличь встречу с&nbsp;Иваном до&nbsp;двух часов»</td><td>Меняет длительность</td></tr>
-          <tr><td>«Добавь во&nbsp;встречу описание и&nbsp;позови petya@mail.ru»</td><td>Дописывает описание и&nbsp;отправляет приглашение на&nbsp;почту</td></tr>
+          <tr><td>«Добавь во&nbsp;встречу описание и&nbsp;позови petya@example.com»</td><td>Дописывает описание и&nbsp;отправляет приглашение на&nbsp;почту</td></tr>
           <tr><td>«Переключи мой часовой пояс на&nbsp;Тбилиси»</td><td>Меняет зону календаря, дальше считает всё в&nbsp;ней</td></tr>
           <tr><td>«Какая у&nbsp;меня сейчас зона?»</td><td>Показывает зону и&nbsp;текущее время</td></tr>
           <tr><td>«Йога каждый ПН и&nbsp;ПТ с&nbsp;11:00 до&nbsp;12:30 на&nbsp;8&nbsp;недель»</td><td>Ставит серию: карточка «еженедельно по&nbsp;ПН и&nbsp;ПТ · до&nbsp;… (16&nbsp;занятий)» с&nbsp;подтверждением</td></tr>
@@ -353,7 +353,7 @@
 — Вариант 1: подписка ChatGPT (Codex) через OpenClaw. Для этого варианта OpenClaw на сервере ОБЯЗАТЕЛЕН (он — мост к подписке, отдельно за токены платить не нужно).
 — Вариант 2: MiniMax по API-ключу. OpenClaw для этого варианта НЕ НУЖЕН вообще — бот ходит в API напрямую.
 
-Шаг 2. Проверь, что сервер жив и Docker установлен. Склонируй репозиторий, поставь зависимости и прогони тесты: npm install и npm test. Все 190 тестов должны быть зелёными.
+Шаг 2. Проверь, что сервер жив и Docker установлен. Склонируй репозиторий, поставь зависимости и прогони тесты: npm install и npm test. Все 191 тест должны быть зелёными.
 
 Шаг 3. Настрой выбранную модель (образец — .env.example, подробности — README репозитория, раздел «Модель-классификатор»):
 — Вариант 1 (Codex через OpenClaw): (а) подключи мою подписку командой openclaw models auth login --provider openai — я залогинюсь в браузере; (б) в ~/.openclaw/openclaw.json включи gateway.http.endpoints.chatCompletions.enabled: true и добавь лёгкого агента-классификатора secretary-clf по готовому образцу из README; (в) скопируй docs/SOUL-classifier.md из репозитория в воркспейс этого агента как SOUL.md; (г) перезапусти gateway: openclaw gateway restart; (д) в .env: MODEL_FORMAT=openai, MODEL_BASE_URL=http://127.0.0.1:18789/v1 (контейнер работает в host-сети, это уже настроено в docker-compose.yml), MODEL_API_KEY=gateway-токен (gateway.auth.token из ~/.openclaw/openclaw.json), MODEL_NAME=openclaw/secretary-clf. Проверь мост тестовым запросом: в ответ должен прийти строгий JSON.
@@ -456,7 +456,7 @@
         <div class="item" data-key="setup-mcp"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Подключить Google Календарь</div>
-            <div class="item__hint">Claude&nbsp;Code подключает Google&nbsp;Workspace&nbsp;MCP и&nbsp;оставляет из&nbsp;него только Календарь.</div>
+            <div class="item__hint">Claude&nbsp;Code берёт из&nbsp;Google&nbsp;Workspace&nbsp;MCP только файл с&nbsp;доступами к&nbsp;Календарю — дальше боту сам MCP не&nbsp;нужен.</div>
           </div>
         </div>
         <div class="item" data-key="setup-auth"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
@@ -468,7 +468,7 @@
         <div class="item" data-key="setup-rules"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Задать правила секретаря</div>
-            <div class="item__hint">Часовой пояс, рабочие часы, длительность по&nbsp;умолчанию, обязательное подтверждение перед любым изменением.</div>
+            <div class="item__hint">Часовой пояс, рабочие часы, длительность по&nbsp;умолчанию, подтверждение на&nbsp;опасных действиях.</div>
           </div>
         </div>
         <div class="item" data-key="setup-conflict"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
@@ -611,7 +611,7 @@
         </div>
         <div class="item" data-key="t-edit"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">«Добавь во встречу с Иваном описание и позови petya@mail.ru»</div>
+            <div class="item__text">«Добавь во встречу с Иваном описание и позови petya@example.com»</div>
             <div class="item__hint">Появляется описание, участнику уходит приглашение на&nbsp;почту.</div>
           </div>
         </div>
