@@ -296,7 +296,7 @@
         <div class="note note--green"><span class="note__icon">✅</span><span><strong>Это настроим дальше по&nbsp;чек-листу, заранее ничего делать не&nbsp;нужно:</strong><br>
         •&nbsp;<strong>Google-таблица</strong> — копия готового шаблона к&nbsp;себе на&nbsp;Диск <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
         •&nbsp;<strong>Доступ к&nbsp;Google Таблицам</strong> — Google&nbsp;Sheets&nbsp;API и&nbsp;ключи в&nbsp;консоли <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
-        •&nbsp;<strong>Google Скрипты</strong> — уже вшиты в&nbsp;шаблон, ставить и&nbsp;включать нечего <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
+        •&nbsp;<strong>Google Скрипты</strong> — уже вшиты в&nbsp;шаблон, останется нажать две кнопки <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
         •&nbsp;<strong>Ключ курсов валют</strong> — бесплатный, регистрация на&nbsp;минуту <span style="opacity:.6">(блок&nbsp;05, руками)</span><br>
         •&nbsp;<strong>Telegram-бот</strong> — заводим нового, отдельно под&nbsp;финансы <span style="opacity:.6">(блок&nbsp;03, по&nbsp;промпту)</span></span></div>
       </div>
@@ -332,6 +332,8 @@
 
 Шаг 4. Проверь связь с таблицей: прочитай вкладку КОНФИГ и покажи мне название компании, базовую валюту и количество категорий. Убедись, что на месте вкладки PNL, СИСТЕМА, ДОСТУП, КОНФИГ, КАТЕГОРИИ и двенадцать листов месяцев. Если чего-то нет — скажи мне, что именно, дальше не иди.
 
+Шаг 4.1. Спроси меня, включил ли я скрипты таблицы: в блоке 04 я должен был открыть Расширения → Apps Script и запустить две функции — installNotesTrigger и rebuildAllNotes. Они вшиты в шаблон, писать их не нужно. Если я не сделал этого, попроси сделать сейчас: без них комментарии операций не будут превращаться в примечания на листах месяцев. Сам в код скриптов не лезь и в репозиторий их не тащи.
+
 Шаг 5. Заполни .env по образцу .env.example: токен бота, мой id, идентификатор таблицы, ключ модели, ключ Groq для голосовых, ключ курсов валют (спроси у меня — я взял его в блоке 05). Файл .env в git не коммить никогда.
 
 Шаг 6. Подключи модель в OpenClaw — это мозг, который разбирает мою речь и читает фото чеков:
@@ -347,10 +349,12 @@
 
 Шаг 10. Проверь доступы целиком: я приглашаю второго человека, ему приходит заявка, я одобряю кнопкой. Дальше бот сам просит у него настоящие имя и фамилию. Убедись, что имя записалось в таблицу, а мне пришла копия его операции с его ником.
 
-Шаг 11. Прогони со мной чек-лист приёмки из docs/ и покажи результат по каждому блоку.
+Шаг 11. Проверь заметки: попроси меня записать через бота операцию с комментарием, потом открой лист нужного месяца и убедись, что на пересечении «категория × день» появилось примечание с этим комментарием. Не появилось — проблема не в боте, а в триггерах таблицы: отправь меня в блок 04, шаги 6–7.
+
+Шаг 12. Прогони со мной чек-лист приёмки из docs/ и покажи результат по каждому блоку.
 
 Важные правила, не нарушай их:
-— Бот только ДОБАВЛЯЕТ строки на лист PNL. Формулы, структуру листов и другие вкладки не трогать никогда: таблица сама считает месяцы и аналитику.
+— Бот ДОБАВЛЯЕТ строки на лист PNL, а правит и удаляет их точечно по номеру строки. Формулы, структуру листов и расчётные вкладки не трогать никогда: таблица сама считает месяцы и аналитику.
 — Строки писать только через append с перезаписью, не вставкой: вставка сдвигает адреса в формулах и ломает подсчёты.
 — Все суммы, проценты и курсы считает код, а не модель.</div>
           <button class="btn-copy" onclick="copyBlock('promptMain', this)">📋 Копировать промпт</button>
@@ -395,33 +399,57 @@
 
         <div class="note note--alert"><span class="note__icon">🚫</span><span><strong>Не&nbsp;переделывайте структуру таблицы.</strong> Не&nbsp;удаляйте и&nbsp;не&nbsp;переименовывайте вкладки, не&nbsp;трогайте формулы, не&nbsp;переставляйте колонки. Месяцы и&nbsp;аналитика тянут данные из&nbsp;PNL по&nbsp;точным адресам: сломав одну формулу, вы&nbsp;потеряете все подсчёты. Планы вписывать можно и&nbsp;нужно — для&nbsp;этого есть колонка ПЛАН на&nbsp;листах месяцев.</span></div>
 
-        <div class="note note--green"><span class="note__icon">📎</span><span><strong>В&nbsp;шаблон вшиты два Google Скрипта, и&nbsp;они копируются вместе с&nbsp;таблицей.</strong> Это маленькие программы Apps&nbsp;Script, которые живут внутри вашей копии и&nbsp;работают только с&nbsp;ней. <strong>Ставить и&nbsp;включать ничего не&nbsp;нужно</strong> — они запускаются сами, как только вы&nbsp;правите таблицу руками.</span></div>
+        <div class="note note--green"><span class="note__icon">📎</span><span><strong>В&nbsp;шаблон вшиты два Google Скрипта, и&nbsp;они копируются вместе с&nbsp;таблицей.</strong> Это маленькие программы Apps&nbsp;Script, которые живут внутри вашей копии и&nbsp;работают только с&nbsp;ней. Устанавливать их&nbsp;не&nbsp;нужно — они уже там. Нужно один раз нажать две кнопки, дальше всё само.</span></div>
 
         <table class="data-table">
-          <tr><th>Скрипт</th><th>Что делает</th></tr>
-          <tr><td>💱 Смена валюты</td><td>Поменяли базовую валюту в&nbsp;КОНФИГ — символы и&nbsp;заголовки перекрашиваются во&nbsp;всех вкладках</td></tr>
-          <tr><td>📝 Заметки</td><td>Комментарий операции вешается примечанием на&nbsp;ячейку «категория&nbsp;× день» в&nbsp;листе месяца: наводите мышь на&nbsp;цифру — видно, из&nbsp;чего она сложилась</td></tr>
+          <tr><th>Скрипт</th><th>Что делает</th><th>Настройка</th></tr>
+          <tr><td>💱 Смена валюты</td><td>Поменяли базовую валюту в&nbsp;КОНФИГ — символы и&nbsp;заголовки перекрашиваются во&nbsp;всех вкладках</td><td>работает сразу</td></tr>
+          <tr><td>📝 Заметки</td><td>Комментарий операции вешается примечанием на&nbsp;ячейку «категория&nbsp;× день» в&nbsp;листе месяца: наводите мышь на&nbsp;цифру — видно, из&nbsp;чего она сложилась</td><td>шаги&nbsp;5–7 ниже</td></tr>
         </table>
 
         <div class="item" data-key="gs-menu"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Шаг 4. Обновить страницу таблицы</div>
-            <div class="item__hint">В&nbsp;меню сверху сам собой появится пункт <strong>💱 Финбот</strong> — значит скрипты приехали вместе с&nbsp;копией и&nbsp;на&nbsp;месте. Ничего нажимать не&nbsp;нужно, это просто проверка.</div>
+            <div class="item__hint">В&nbsp;меню сверху сам собой появится пункт <strong>💱 Финбот</strong> — значит скрипты приехали вместе с&nbsp;копией. Ничего нажимать не&nbsp;нужно, это просто проверка, что они на&nbsp;месте.</div>
           </div>
         </div>
 
-        <div class="note note--info"><span class="note__icon">🔧</span><span><strong>Почему не&nbsp;надо ничего включать.</strong> Скрипты запускает <strong>простой триггер</strong> — функция со&nbsp;специальным именем, которую Google зовёт сам на&nbsp;каждую правку таблицы. Она едет вместе с&nbsp;кодом в&nbsp;любую копию. Обычные триггеры, заведённые руками, при&nbsp;копировании таблицы <strong>не&nbsp;переносятся</strong> — код уезжает, а&nbsp;запускать его&nbsp;некому, и&nbsp;в&nbsp;копии всё молча перестаёт работать. Здесь этой ловушки нет.</span></div>
+        <div class="note note--info"><span class="note__icon">🔧</span><span><strong>Почему заметкам нужны две кнопки, а&nbsp;валюте нет.</strong><br><br>Перекраску валюты запускает <strong>простой триггер</strong> — функция со&nbsp;специальным именем, которую Google зовёт сам. Она едет вместе с&nbsp;кодом в&nbsp;любую копию, настраивать нечего.<br><br>А&nbsp;заметки должны появляться и&nbsp;на&nbsp;строки, которые пишет <strong>бот</strong>. Вот тут ловушка: на&nbsp;изменения, сделанные программой, Google простые триггеры <strong>не&nbsp;запускает вообще</strong>. Поэтому заметки висят на&nbsp;другом триггере, который такие изменения видит, — а&nbsp;он&nbsp;при копировании таблицы не&nbsp;переносится и&nbsp;его&nbsp;надо один раз включить руками.</span></div>
 
-        <div class="item" data-key="gs-check"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="gs-open"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 5. Проверить, что скрипты живые</div>
-            <div class="item__hint">Смените валюту в&nbsp;<strong>КОНФИГ</strong> — через пару секунд символы поменяются по&nbsp;всей таблице. Затем впишите руками на&nbsp;листе <strong>PNL</strong> строку с&nbsp;датой, категорией, суммой и&nbsp;комментарием — в&nbsp;листе нужного месяца на&nbsp;пересечении «категория&nbsp;× день» появится примечание с&nbsp;этим комментарием.</div>
+            <div class="item__text">Шаг 5. Открыть редактор скриптов</div>
+            <div class="item__hint">В&nbsp;своей копии таблицы: меню <strong>Расширения</strong> → <strong>Apps&nbsp;Script</strong>. Откроется вкладка с&nbsp;двумя файлами слева — <strong>Код</strong> и&nbsp;<strong>Заметки</strong>. Все ваши проекты скриптов всегда лежат по&nbsp;ссылке ниже.</div>
+            <a href="https://script.google.com/home/projects" target="_blank" class="item__link" onclick="event.stopPropagation()">script.google.com/home/projects</a>
           </div>
         </div>
 
-        <div class="note note--warn"><span class="note__icon">⚠</span><span>В&nbsp;меню <strong>💱 Финбот</strong> есть кнопка «Перекрасить валюту сейчас» — на&nbsp;случай, если что-то не&nbsp;перекрасилось. При&nbsp;первом нажатии Google попросит авторизацию: <strong>Продолжить</strong> → ваш аккаунт → на&nbsp;жёлтом экране «Приложение не&nbsp;проверено» нажмите <strong>Дополнительные настройки</strong> → <strong>Перейти к&nbsp;проекту</strong> → <strong>Разрешить</strong>. Экран пугает, но&nbsp;вы&nbsp;разрешаете своей копии работать с&nbsp;самой собой. Для&nbsp;автоматической работы скриптов эта авторизация не&nbsp;нужна — только для&nbsp;кнопки.</span></div>
+        <div class="item" data-key="gs-install"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 6. Запустить <code>installNotesTrigger</code></div>
+            <div class="item__hint">Сверху есть выпадающий список функций. Выберите в&nbsp;нём <strong>installNotesTrigger</strong> и&nbsp;нажмите <strong>Run</strong> (▶). Google попросит авторизацию: <strong>Разрешить доступ</strong> → ваш аккаунт → на&nbsp;жёлтом экране «Приложение не&nbsp;проверено» нажмите <strong>Дополнительные настройки</strong> → <strong>Перейти к&nbsp;проекту</strong> → <strong>Разрешить</strong>. Экран пугает, но&nbsp;вы&nbsp;разрешаете своей копии работать с&nbsp;самой собой.</div>
+          </div>
+        </div>
 
-        <div class="note note--info"><span class="note__icon">💡</span><span><strong>Строки, которые пишет бот, скрипты не&nbsp;видят:</strong> Google не&nbsp;запускает триггеры на&nbsp;изменения, сделанные программой. На&nbsp;деле это ничего не&nbsp;ломает — когда валюту меняете через бота (<code>/settings</code>), он&nbsp;перекрашивает таблицу сам. Заметки появляются у&nbsp;строк, вписанных руками.</span></div>
+        <div class="note note--green"><span class="note__icon">📋</span><span>Внизу откроется <strong>журнал выполнения</strong>. Должна появиться строка «Готово: onChange + страховка 30&nbsp;мин» и&nbsp;<strong>Execution completed</strong>. Если написано <strong>Execution failed</strong> — скопируйте текст ошибки и&nbsp;отдайте его&nbsp;Claude&nbsp;Code, он&nbsp;разберётся.</span></div>
+
+        <div class="item" data-key="gs-rebuild"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 7. Запустить <code>rebuildAllNotes</code></div>
+            <div class="item__hint">В&nbsp;том&nbsp;же списке выберите <strong>rebuildAllNotes</strong> → <strong>Run</strong>. Эта функция один раз проходит по&nbsp;всем месяцам и&nbsp;задаёт точку отсчёта. Дальше скрипт пересобирает только тот месяц, где что-то поменялось, — поэтому работает за&nbsp;секунды.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="gs-triggers"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 8. Проверить, что всё встало</div>
+            <div class="item__hint">Слева в&nbsp;редакторе — значок <strong>будильника</strong> (Triggers). Откройте: там должно быть <strong>ровно две строки</strong>, обе на&nbsp;функцию <code>syncNotesAuto</code>. Одна срабатывает на&nbsp;изменение таблицы, вторая — раз в&nbsp;полчаса на&nbsp;всякий случай.</div>
+          </div>
+        </div>
+
+        <div class="note note--green"><span class="note__icon">🧪</span><span><strong>Живая проверка (30&nbsp;секунд).</strong> Впишите руками на&nbsp;листе <strong>PNL</strong> строку: дату, тип, категорию из&nbsp;списка, сумму и&nbsp;комментарий. Откройте лист нужного месяца и&nbsp;наведите мышь на&nbsp;цифру на&nbsp;пересечении «категория&nbsp;× день» — всплывёт ваш комментарий. Удалите строку из&nbsp;PNL — заметка исчезнет.</span></div>
+
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>В&nbsp;меню <strong>💱 Финбот</strong> есть кнопка «Перекрасить валюту сейчас» — на&nbsp;случай, если после смены валюты что-то не&nbsp;перекрасилось. Обычно она не&nbsp;нужна: перекраска идёт сама.</span></div>
 
         <div class="note note--warn"><span class="note__icon">⚠</span><span>Дальше — доступ к&nbsp;таблицам в&nbsp;консоли Google. Это единственная часть, которую нельзя поручить Claude&nbsp;Code: он&nbsp;не&nbsp;может зайти в&nbsp;вашу консоль. Каждый шаг со&nbsp;ссылкой, которая открывает сразу нужный экран. Займёт минут пятнадцать.</span></div>
 
@@ -431,7 +459,7 @@
 
         <div class="item" data-key="g-project"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 6. Открыть консоль и выбрать проект</div>
+            <div class="item__text">Шаг 9. Открыть консоль и выбрать проект</div>
             <div class="item__hint">Слева сверху выпадающий список проектов. Если проект уже заводили на&nbsp;курсе или в&nbsp;связке&nbsp;1 — выберите его&nbsp;и&nbsp;ничего не&nbsp;создавайте. Если проекта нет, нажмите «Создать проект», имя любое, например&nbsp;finance.</div>
             <a href="https://console.cloud.google.com/" target="_blank" class="item__link" onclick="event.stopPropagation()">console.cloud.google.com</a>
           </div>
@@ -439,7 +467,7 @@
 
         <div class="item" data-key="g-api"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 7. Включить Google Sheets API</div>
+            <div class="item__text">Шаг 10. Включить Google Sheets API</div>
             <div class="item__hint">Ссылка открывает сразу карточку нужного API — это доступ к&nbsp;гугл-таблицам. Нажмите синюю кнопку «Включить». Если вместо неё написано «Управлять», значит API уже включён, идите дальше.</div>
             <a href="https://console.cloud.google.com/apis/library/sheets.googleapis.com" target="_blank" class="item__link" onclick="event.stopPropagation()">Открыть Google Sheets API</a>
           </div>
@@ -447,7 +475,7 @@
 
         <div class="item" data-key="g-consent"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 8. Заполнить экран согласия</div>
+            <div class="item__text">Шаг 11. Заполнить экран согласия</div>
             <div class="item__hint">Тип пользователя «Внешний» → «Создать». Заполните три поля: название приложения, ваша почта для&nbsp;поддержки, ваша почта разработчика. Название увидите только вы, можно написать «Финансовый бот».</div>
             <a href="https://console.cloud.google.com/apis/credentials/consent" target="_blank" class="item__link" onclick="event.stopPropagation()">Экран согласия OAuth</a>
           </div>
@@ -455,24 +483,24 @@
 
         <div class="item" data-key="g-scopes"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 9. Выдать права на таблицы</div>
+            <div class="item__text">Шаг 12. Выдать права на таблицы</div>
             <div class="item__hint">На&nbsp;шаге «Области доступа» нажмите «Добавить или удалить области». В&nbsp;поиске наберите <strong>sheets</strong> и&nbsp;отметьте строку <strong>.../auth/spreadsheets</strong> — это чтение и&nbsp;запись гугл-таблиц. «Обновить» → «Сохранить и&nbsp;продолжить».</div>
           </div>
         </div>
 
         <div class="item" data-key="g-publish"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 10. Опубликовать приложение</div>
+            <div class="item__text">Шаг 13. Опубликовать приложение</div>
             <div class="item__hint">Вернитесь на&nbsp;экран согласия. В&nbsp;блоке «Статус публикации» нажмите «Опубликовать приложение» и&nbsp;подтвердите. Статус должен смениться с&nbsp;«Тестирование» на&nbsp;«В&nbsp;эксплуатации».</div>
             <a href="https://console.cloud.google.com/apis/credentials/consent" target="_blank" class="item__link" onclick="event.stopPropagation()">Статус публикации</a>
           </div>
         </div>
 
-        <div class="note note--alert"><span class="note__icon">🚫</span><span>Не&nbsp;пропускайте шаг&nbsp;10. Если приложение останется в&nbsp;режиме тестирования, доступ к&nbsp;таблице отвалится ровно через семь дней, и&nbsp;бот молча перестанет записывать операции. Это самая частая причина поломки.</span></div>
+        <div class="note note--alert"><span class="note__icon">🚫</span><span>Не&nbsp;пропускайте шаг&nbsp;13. Если приложение останется в&nbsp;режиме тестирования, доступ к&nbsp;таблице отвалится ровно через семь дней, и&nbsp;бот молча перестанет записывать операции. Это самая частая причина поломки.</span></div>
 
         <div class="item" data-key="g-client"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 11. Создать OAuth Client ID</div>
+            <div class="item__text">Шаг 14. Создать OAuth Client ID</div>
             <div class="item__hint">Нажмите «Создать учётные данные», выберите «Идентификатор клиента OAuth». Тип приложения: <strong>Веб-приложение</strong>. В&nbsp;разделе «Разрешённые URI перенаправления» добавьте адрес, который даст Claude&nbsp;Code на&nbsp;третьем шаге промпта. Нажмите «Создать».</div>
             <a href="https://console.cloud.google.com/apis/credentials" target="_blank" class="item__link" onclick="event.stopPropagation()">Учётные данные</a>
           </div>
@@ -480,14 +508,14 @@
 
         <div class="item" data-key="g-keys"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 12. Сохранить два ключа</div>
+            <div class="item__text">Шаг 15. Сохранить два ключа</div>
             <div class="item__hint">После создания появится окно с&nbsp;двумя строками: «Идентификатор клиента» и&nbsp;«Секрет клиента». Скопируйте обе в&nbsp;надёжное место. Позже их&nbsp;можно посмотреть там&nbsp;же, в&nbsp;списке учётных данных.</div>
           </div>
         </div>
 
         <div class="note note--warn"><span class="note__icon">⚠</span><span>Секрет клиента это пароль от&nbsp;доступа к&nbsp;вашим таблицам. Не&nbsp;выкладывайте его&nbsp;в&nbsp;открытый репозиторий и&nbsp;не&nbsp;пересылайте в&nbsp;общие чаты.</span></div>
 
-        <div class="note note--info"><span class="note__icon">🔌</span><span>Если на&nbsp;курсе вы&nbsp;уже подключали <strong>Google&nbsp;Workspace&nbsp;MCP</strong>, отдельные ключи можно не&nbsp;создавать: Claude&nbsp;Code возьмёт из&nbsp;него готовый файл с&nbsp;доступами — нужно только, чтобы в&nbsp;согласии стояла область <strong>spreadsheets</strong> из&nbsp;шага&nbsp;9. Дальше боту сам MCP не&nbsp;нужен: он&nbsp;читает файл напрямую.</span></div>
+        <div class="note note--info"><span class="note__icon">🔌</span><span>Если на&nbsp;курсе вы&nbsp;уже подключали <strong>Google&nbsp;Workspace&nbsp;MCP</strong>, отдельные ключи можно не&nbsp;создавать: Claude&nbsp;Code возьмёт из&nbsp;него готовый файл с&nbsp;доступами — нужно только, чтобы в&nbsp;согласии стояла область <strong>spreadsheets</strong> из&nbsp;шага&nbsp;12. Дальше боту сам MCP не&nbsp;нужен: он&nbsp;читает файл напрямую.</span></div>
 
       </div>
     </div>
@@ -603,14 +631,15 @@
           <tr><th>Что видите</th><th>Что делать</th></tr>
           <tr><td>Бот молчит на&nbsp;любое сообщение</td><td>Контейнер упал или не&nbsp;стартовал. Попросите Claude&nbsp;Code показать лог бота — в&nbsp;первых строках будет причина.</td></tr>
           <tr><td>«Тебя ещё нет в&nbsp;списке команды», хотя вы&nbsp;владелец</td><td>В&nbsp;настройках бота не&nbsp;тот числовой id. Сверьте его&nbsp;с&nbsp;тем, что дал @userinfobot.</td></tr>
-          <tr><td>Операции не&nbsp;попадают в&nbsp;таблицу</td><td>Чаще всего доступ к&nbsp;Google протух: приложение осталось в&nbsp;режиме «Тестирование». Опубликуйте его&nbsp;(блок&nbsp;04, шаг&nbsp;10) и&nbsp;пройдите авторизацию заново.</td></tr>
+          <tr><td>Операции не&nbsp;попадают в&nbsp;таблицу</td><td>Чаще всего доступ к&nbsp;Google протух: приложение осталось в&nbsp;режиме «Тестирование». Опубликуйте его&nbsp;(блок&nbsp;04, шаг&nbsp;13) и&nbsp;пройдите авторизацию заново.</td></tr>
           <tr><td>Ошибка доступа к&nbsp;таблице сразу после сборки</td><td>Вероятно, боту дали адрес шаблона, а&nbsp;не&nbsp;своей копии. Проверьте ссылку.</td></tr>
           <tr><td>Пишет «не&nbsp;знаю такую валюту»</td><td>Назовите валюту кодом из&nbsp;трёх букв: RUB, USD, KZT, GEL.</td></tr>
           <tr><td>Сумма в&nbsp;валюте компании пустая</td><td>Кончился лимит курсов или сервис не&nbsp;ответил. Запись сохранена — проставьте сумму руками, лимит проверьте в&nbsp;кабинете ExchangeRate-API.</td></tr>
           <tr><td>Любое фото чека не&nbsp;читается</td><td>Выбранная модель не&nbsp;умеет смотреть картинки. Переключитесь на&nbsp;ту, что умеет (блок&nbsp;02).</td></tr>
           <tr><td>Меню «💱 Финбот» не&nbsp;появилось в&nbsp;таблице</td><td>Обновите страницу таблицы. Если не&nbsp;помогло — <strong>Расширения → Apps Script</strong>, проверьте, что проект на&nbsp;месте. Меню показывается только при&nbsp;наличии вкладки КОНФИГ.</td></tr>
           <tr><td>Поменяли валюту руками, таблица не&nbsp;перекрасилась</td><td>Обновите страницу таблицы и&nbsp;поменяйте валюту ещё раз. Не&nbsp;помогло — меню <strong>💱 Финбот</strong> → «Перекрасить валюту сейчас»: в&nbsp;первый раз Google спросит разрешение (блок&nbsp;04).</td></tr>
-          <tr><td>Заметки не&nbsp;появляются под&nbsp;цифрами в&nbsp;листе месяца</td><td>Заметка строится из&nbsp;<strong>комментария</strong> операции — без него её&nbsp;не&nbsp;из&nbsp;чего собрать. И&nbsp;помните: строки, записанные ботом, скрипт не&nbsp;видит, это ограничение Google (блок&nbsp;04).</td></tr>
+          <tr><td>Заметки не&nbsp;появляются под&nbsp;цифрами в&nbsp;листе месяца</td><td>Скорее всего не&nbsp;включён триггер: блок&nbsp;04, шаги&nbsp;6–7, и&nbsp;проверьте, что в&nbsp;Triggers ровно две строки. Вторая причина — у&nbsp;операции <strong>нет комментария</strong>: заметку не&nbsp;из&nbsp;чего собрать.</td></tr>
+          <tr><td>Заметка есть, но&nbsp;значок валюты в&nbsp;ней старый</td><td>Подождите полчаса — страховочный триггер пересоберёт сам. Не&nbsp;ждать: редактор скриптов → <code>rebuildAllNotes</code> → <strong>Run</strong>.</td></tr>
           <tr><td>Аналитика пишет «План не&nbsp;задан»</td><td>Это не&nbsp;ошибка: планы вписываются руками в&nbsp;колонку ПЛАН на&nbsp;листе месяца.</td></tr>
           <tr><td>Формулы в&nbsp;таблице сломались (#REF!)</td><td><strong>Файл → История версий → Восстановить</strong>. Вернёт таблицу целиком, включая удалённые вкладки.</td></tr>
         </table>
