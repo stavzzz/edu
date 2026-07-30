@@ -328,7 +328,7 @@
 
 Шаг 2. Заведи Telegram-бота: нужен НОВЫЙ бот отдельно под финансы, даже если у меня уже есть другие. Продиктуй, что нажимать в @BotFather (/newbot, имя, username), забери у меня токен. Затем подскажи написать @userinfobot и забери мой Telegram id — это будет OWNER_CHAT_ID, то есть я, главный админ.
 
-Шаг 3. Спроси у меня ссылку на мою копию Google-таблицы — я её уже сделал руками (блок 04). Из адреса вида docs.google.com/spreadsheets/d/XXXXXXXX/edit сам достань идентификатор таблицы. Спроси ключи Google из консоли: идентификатор клиента и секрет клиента. Скажи мне, какой redirect URI вписать в OAuth Client ID, проведи авторизацию и сохрани файл с доступом на сервере с правами 600.
+Шаг 3. Спроси у меня ссылку на мою копию Google-таблицы — я её уже сделал руками (блок 04). Из адреса вида docs.google.com/spreadsheets/d/XXXXXXXX/edit сам достань идентификатор таблицы. Дальше нужен доступ к Google Таблицам: возьми креды (client_id, client_secret, refresh_token) — например, из файла кредов Google Workspace MCP, если он у меня уже настроен, — и пропиши путь к этому файлу в docker-compose.yml. Если кредов нет, спроси у меня идентификатор клиента и секрет клиента, скажи, какой redirect URI вписать в OAuth Client ID, проведи авторизацию и сохрани файл с доступом на сервере с правами 600. OAuth Client ID я уже создал и Google Sheets API включил (блок 04).
 
 Шаг 4. Проверь связь с таблицей: прочитай вкладку КОНФИГ и покажи мне название компании, базовую валюту и количество категорий. Убедись, что на месте вкладки PNL, СИСТЕМА, ДОСТУП, КОНФИГ, КАТЕГОРИИ и двенадцать листов месяцев. Если чего-то нет — скажи мне, что именно, дальше не иди.
 
@@ -415,7 +415,9 @@
 
         <div class="note note--warn"><span class="note__icon">⚠</span><span>Дальше — доступ к&nbsp;таблицам в&nbsp;консоли Google. Это единственная часть, которую нельзя поручить Claude&nbsp;Code: он&nbsp;не&nbsp;может зайти в&nbsp;вашу консоль. Каждый шаг со&nbsp;ссылкой, которая открывает сразу нужный экран. Займёт минут пятнадцать.</span></div>
 
-        <div class="note note--green"><span class="note__icon">💰</span><span><strong>Платить не&nbsp;нужно.</strong> Google&nbsp;Sheets&nbsp;API бесплатен, карту привязывать не&nbsp;требуется. Лимиты: 300&nbsp;запросов в&nbsp;минуту на&nbsp;проект — бот делает несколько десятков в&nbsp;день, упереться невозможно.</span></div>
+        <div class="note note--green"><span class="note__icon">💰</span><span><strong>Платить не&nbsp;нужно.</strong> Google&nbsp;Sheets&nbsp;API бесплатен, карту в&nbsp;консоли привязывать не&nbsp;требуется, платный Google&nbsp;Workspace тоже не&nbsp;нужен. Обычного Gmail достаточно.<br><br>Лимиты: 300&nbsp;запросов в&nbsp;минуту на&nbsp;проект и&nbsp;60&nbsp;в&nbsp;минуту на&nbsp;пользователя. Бот делает несколько десятков запросов в&nbsp;день, упереться невозможно.</span></div>
+
+        <div class="note note--info"><span class="note__icon">💡</span><span>Google периодически переносит эти экраны и&nbsp;переименовывает разделы. Если увидите другое название, ориентируйтесь по&nbsp;смыслу: нужен доступ к&nbsp;таблицам, согласие приложения и&nbsp;пара ключей.</span></div>
 
         <div class="item" data-key="g-project"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
@@ -460,13 +462,22 @@
 
         <div class="item" data-key="g-client"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 11. Создать OAuth Client ID и сохранить два ключа</div>
-            <div class="item__hint">«Создать учётные данные» → «Идентификатор клиента OAuth». Тип приложения: <strong>Веб-приложение</strong>. В&nbsp;«Разрешённые URI перенаправления» добавьте адрес, который даст Claude&nbsp;Code на&nbsp;третьем шаге промпта. После создания появятся <strong>идентификатор клиента</strong> и&nbsp;<strong>секрет клиента</strong> — скопируйте обе строки в&nbsp;блокнот.</div>
+            <div class="item__text">Шаг 11. Создать OAuth Client ID</div>
+            <div class="item__hint">Нажмите «Создать учётные данные», выберите «Идентификатор клиента OAuth». Тип приложения: <strong>Веб-приложение</strong>. В&nbsp;разделе «Разрешённые URI перенаправления» добавьте адрес, который даст Claude&nbsp;Code на&nbsp;третьем шаге промпта. Нажмите «Создать».</div>
             <a href="https://console.cloud.google.com/apis/credentials" target="_blank" class="item__link" onclick="event.stopPropagation()">Учётные данные</a>
           </div>
         </div>
 
-        <div class="note note--warn"><span class="note__icon">⚠</span><span>Секрет клиента — это пароль от&nbsp;доступа к&nbsp;вашим таблицам. Не&nbsp;выкладывайте его&nbsp;в&nbsp;открытый репозиторий и&nbsp;не&nbsp;пересылайте в&nbsp;общие чаты.</span></div>
+        <div class="item" data-key="g-keys"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 12. Сохранить два ключа</div>
+            <div class="item__hint">После создания появится окно с&nbsp;двумя строками: «Идентификатор клиента» и&nbsp;«Секрет клиента». Скопируйте обе в&nbsp;надёжное место. Позже их&nbsp;можно посмотреть там&nbsp;же, в&nbsp;списке учётных данных.</div>
+          </div>
+        </div>
+
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>Секрет клиента это пароль от&nbsp;доступа к&nbsp;вашим таблицам. Не&nbsp;выкладывайте его&nbsp;в&nbsp;открытый репозиторий и&nbsp;не&nbsp;пересылайте в&nbsp;общие чаты.</span></div>
+
+        <div class="note note--info"><span class="note__icon">🔌</span><span>Если на&nbsp;курсе вы&nbsp;уже подключали <strong>Google&nbsp;Workspace&nbsp;MCP</strong>, отдельные ключи можно не&nbsp;создавать: Claude&nbsp;Code возьмёт из&nbsp;него готовый файл с&nbsp;доступами — нужно только, чтобы в&nbsp;согласии стояла область <strong>spreadsheets</strong> из&nbsp;шага&nbsp;9. Дальше боту сам MCP не&nbsp;нужен: он&nbsp;читает файл напрямую.</span></div>
 
       </div>
     </div>
