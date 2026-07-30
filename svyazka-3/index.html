@@ -199,9 +199,9 @@
     <div class="header__badge">ИИ-ВИЗАЦИЯ · СВЯЗКА 3</div>
     <h1 class="header__title">Финансовый <span>бот компании</span> в&nbsp;Telegram</h1>
     <ul class="header__topics">
-      <li>Сотрудник наговаривает трату: «Потратил 1500&nbsp;рублей на&nbsp;ручки и&nbsp;стикеры. Купил канцтовары сегодня»</li>
-      <li>Бот распознаёт дату, сумму, валюту и&nbsp;категорию и&nbsp;пишет строку в&nbsp;общую Google-таблицу</li>
-      <li>Можно прислать фото чека — бот прочитает его сам</li>
+      <li>Сотрудник говорит: «Потратил 1500&nbsp;рублей на&nbsp;ручки и&nbsp;стикеры. Купил канцтовары сегодня»</li>
+      <li>Бот разбирает дату, сумму, валюту и&nbsp;категорию и&nbsp;пишет строку в&nbsp;Google-таблицу</li>
+      <li>Можно прислать фото чека — бот прочитает его&nbsp;сам</li>
       <li>Любая валюта пересчитывается в&nbsp;валюту компании по&nbsp;курсу дня</li>
       <li>Руководителю приходит копия каждой операции: кто, сколько и&nbsp;на&nbsp;что</li>
       <li>Аналитика по&nbsp;кнопкам: итоги, бюджет план/факт, динамика, «кто сколько»</li>
@@ -219,552 +219,378 @@
 
   <div id="sections">
 
-    <!-- ================= 01 ================= -->
     <div class="section">
       <div class="section__header"><div class="section__num">01</div><div class="section__title">Зачем это нужно</div></div>
       <div class="section__card">
+        <div class="note note--info"><span class="note__icon">🎯</span><span>Деньги компании перестают теряться в&nbsp;чеках и&nbsp;чужой памяти. Сотрудник говорит фразу — строка уже в&nbsp;таблице. Вы&nbsp;видите каждую операцию в&nbsp;тот&nbsp;же момент и&nbsp;спрашиваете цифры словами, не&nbsp;открывая таблицу.</span></div>
 
-        <div class="note note--info"><span class="note__icon">🎯</span><span>Деньги компании расползаются по&nbsp;чекам, перепискам и&nbsp;чужой памяти. Собирать их&nbsp;в&nbsp;таблицу руками не&nbsp;будет никто. Здесь сотрудник говорит фразу — и&nbsp;строка уже в&nbsp;таблице, а&nbsp;руководитель видит её&nbsp;в&nbsp;ту&nbsp;же секунду.</span></div>
+        <div class="note"><span class="note__icon">👔</span><span><strong>Что говорит сотрудник:</strong><br>
+        •&nbsp;«Потратил 1500&nbsp;рублей на&nbsp;ручки и&nbsp;стикеры. Купил канцтовары сегодня»<br>
+        •&nbsp;То&nbsp;же самое голосовым — бот расшифрует<br>
+        •&nbsp;Фото чека из&nbsp;магазина — бот прочитает сумму и&nbsp;продавца<br>
+        •&nbsp;«Ошибся, удали» · «В&nbsp;R-12 сумма 2000»</span></div>
+
+        <div class="note"><span class="note__icon">📊</span><span><strong>Что видит руководитель:</strong> копию каждой операции с&nbsp;именем и&nbsp;ником автора, а&nbsp;по&nbsp;запросу — аналитику: итоги, бюджет план/факт, динамику, «кто сколько». Восемь кнопок в&nbsp;меню отвечают мгновенно, потому что считает код, а&nbsp;не&nbsp;модель.</span></div>
 
         <table class="data-table">
-          <thead><tr><th>Сотрудник говорит</th><th>Что происходит</th></tr></thead>
-          <tbody>
-            <tr><td>«Потратил 1500&nbsp;рублей на&nbsp;ручки и&nbsp;стикеры. Купил канцтовары сегодня»</td><td>строка в&nbsp;таблице: дата, сумма, категория КАНЦТОВАРЫ, комментарий, источник</td></tr>
-            <tr><td>Голосовое вместо текста</td><td>то&nbsp;же самое — бот расшифрует речь</td></tr>
-            <tr><td>Фото чека из&nbsp;магазина</td><td>бот читает итоговую сумму, продавца и&nbsp;дату, показывает карточку на&nbsp;подтверждение</td></tr>
-            <tr><td>«Потратил 50&nbsp;лари на&nbsp;продукты»</td><td>пересчитает в&nbsp;валюту компании по&nbsp;курсу дня, в&nbsp;таблице обе суммы</td></tr>
-            <tr><td>«Ошибся, удали»</td><td>уберёт свою последнюю запись, чужие не&nbsp;тронет</td></tr>
-            <tr><td>Руководитель: «сколько потратили в&nbsp;июле»</td><td>карточка с&nbsp;итогами, топом категорий и&nbsp;планом/фактом</td></tr>
-          </tbody>
+          <tr><th>Сотрудник говорит</th><th>Что происходит</th></tr>
+          <tr><td>«Потратил 1500&nbsp;рублей на&nbsp;канцтовары»</td><td>Строка в&nbsp;таблице: дата, сумма, категория, комментарий, источник</td></tr>
+          <tr><td>«Потратил 50&nbsp;лари на&nbsp;продукты»</td><td>Пересчёт в&nbsp;валюту компании по&nbsp;курсу дня, в&nbsp;таблице обе суммы</td></tr>
+          <tr><td>Присылает фото чека</td><td>Карточка «проверь» с&nbsp;кнопками — записывается только после подтверждения</td></tr>
+          <tr><td>«Ошибся, удали»</td><td>Уходит его&nbsp;последняя запись, чужие бот не&nbsp;трогает</td></tr>
+          <tr><td>Руководитель: «сколько потратили в&nbsp;июле»</td><td>Карточка с&nbsp;итогами, топом категорий и&nbsp;планом/фактом</td></tr>
         </table>
 
-        <div class="note note--green"><span class="note__icon">🧠</span><span><strong>Модель не&nbsp;считает — считает код.</strong> Нейросеть нужна ровно для&nbsp;трёх вещей: понять фразу, прочитать чек и&nbsp;разобрать вопрос. Все суммы, проценты, курсы и&nbsp;план/факт считает обычная программа. Поэтому цифры не&nbsp;«плывут»: бот не&nbsp;может ошибиться в&nbsp;арифметике, потому что он&nbsp;её&nbsp;не&nbsp;выдумывает.</span></div>
-
-        <div class="note note--info"><span class="note__icon">👔</span><span>Кнопки аналитики и&nbsp;отказы в&nbsp;правах работают <strong>без единого обращения к&nbsp;модели</strong> — это не&nbsp;только быстро, но&nbsp;и&nbsp;бесплатно. Токены тратятся только на&nbsp;живую речь и&nbsp;фото.</span></div>
-
-        <div class="note note--warn"><span class="note__icon">🔒</span><span>Прямого доступа к&nbsp;таблице у&nbsp;сотрудников нет — только через бота. Кто что может (расходы, доходы, аналитика) — решает руководитель галочками.</span></div>
-
+        <div class="note note--green"><span class="note__icon">🧠</span><span><strong>Модель не&nbsp;считает — считает код.</strong> Нейросеть нужна для&nbsp;трёх вещей: понять фразу, прочитать чек и&nbsp;разобрать вопрос. Все суммы, курсы и&nbsp;проценты считает программа, поэтому цифры не&nbsp;«плывут». Программный код руками писать не&nbsp;нужно: вы&nbsp;отдаёте ссылку и&nbsp;промпт в&nbsp;Claude&nbsp;Code, дальше он&nbsp;всё делает сам.</span></div>
       </div>
     </div>
 
-    <!-- ================= 02 ================= -->
     <div class="section">
       <div class="section__header"><div class="section__num">02</div><div class="section__title">Что нужно иметь до старта</div></div>
       <div class="section__card">
 
-        <div class="note note--info"><span class="note__icon">📦</span><span>Список того, что должно быть <strong>до</strong>&nbsp;начала сборки. Если проходили связки&nbsp;1 и&nbsp;2 — почти всё уже есть, останется таблица и&nbsp;ключ курсов валют.</span></div>
+        <div class="note note--info"><span class="note__icon">💡</span><span>Всё из&nbsp;этого списка вы&nbsp;уже настраивали на&nbsp;курсе и&nbsp;в&nbsp;прошлых связках. Пробегитесь и&nbsp;отметьте, что живо.</span></div>
 
         <div class="item" data-key="pre-vpn"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">VPN</div>
-            <div class="item__hint">Нужен для&nbsp;доступа к&nbsp;консоли Google и&nbsp;сайтам с&nbsp;ключами.</div>
+            <div class="item__hint">Нужен для&nbsp;доступа к&nbsp;зарубежным сервисам.</div>
           </div>
         </div>
 
-        <div class="item" data-key="pre-claude"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="pre-cc"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Claude Code</div>
-            <div class="item__hint">Именно он&nbsp;соберёт бота по&nbsp;промпту из&nbsp;блока&nbsp;07. Руками писать код не&nbsp;придётся.</div>
+            <div class="item__hint">Установлен и&nbsp;запускается на&nbsp;вашем компьютере.</div>
           </div>
         </div>
 
-        <div class="item" data-key="pre-server"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="pre-vps"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Сервер с OpenClaw</div>
-            <div class="item__hint">Тот&nbsp;же, что в&nbsp;прошлых связках. Бот живёт в&nbsp;докер-контейнере и&nbsp;работает круглосуточно, даже когда компьютер выключен.</div>
-          </div>
-        </div>
-
-        <div class="item" data-key="pre-google"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Google-аккаунт (обычный Gmail)</div>
-            <div class="item__hint">На&nbsp;нём будет жить таблица. Платный Google&nbsp;Workspace не&nbsp;нужен.</div>
+            <div class="item__text">Сервер VPS с&nbsp;установленным OpenClaw</div>
+            <div class="item__hint">Тот&nbsp;же, что и&nbsp;в&nbsp;прошлых связках. Docker тоже нужен — бот живёт в&nbsp;контейнере; на&nbsp;вашем сервере он&nbsp;уже стоит с&nbsp;курса.</div>
           </div>
         </div>
 
         <div class="item" data-key="pre-model"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Ключ модели — она читает фразы и фото чеков</div>
-            <div class="item__hint">Подойдёт <strong>MiniMax</strong> — берём его в&nbsp;блоке&nbsp;06. Важно: модель должна уметь <strong>смотреть картинки</strong>, иначе фото чека работать не&nbsp;будет.</div>
+            <div class="item__text">Модель на выбор: подписка ChatGPT ИЛИ ключ MiniMax</div>
+            <div class="item__hint">Подключается к&nbsp;OpenClaw так&nbsp;же, как в&nbsp;прошлых связках. <strong>Совет:</strong> здесь модель не&nbsp;только разбирает фразы, но&nbsp;и&nbsp;<strong>читает фото чеков</strong>, поэтому нужна та, что умеет смотреть картинки. На&nbsp;MiniMax это проверено и&nbsp;работает.</div>
           </div>
         </div>
 
         <div class="item" data-key="pre-groq"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Ключ Groq — расшифровка голосовых</div>
-            <div class="item__hint">Если делали связку&nbsp;1, ключ уже есть — берите тот&nbsp;же. Если нет — в&nbsp;блоке&nbsp;06.</div>
+            <div class="item__text">Ключ Groq для распознавания голосовых</div>
+            <div class="item__hint">Тот&nbsp;же ключ, что делали на&nbsp;курсе (console.groq.com). Держите под&nbsp;рукой: Claude&nbsp;Code сам попросит его.</div>
           </div>
         </div>
 
-        <div class="item" data-key="pre-rates"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="pre-gmcp"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Ключ курсов валют</div>
-            <div class="item__hint">Бесплатный, берём в&nbsp;блоке&nbsp;06. Нужен, только если сотрудники платят в&nbsp;разных валютах.</div>
+            <div class="item__text">Google-аккаунт с доступом к Google Таблицам</div>
+            <div class="item__hint">Обычного Gmail достаточно, платный Google&nbsp;Workspace не&nbsp;нужен. Если на&nbsp;курсе уже подключали Google&nbsp;MCP&nbsp;— проект в&nbsp;консоли и&nbsp;ключи у&nbsp;вас есть, останется добавить доступ к&nbsp;таблицам в&nbsp;блоке&nbsp;04.</div>
           </div>
         </div>
 
-        <div class="note note--green"><span class="note__icon">💰</span><span><strong>Сколько это стоит.</strong> Google&nbsp;Sheets&nbsp;API — бесплатно. Курсы валют — бесплатный тариф. Groq — бесплатный тариф. Платите только за&nbsp;модель, и&nbsp;то&nbsp;копейки: кнопки аналитики её&nbsp;не&nbsp;трогают вообще.</span></div>
-
+        <div class="note note--green"><span class="note__icon">✅</span><span><strong>Это настроим дальше по&nbsp;чек-листу, заранее ничего делать не&nbsp;нужно:</strong><br>
+        •&nbsp;<strong>Google-таблица</strong> — копия готового шаблона к&nbsp;себе на&nbsp;Диск <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
+        •&nbsp;<strong>Доступ к&nbsp;Google Таблицам</strong> — Google&nbsp;Sheets&nbsp;API и&nbsp;ключи в&nbsp;консоли <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
+        •&nbsp;<strong>Скрипт смены валюты</strong> — уже вшит в&nbsp;шаблон, надо только включить <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
+        •&nbsp;<strong>Ключ курсов валют</strong> — бесплатный, регистрация на&nbsp;минуту <span style="opacity:.6">(блок&nbsp;05, руками)</span><br>
+        •&nbsp;<strong>Telegram-бот</strong> — заводим нового, отдельно под&nbsp;финансы <span style="opacity:.6">(блок&nbsp;03, по&nbsp;промпту)</span></span></div>
       </div>
     </div>
 
-    <!-- ================= 03 ================= -->
     <div class="section">
-      <div class="section__header"><div class="section__num">03</div><div class="section__title">Таблица: копия шаблона к себе на Google Диск</div></div>
+      <div class="section__header"><div class="section__num">03</div><div class="section__title">Репозиторий и главный промпт</div></div>
       <div class="section__card">
 
-        <div class="note note--info"><span class="note__icon">📊</span><span>Вся финансовая машина — это одна <strong>Google-таблица</strong> (Google&nbsp;Sheets / Google&nbsp;Spreadsheet). Бот только <strong>добавляет строки</strong> на&nbsp;лист&nbsp;PNL, а&nbsp;листы месяцев, АНАЛИЗ и&nbsp;PNL&nbsp;С&nbsp;ФИЛЬТРАЦИЕЙ считают всё сами формулами. Шаблон уже собран — вам нужно сделать копию себе.</span></div>
+        <div class="note note--info"><span class="note__icon">📦</span><span>Весь код и&nbsp;инструкция лежат в&nbsp;репозитории. Вы&nbsp;отдаёте ссылку и&nbsp;промпт в&nbsp;Claude&nbsp;Code, он&nbsp;делает всё по&nbsp;инструкции и&nbsp;ведёт вас за&nbsp;руку.</span></div>
 
-        <div class="item" data-key="tbl-open"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="repo-open"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 1. Открыть шаблон таблицы</div>
-            <div class="item__hint">Ссылка ниже открывает шаблон в&nbsp;режиме просмотра. Ничего в&nbsp;нём не&nbsp;меняйте — он&nbsp;общий для&nbsp;всех.</div>
-            <a href="https://docs.google.com/spreadsheets/d/1INbzQ8dQV3xwlWqDecqnzOGJCpNKK-Nj8SJsAE3kBjI/edit?usp=sharing" target="_blank" class="item__link" onclick="event.stopPropagation()">Открыть шаблон «ФИНАНСЫ КОМПАНИИ»</a>
+            <div class="item__text">Открыть репозиторий связки</div>
+            <div class="item__hint">Ссылка понадобится в&nbsp;промпте ниже.</div>
+            <a href="https://github.com/stavzzz/svyazka-3" target="_blank" class="item__link" onclick="event.stopPropagation()">Репозиторий связки 3</a>
           </div>
         </div>
+
+        <div class="note note--info"><span class="note__icon">🧠</span><span><strong>Как устроен бот внутри.</strong><br><br>Сам бот — <strong>самописный код</strong> на&nbsp;вашем сервере. Модель нужна ровно для&nbsp;трёх вещей: понять живую фразу, прочитать фото чека и&nbsp;разобрать вопрос по&nbsp;аналитике. Всю арифметику — суммы, курсы, проценты, план и&nbsp;факт — считает код, поэтому цифра в&nbsp;таблице всегда сходится с&nbsp;тем, что сказал человек.<br><br>Права проверяются <strong>до</strong>&nbsp;обращения к&nbsp;модели: если сотруднику не&nbsp;открыта аналитика, отказ придёт мгновенно и&nbsp;бесплатно. Восемь кнопок аналитики тоже не&nbsp;тратят ни&nbsp;одного токена — их&nbsp;целиком считает код.<br><br>Ещё две вещи бот делает сам, без вас:<br>•&nbsp;<strong>знакомится</strong> с&nbsp;новым человеком — просит настоящие имя и&nbsp;фамилию, потому что в&nbsp;профиле Telegram у&nbsp;людей бывает что угодно, а&nbsp;в&nbsp;таблице должно быть видно, кто внёс расход;<br>•&nbsp;<strong>рассылает копии операций</strong> руководителям — каждая запись, правка и&nbsp;удаление приходят им&nbsp;с&nbsp;именем и&nbsp;ником автора.</span></div>
+
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>Сначала пройдите блоки&nbsp;04 и&nbsp;05: сделайте копию таблицы, включите доступ к&nbsp;Google&nbsp;Таблицам и&nbsp;возьмите ключ курсов валют. Без них промпт остановится на&nbsp;третьем шаге.</span></div>
+
+        <div class="prompt-block">
+          <div class="prompt-block__title">📋 Промпт: собрать финансового бота (в Claude Code)</div>
+          <div class="prompt-block__text" id="promptMain">Ты разворачиваешь мне финансового бота компании в Telegram. Готовый код, тесты и документация лежат здесь: https://github.com/stavzzz/svyazka-3 — с нуля ничего не пиши, работай с этим репозиторием. Веди меня по шагам, после каждого шага показывай результат и жди подтверждения.
+
+Шаг 1. Проверь, что сервер жив, Node 22, Docker и OpenClaw на месте. Склонируй репозиторий в /root/finance-bot, прочитай docs/ целиком — там техзадание, все тексты сообщений и чек-лист приёмки.
+
+Шаг 2. Заведи Telegram-бота: нужен НОВЫЙ бот отдельно под финансы, даже если у меня уже есть другие. Продиктуй, что нажимать в @BotFather (/newbot, имя, username), забери у меня токен. Затем подскажи написать @userinfobot и забери мой Telegram id — это будет OWNER_CHAT_ID, то есть я, главный админ.
+
+Шаг 3. Спроси у меня ссылку на мою копию Google-таблицы — я её уже сделал руками (блок 04). Из адреса вида docs.google.com/spreadsheets/d/XXXXXXXX/edit сам достань идентификатор таблицы. Спроси ключи Google из консоли: идентификатор клиента и секрет клиента. Скажи мне, какой redirect URI вписать в OAuth Client ID, проведи авторизацию и сохрани файл с доступом на сервере с правами 600.
+
+Шаг 4. Проверь связь с таблицей: прочитай вкладку КОНФИГ и покажи мне название компании, базовую валюту и количество категорий. Убедись, что на месте вкладки PNL, СИСТЕМА, ДОСТУП, КОНФИГ, КАТЕГОРИИ и двенадцать листов месяцев. Если чего-то нет — скажи мне, что именно, дальше не иди.
+
+Шаг 5. Заполни .env по образцу .env.example: токен бота, мой id, идентификатор таблицы, ключ модели, ключ Groq для голосовых, ключ курсов валют (спроси у меня — я взял его в блоке 05). Файл .env в git не коммить никогда.
+
+Шаг 6. Подключи модель в OpenClaw — это мозг, который разбирает мою речь и читает фото чеков:
+— Вариант 1: подписка ChatGPT через OpenClaw.
+— Вариант 2: MiniMax по API-ключу.
+Спроси меня, какой вариант выбираю, и настрой его. Проверь, что выбранная модель умеет смотреть картинки, иначе фото чека работать не будет — скажи мне об этом прямо.
+
+Шаг 7. Подними бота в докере: docker compose up -d --build. Покажи мне лог старта: бот должен прочитать таблицу и зарегистрировать меню команд. Контейнер, падающий по кругу, между падениями выглядит работающим — проверь docker ps и логи, а не «сервис запущен».
+
+Шаг 8. Прогони автотесты из репозитория и покажи результат таблицей. Падать не должно ничего.
+
+Шаг 9. Я нажимаю Start у бота — первым запуском я стану главным админом, и бот сам создаст мою строку на листе ДОСТУП. Руками в таблицу никого не вписывай. Дальше проведи меня по живой проверке: записать расход текстом, голосом и фото чека, поправить запись, удалить.
+
+Шаг 10. Проверь доступы целиком: я приглашаю второго человека, ему приходит заявка, я одобряю кнопкой. Дальше бот сам просит у него настоящие имя и фамилию. Убедись, что имя записалось в таблицу, а мне пришла копия его операции с его ником.
+
+Шаг 11. Прогони со мной чек-лист приёмки из docs/ и покажи результат по каждому блоку.
+
+Важные правила, не нарушай их:
+— Бот только ДОБАВЛЯЕТ строки на лист PNL. Формулы, структуру листов и другие вкладки не трогать никогда: таблица сама считает месяцы и аналитику.
+— Строки писать только через append с перезаписью, не вставкой: вставка сдвигает адреса в формулах и ломает подсчёты.
+— Все суммы, проценты и курсы считает код, а не модель.</div>
+          <button class="btn-copy" onclick="copyBlock('promptMain', this)">📋 Копировать промпт</button>
+        </div>
+
+        <div class="item" data-key="prompt-main-done"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Отправить промпт в Claude Code</div>
+            <div class="item__hint">Скопируйте промпт целиком и&nbsp;вставьте в&nbsp;Claude&nbsp;Code. Дальше отвечайте на&nbsp;его вопросы и&nbsp;подтверждайте шаги.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">04</div><div class="section__title">Google: таблица, доступ и скрипт</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">📊</span><span>Вся финансовая машина — одна <strong>Google-таблица</strong> (Google&nbsp;Sheets). Бот только добавляет строки на&nbsp;лист&nbsp;PNL, а&nbsp;листы месяцев и&nbsp;аналитика считают всё сами формулами. Шаблон уже собран — вам нужна своя копия.</span></div>
 
         <div class="item" data-key="tbl-copy"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 2. Сделать копию на свой Диск</div>
-            <div class="item__hint">Меню <strong>Файл</strong> → <strong>Создать копию</strong> (<em>File → Make a copy</em>). Название любое, например «Финансы моей компании&nbsp;2026». Копия ляжет на&nbsp;ваш Google&nbsp;Диск, и&nbsp;дальше вы&nbsp;работаете <strong>только с&nbsp;ней</strong>.</div>
+            <div class="item__text">Шаг 1. Сделать копию шаблона на свой Google Диск</div>
+            <div class="item__hint">Откройте шаблон по&nbsp;ссылке и&nbsp;выберите <strong>Файл</strong> → <strong>Создать копию</strong> (<em>File → Make a&nbsp;copy</em>). Название любое. Копия ляжет на&nbsp;ваш Диск, дальше вы&nbsp;работаете <strong>только с&nbsp;ней</strong>.</div>
+            <a href="https://docs.google.com/spreadsheets/d/1INbzQ8dQV3xwlWqDecqnzOGJCpNKK-Nj8SJsAE3kBjI/edit?usp=sharing" target="_blank" class="item__link" onclick="event.stopPropagation()">Шаблон «ФИНАНСЫ КОМПАНИИ 2026»</a>
           </div>
         </div>
 
-        <div class="note note--green"><span class="note__icon">✅</span><span><strong>Скрипт копируется вместе с&nbsp;таблицей.</strong> В&nbsp;шаблон вшит Apps&nbsp;Script «Финбот — смена валюты», и&nbsp;при копировании он&nbsp;переезжает в&nbsp;копию автоматически. Отдельно ставить его не&nbsp;нужно — но&nbsp;<strong>один раз включить</strong> придётся, это блок&nbsp;ниже.</span></div>
+        <div class="item" data-key="tbl-conf"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 2. Вписать название компании и валюту</div>
+            <div class="item__hint">Вкладка <strong>КОНФИГ</strong>: строка «НАЗВАНИЕ КОМПАНИИ» — своё название, строка «БАЗОВАЯ ВАЛЮТА» — выбрать из&nbsp;списка. Остальное настроите потом прямо из&nbsp;бота.</div>
+          </div>
+        </div>
 
-        <div class="item" data-key="tbl-id"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="tbl-link"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Шаг 3. Скопировать адрес своей копии</div>
-            <div class="item__hint">Просто скопируйте ссылку из&nbsp;адресной строки браузера, когда открыта <strong>ваша</strong> копия. Она выглядит так: <code>docs.google.com/spreadsheets/d/<strong>ДЛИННЫЙ_НОМЕР</strong>/edit</code>. Этот длинный номер и&nbsp;есть «номер таблицы» — Claude&nbsp;Code достанет его из&nbsp;ссылки сам, искать отдельно не&nbsp;нужно.</div>
+            <div class="item__hint">Просто скопируйте ссылку из&nbsp;адресной строки, когда открыта <strong>ваша</strong> копия. Claude&nbsp;Code сам достанет из&nbsp;неё идентификатор таблицы. Проверьте, что это адрес копии, а&nbsp;не&nbsp;шаблона — в&nbsp;шаблон бот писать не&nbsp;сможет.</div>
           </div>
         </div>
 
-        <div class="note note--warn"><span class="note__icon">⚠</span><span>Проверьте, что скопировали адрес <strong>своей копии</strong>, а&nbsp;не&nbsp;шаблона. Если бот получит номер шаблона, он&nbsp;не&nbsp;сможет туда писать — и&nbsp;вы&nbsp;увидите ошибку доступа.</span></div>
+        <div class="note note--alert"><span class="note__icon">🚫</span><span><strong>Не&nbsp;переделывайте структуру таблицы.</strong> Не&nbsp;удаляйте и&nbsp;не&nbsp;переименовывайте вкладки, не&nbsp;трогайте формулы, не&nbsp;переставляйте колонки. Месяцы и&nbsp;аналитика тянут данные из&nbsp;PNL по&nbsp;точным адресам: сломав одну формулу, вы&nbsp;потеряете все подсчёты. Планы вписывать можно и&nbsp;нужно — для&nbsp;этого есть колонка ПЛАН на&nbsp;листах месяцев.</span></div>
 
-        <div class="item" data-key="tbl-name"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Шаг 4. Вписать название компании и валюту</div>
-            <div class="item__hint">Вкладка <strong>КОНФИГ</strong>: в&nbsp;строке «НАЗВАНИЕ КОМПАНИИ» напишите своё, в&nbsp;строке «БАЗОВАЯ ВАЛЮТА» выберите из&nbsp;списка ту, в&nbsp;которой считаете итоги. Остальное (дни и&nbsp;время сводки, часовой пояс) потом настроите прямо из&nbsp;бота.</div>
-          </div>
-        </div>
-
-        <div class="note note--info"><span class="note__icon">🗂</span><span><strong>Что за&nbsp;вкладки в&nbsp;таблице:</strong><br>
-        •&nbsp;<strong>PNL</strong> — сюда падают все операции, одна строка = одна трата или доход<br>
-        •&nbsp;<strong>СИСТЕМА</strong> — служебные счётчики номеров, бот ведёт их&nbsp;сам<br>
-        •&nbsp;<strong>ДОСТУП</strong> — кто в&nbsp;команде и&nbsp;что кому можно; заполняется через бота<br>
-        •&nbsp;<strong>КОНФИГ</strong> — валюта, название компании, расписание сводки<br>
-        •&nbsp;<strong>КАТЕГОРИИ</strong> — списки статей расходов и&nbsp;доходов<br>
-        •&nbsp;<strong>ЯНВАРЬ…ДЕКАБРЬ</strong> — планы и&nbsp;факт по&nbsp;месяцам, считаются формулами<br>
-        •&nbsp;<strong>АНАЛИЗ</strong> и&nbsp;<strong>PNL С ФИЛЬТРАЦИЕЙ</strong> — сводные срезы, тоже формулами</span></div>
-
-        <div class="note note--alert"><span class="note__icon">🚫</span><span><strong>Не&nbsp;переделывайте структуру таблицы.</strong> Не&nbsp;удаляйте и&nbsp;не&nbsp;переименовывайте вкладки, не&nbsp;трогайте формулы и&nbsp;не&nbsp;переставляйте колонки. Таблица — считающая машина: месяцы и&nbsp;АНАЛИЗ тянут данные из&nbsp;PNL по&nbsp;точным адресам. Сломав одну формулу, вы&nbsp;потеряете всю аналитику. Планы вписывать можно и&nbsp;нужно — для&nbsp;этого есть колонка ПЛАН на&nbsp;листах месяцев.</span></div>
-
-      </div>
-    </div>
-
-    <!-- ================= 04 ================= -->
-    <div class="section">
-      <div class="section__header"><div class="section__num">04</div><div class="section__title">Скрипт смены валюты: включаем в своей копии</div></div>
-      <div class="section__card">
-
-        <div class="note note--info"><span class="note__icon">💱</span><span>В&nbsp;таблице живёт маленькая программа (Apps&nbsp;Script) «Финбот — смена валюты». Она нужна для&nbsp;одного: если вы&nbsp;поменяли базовую валюту <strong>руками в&nbsp;таблице</strong>, скрипт перекрасит символы валюты и&nbsp;заголовки на&nbsp;всех вкладках. Меняете валюту через бота — бот перекрашивает сам, скрипт не&nbsp;нужен.</span></div>
-
-        <div class="note note--green"><span class="note__icon">📎</span><span><strong>Копируется ли&nbsp;скрипт вместе с&nbsp;таблицей? Да.</strong> Скрипт привязан к&nbsp;таблице (bound&nbsp;script), поэтому «Создать копию» переносит и&nbsp;его&nbsp;— переустанавливать ничего не&nbsp;надо. А&nbsp;вот <strong>разрешение на&nbsp;запуск</strong> и&nbsp;<strong>автозапуск</strong> в&nbsp;копию не&nbsp;переезжают: их&nbsp;Google просит подтвердить заново у&nbsp;каждого владельца. Это два клика ниже.</span></div>
-
-        <div class="item" data-key="gs-menu"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Шаг 1. Обновить страницу таблицы</div>
-            <div class="item__hint">Откройте свою копию и&nbsp;перезагрузите вкладку браузера. В&nbsp;верхнем меню, справа от&nbsp;«Справка», должен появиться пункт <strong>💱 Финбот</strong>. Если его&nbsp;нет — подождите несколько секунд и&nbsp;обновите ещё&nbsp;раз, меню появляется не&nbsp;мгновенно.</div>
-          </div>
-        </div>
+        <div class="note note--green"><span class="note__icon">📎</span><span><strong>Скрипт смены валюты копируется вместе с&nbsp;таблицей.</strong> В&nbsp;шаблон вшита маленькая программа Apps&nbsp;Script: если поменять базовую валюту руками в&nbsp;таблице, она перекрасит символы и&nbsp;заголовки на&nbsp;всех вкладках. Ставить её&nbsp;отдельно не&nbsp;нужно, но&nbsp;<strong>разрешение на&nbsp;запуск и&nbsp;автозапуск</strong> Google просит подтвердить у&nbsp;каждого нового владельца — это два шага ниже.</span></div>
 
         <div class="item" data-key="gs-auth"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 2. Разрешить скрипту работать</div>
-            <div class="item__hint">Меню <strong>💱 Финбот</strong> → любой пункт. Google покажет окно «Требуется авторизация» → <strong>Продолжить</strong> → выберите свой аккаунт. Дальше появится жёлтый экран «Приложение не&nbsp;проверено» — это нормально, скрипт ваш собственный: нажмите <strong>Дополнительные настройки</strong> → <strong>Перейти к&nbsp;проекту (небезопасно)</strong> → <strong>Разрешить</strong>.</div>
+            <div class="item__text">Шаг 4. Разрешить скрипту работать</div>
+            <div class="item__hint">Обновите страницу своей копии — в&nbsp;меню сверху появится пункт <strong>💱 Финбот</strong>. Нажмите любой его&nbsp;пункт: Google попросит авторизацию → <strong>Продолжить</strong> → ваш аккаунт → на&nbsp;жёлтом экране «Приложение не&nbsp;проверено» нажмите <strong>Дополнительные настройки</strong> → <strong>Перейти к&nbsp;проекту</strong> → <strong>Разрешить</strong>. Экран пугает, но&nbsp;вы&nbsp;разрешаете своей копии работать с&nbsp;самой собой.</div>
           </div>
         </div>
-
-        <div class="note note--warn"><span class="note__icon">⚠</span><span>Экран «Приложение не&nbsp;проверено» пугает, но&nbsp;в&nbsp;нашем случае безопасен: вы&nbsp;разрешаете <strong>своей копии таблицы</strong> работать с&nbsp;самой собой. Никакого доступа наружу скрипт не&nbsp;получает.</span></div>
 
         <div class="item" data-key="gs-trigger"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 3. Включить автозапуск</div>
-            <div class="item__hint">Меню <strong>💱 Финбот</strong> → пункт про <strong>автозапуск</strong>. Это создаёт «триггер» — правило «как только в&nbsp;КОНФИГ поменяли валюту, перекрасить таблицу». Триггеры при копировании не&nbsp;переносятся, поэтому включить его&nbsp;нужно вручную один раз.</div>
+            <div class="item__text">Шаг 5. Включить автозапуск скрипта</div>
+            <div class="item__hint">Меню <strong>💱 Финбот</strong> → пункт про&nbsp;автозапуск. Триггеры при копировании таблицы не&nbsp;переносятся, поэтому включить нужно один раз руками. Проверить: смените валюту в&nbsp;КОНФИГ — через пару секунд символы поменяются по&nbsp;всей таблице.</div>
           </div>
         </div>
 
-        <div class="item" data-key="gs-check"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Шаг 4. Проверить</div>
-            <div class="item__hint">Вкладка <strong>КОНФИГ</strong> → в&nbsp;строке «БАЗОВАЯ ВАЛЮТА» выберите из&nbsp;выпадающего списка другую валюту. Через пару секунд символы в&nbsp;денежных ячейках и&nbsp;заголовки поменяются по&nbsp;всей таблице. Верните валюту обратно — всё вернётся.</div>
-          </div>
-        </div>
+        <div class="note note--info"><span class="note__icon">💡</span><span>Скрипт нужен только для&nbsp;<strong>ручной</strong> смены валюты. Когда валюту меняете через бота (<code>/settings</code>), он&nbsp;перекрашивает таблицу сам: Google не&nbsp;запускает триггеры на&nbsp;изменения, сделанные программой.</span></div>
 
-        <details class="spoiler"><summary>Где посмотреть сам код скрипта</summary>
-          <div class="spoiler__content">
-            <p>Меню <strong>Расширения</strong> → <strong>Apps Script</strong> (<em>Extensions → Apps Script</em>). Откроется редактор с&nbsp;кодом проекта «Финбот — смена валюты».</p>
-            <p>Трогать его&nbsp;не&nbsp;нужно — он&nbsp;уже настроен. Но&nbsp;если случайно удалили: код лежит в&nbsp;репозитории связки, в&nbsp;папке <code>apps-script/</code>, оттуда его&nbsp;можно вставить обратно.</p>
-          </div>
-        </details>
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>Дальше — доступ к&nbsp;таблицам в&nbsp;консоли Google. Это единственная часть, которую нельзя поручить Claude&nbsp;Code: он&nbsp;не&nbsp;может зайти в&nbsp;вашу консоль. Каждый шаг со&nbsp;ссылкой, которая открывает сразу нужный экран. Займёт минут пятнадцать.</span></div>
 
-        <div class="note note--info"><span class="note__icon">💡</span><span><strong>Скрипт не&nbsp;реагирует на&nbsp;бота — и&nbsp;это правильно.</strong> Google не&nbsp;запускает триггеры на&nbsp;изменения, сделанные программой через&nbsp;API. Поэтому когда валюту меняет бот (через <code>/settings</code>), он&nbsp;перекрашивает таблицу сам, своими силами. Скрипт нужен только для&nbsp;ручной смены.</span></div>
-
-      </div>
-    </div>
-
-    <!-- ================= 05 ================= -->
-    <div class="section">
-      <div class="section__header"><div class="section__num">05</div><div class="section__title">Доступ к Google Таблицам: делаем руками</div></div>
-      <div class="section__card">
-
-        <div class="note note--warn"><span class="note__icon">⚠</span><span>Единственная часть, которую нельзя поручить Claude&nbsp;Code: он&nbsp;не&nbsp;может зайти в&nbsp;вашу консоль Google. Дальше каждый шаг со&nbsp;ссылкой, которая открывает сразу нужный экран. Займёт минут пятнадцать.</span></div>
-
-        <div class="note note--green"><span class="note__icon">💰</span><span><strong>Платить не&nbsp;нужно.</strong> Google&nbsp;Sheets&nbsp;API бесплатен, карту в&nbsp;консоли привязывать не&nbsp;требуется, платный Google&nbsp;Workspace тоже не&nbsp;нужен. Обычного Gmail достаточно.<br><br>Лимиты: 300&nbsp;запросов в&nbsp;минуту на&nbsp;проект и&nbsp;60&nbsp;в&nbsp;минуту на&nbsp;пользователя. Бот делает несколько десятков запросов в&nbsp;день, упереться невозможно.</span></div>
-
-        <div class="note note--info"><span class="note__icon">💡</span><span>Google периодически переносит эти экраны и&nbsp;переименовывает разделы. Если увидите другое название, ориентируйтесь по&nbsp;смыслу: нужен доступ к&nbsp;таблицам, согласие приложения и&nbsp;пара ключей.</span></div>
+        <div class="note note--green"><span class="note__icon">💰</span><span><strong>Платить не&nbsp;нужно.</strong> Google&nbsp;Sheets&nbsp;API бесплатен, карту привязывать не&nbsp;требуется. Лимиты: 300&nbsp;запросов в&nbsp;минуту на&nbsp;проект — бот делает несколько десятков в&nbsp;день, упереться невозможно.</span></div>
 
         <div class="item" data-key="g-project"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 1. Открыть консоль и выбрать проект</div>
-            <div class="item__hint">Слева сверху выпадающий список проектов. Если проект уже заводили в&nbsp;прошлых связках, выберите его&nbsp;и&nbsp;ничего не&nbsp;создавайте. Если проекта нет, нажмите «Создать проект», имя любое, например&nbsp;finance.</div>
+            <div class="item__text">Шаг 6. Открыть консоль и выбрать проект</div>
+            <div class="item__hint">Слева сверху выпадающий список проектов. Если проект уже заводили на&nbsp;курсе или в&nbsp;связке&nbsp;1 — выберите его&nbsp;и&nbsp;ничего не&nbsp;создавайте. Если проекта нет, нажмите «Создать проект», имя любое, например&nbsp;finance.</div>
             <a href="https://console.cloud.google.com/" target="_blank" class="item__link" onclick="event.stopPropagation()">console.cloud.google.com</a>
           </div>
         </div>
 
         <div class="item" data-key="g-api"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 2. Включить Google Sheets API</div>
-            <div class="item__hint">Ссылка открывает сразу карточку нужного API — <strong>Google Sheets API</strong> (доступ к&nbsp;гугл-таблицам). Нажмите синюю кнопку «Включить». Если вместо неё написано «Управлять», значит API уже включён, идите дальше.</div>
+            <div class="item__text">Шаг 7. Включить Google Sheets API</div>
+            <div class="item__hint">Ссылка открывает сразу карточку нужного API — это доступ к&nbsp;гугл-таблицам. Нажмите синюю кнопку «Включить». Если вместо неё написано «Управлять», значит API уже включён, идите дальше.</div>
             <a href="https://console.cloud.google.com/apis/library/sheets.googleapis.com" target="_blank" class="item__link" onclick="event.stopPropagation()">Открыть Google Sheets API</a>
           </div>
         </div>
 
         <div class="item" data-key="g-consent"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 3. Заполнить экран согласия</div>
-            <div class="item__hint">Тип пользователя выберите «Внешний» и&nbsp;нажмите «Создать». Заполните три поля: название приложения, ваша почта для&nbsp;поддержки, ваша почта разработчика. Название увидите только вы, можно написать «Финансовый бот».</div>
+            <div class="item__text">Шаг 8. Заполнить экран согласия</div>
+            <div class="item__hint">Тип пользователя «Внешний» → «Создать». Заполните три поля: название приложения, ваша почта для&nbsp;поддержки, ваша почта разработчика. Название увидите только вы, можно написать «Финансовый бот».</div>
             <a href="https://console.cloud.google.com/apis/credentials/consent" target="_blank" class="item__link" onclick="event.stopPropagation()">Экран согласия OAuth</a>
           </div>
         </div>
 
         <div class="item" data-key="g-scopes"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 4. Выдать права на таблицы</div>
-            <div class="item__hint">На&nbsp;шаге «Области доступа» нажмите «Добавить или удалить области». В&nbsp;поиске наберите <strong>sheets</strong> и&nbsp;отметьте строку <strong>.../auth/spreadsheets</strong> — это чтение и&nbsp;запись гугл-таблиц. Нажмите «Обновить», затем «Сохранить и&nbsp;продолжить».</div>
+            <div class="item__text">Шаг 9. Выдать права на таблицы</div>
+            <div class="item__hint">На&nbsp;шаге «Области доступа» нажмите «Добавить или удалить области». В&nbsp;поиске наберите <strong>sheets</strong> и&nbsp;отметьте строку <strong>.../auth/spreadsheets</strong> — это чтение и&nbsp;запись гугл-таблиц. «Обновить» → «Сохранить и&nbsp;продолжить».</div>
           </div>
         </div>
 
         <div class="item" data-key="g-publish"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 5. Опубликовать приложение</div>
+            <div class="item__text">Шаг 10. Опубликовать приложение</div>
             <div class="item__hint">Вернитесь на&nbsp;экран согласия. В&nbsp;блоке «Статус публикации» нажмите «Опубликовать приложение» и&nbsp;подтвердите. Статус должен смениться с&nbsp;«Тестирование» на&nbsp;«В&nbsp;эксплуатации».</div>
             <a href="https://console.cloud.google.com/apis/credentials/consent" target="_blank" class="item__link" onclick="event.stopPropagation()">Статус публикации</a>
           </div>
         </div>
 
+        <div class="note note--alert"><span class="note__icon">🚫</span><span>Не&nbsp;пропускайте шаг&nbsp;10. Если приложение останется в&nbsp;режиме тестирования, доступ к&nbsp;таблице отвалится ровно через семь дней, и&nbsp;бот молча перестанет записывать операции. Это самая частая причина поломки.</span></div>
+
         <div class="item" data-key="g-client"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 6. Создать OAuth Client ID</div>
-            <div class="item__hint">Нажмите «Создать учётные данные», выберите «Идентификатор клиента OAuth». Тип приложения: <strong>Веб-приложение</strong>. В&nbsp;разделе «Разрешённые URI перенаправления» добавьте адрес, который даст Claude&nbsp;Code на&nbsp;втором шаге промпта. Нажмите «Создать».</div>
+            <div class="item__text">Шаг 11. Создать OAuth Client ID и сохранить два ключа</div>
+            <div class="item__hint">«Создать учётные данные» → «Идентификатор клиента OAuth». Тип приложения: <strong>Веб-приложение</strong>. В&nbsp;«Разрешённые URI перенаправления» добавьте адрес, который даст Claude&nbsp;Code на&nbsp;третьем шаге промпта. После создания появятся <strong>идентификатор клиента</strong> и&nbsp;<strong>секрет клиента</strong> — скопируйте обе строки в&nbsp;блокнот.</div>
             <a href="https://console.cloud.google.com/apis/credentials" target="_blank" class="item__link" onclick="event.stopPropagation()">Учётные данные</a>
           </div>
         </div>
 
-        <div class="item" data-key="g-keys"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Шаг 7. Сохранить два ключа</div>
-            <div class="item__hint">После создания появится окно с&nbsp;двумя строками: «Идентификатор клиента» и&nbsp;«Секрет клиента». Скопируйте обе в&nbsp;надёжное место. Позже их&nbsp;можно посмотреть там&nbsp;же, в&nbsp;списке учётных данных.</div>
-          </div>
-        </div>
-
-        <div class="note note--alert"><span class="note__icon">🚫</span><span>Не&nbsp;пропускайте шаг&nbsp;5. Если приложение останется в&nbsp;режиме тестирования, доступ к&nbsp;таблице отвалится ровно через семь дней, и&nbsp;бот молча перестанет писать операции. Это самая частая причина поломки.</span></div>
-
-        <div class="note note--warn"><span class="note__icon">⚠</span><span>Секрет клиента это пароль от&nbsp;доступа к&nbsp;вашим таблицам. Не&nbsp;выкладывайте его&nbsp;в&nbsp;открытый репозиторий и&nbsp;не&nbsp;пересылайте в&nbsp;общие чаты.</span></div>
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>Секрет клиента — это пароль от&nbsp;доступа к&nbsp;вашим таблицам. Не&nbsp;выкладывайте его&nbsp;в&nbsp;открытый репозиторий и&nbsp;не&nbsp;пересылайте в&nbsp;общие чаты.</span></div>
 
       </div>
     </div>
 
-    <!-- ================= 06 ================= -->
     <div class="section">
-      <div class="section__header"><div class="section__num">06</div><div class="section__title">Telegram-бот: создаём и берём токен</div></div>
+      <div class="section__header"><div class="section__num">05</div><div class="section__title">Курсы валют: бесплатный ключ</div></div>
       <div class="section__card">
 
-        <div class="note note--info"><span class="note__icon">🤖</span><span>Бот создаётся в&nbsp;самом Telegram, за&nbsp;минуту и&nbsp;бесплатно. Всё общение с&nbsp;сотрудниками пойдёт через него.</span></div>
+        <div class="note note--info"><span class="note__icon">💱</span><span>Нужен, если сотрудники платят в&nbsp;разных валютах: бот берёт курс дня и&nbsp;пересчитывает сумму в&nbsp;валюту компании. В&nbsp;таблице остаются обе суммы — исходная и&nbsp;пересчитанная.</span></div>
 
-        <div class="item" data-key="tg-create"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="fx-signup"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 1. Создать бота у BotFather</div>
-            <div class="item__hint">Откройте <strong>@BotFather</strong>, отправьте <code>/newbot</code>. Он&nbsp;спросит название (любое, например «Финансы компании») и&nbsp;адрес — адрес должен заканчиваться на&nbsp;<code>bot</code>, например <code>my_company_finance_bot</code>.</div>
-            <a href="https://t.me/BotFather" target="_blank" class="item__link" onclick="event.stopPropagation()">t.me/BotFather</a>
-          </div>
-        </div>
-
-        <div class="item" data-key="tg-token"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Шаг 2. Сохранить токен</div>
-            <div class="item__hint">В&nbsp;ответ BotFather пришлёт длинную строку вида <code>1234567890:AAH...</code> — это <strong>токен бота</strong>. Скопируйте его&nbsp;в&nbsp;блокнот.</div>
-          </div>
-        </div>
-
-        <div class="item" data-key="tg-id"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Шаг 3. Узнать свой числовой ID</div>
-            <div class="item__hint">Откройте <strong>@userinfobot</strong> и&nbsp;нажмите «Старт» — он&nbsp;пришлёт ваш <strong>Id</strong>, число вроде <code>123456789</code>. Этот номер сделает вас <strong>главным админом</strong>: только он&nbsp;назначает других админов.</div>
-            <a href="https://t.me/userinfobot" target="_blank" class="item__link" onclick="event.stopPropagation()">t.me/userinfobot</a>
-          </div>
-        </div>
-
-        <div class="note note--warn"><span class="note__icon">🔑</span><span>Токен бота — это полный доступ к&nbsp;нему. Утёк токен — чужой человек читает вашу финансовую переписку. Храните как пароль; если засветили, у&nbsp;BotFather есть <code>/revoke</code>.</span></div>
-
-      </div>
-    </div>
-
-    <!-- ================= 07 ================= -->
-    <div class="section">
-      <div class="section__header"><div class="section__num">07</div><div class="section__title">Три ключа: модель, голос, курсы валют</div></div>
-      <div class="section__card">
-
-        <div class="note note--info"><span class="note__icon">🔧</span><span>Три сервиса, каждый отвечает за&nbsp;своё. Все три ключа кладём в&nbsp;тот&nbsp;же блокнот — Claude&nbsp;Code попросит их&nbsp;при сборке.</span></div>
-
-        <table class="data-table">
-          <thead><tr><th>Сервис</th><th>За что отвечает</th></tr></thead>
-          <tbody>
-            <tr><td>MiniMax</td><td>понимает фразы и&nbsp;<strong>читает фото чеков</strong></td></tr>
-            <tr><td>Groq</td><td>расшифровывает голосовые</td></tr>
-            <tr><td>ExchangeRate-API</td><td>курсы валют для&nbsp;пересчёта</td></tr>
-          </tbody>
-        </table>
-
-        <div class="item" data-key="k-minimax"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Ключ MiniMax — мозг бота</div>
-            <div class="item__hint">Регистрация по&nbsp;почте, затем раздел <strong>API Keys</strong> → создать ключ. Эта модель умеет смотреть картинки, поэтому фото чека работает через неё&nbsp;же. Если делали прошлые связки и&nbsp;ключ уже есть — берите его.</div>
-            <a href="https://www.minimax.io/platform" target="_blank" class="item__link" onclick="event.stopPropagation()">minimax.io/platform</a>
-          </div>
-        </div>
-
-        <div class="note note--warn"><span class="note__icon">📷</span><span>Если решите взять другую модель — проверьте, что она <strong>умеет смотреть картинки</strong>. У&nbsp;Groq, например, таких моделей нет: голос он&nbsp;расшифрует, а&nbsp;чек прочитать не&nbsp;сможет. Всё остальное будет работать, кроме фото.</span></div>
-
-        <div class="item" data-key="k-groq"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Ключ Groq — расшифровка голосовых</div>
-            <div class="item__hint">Вход через Google-аккаунт, раздел <strong>API Keys</strong> → <strong>Create API Key</strong>. Бесплатного тарифа хватает с&nbsp;запасом. Тот&nbsp;же ключ, что в&nbsp;связке&nbsp;1, — заводить второй не&nbsp;нужно.</div>
-            <a href="https://console.groq.com/keys" target="_blank" class="item__link" onclick="event.stopPropagation()">console.groq.com/keys</a>
-          </div>
-        </div>
-
-        <div class="item" data-key="k-rates"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Ключ ExchangeRate-API — курсы валют</div>
-            <div class="item__hint">Откройте сайт, введите почту в&nbsp;поле на&nbsp;главной и&nbsp;нажмите <strong>Get Free Key</strong>. Подтвердите почту — ключ придёт письмом и&nbsp;будет виден в&nbsp;личном кабинете. <strong>Карта не&nbsp;нужна.</strong></div>
+            <div class="item__text">Шаг 1. Зарегистрироваться на ExchangeRate-API</div>
+            <div class="item__hint">Откройте сайт, введите свою почту в&nbsp;поле на&nbsp;главной и&nbsp;нажмите <strong>Get Free Key</strong>. Тариф выбирайте <strong>Free</strong>. Карту привязывать не&nbsp;нужно — на&nbsp;бесплатном тарифе её&nbsp;не&nbsp;спрашивают.</div>
             <a href="https://www.exchangerate-api.com/" target="_blank" class="item__link" onclick="event.stopPropagation()">exchangerate-api.com</a>
           </div>
         </div>
 
-        <div class="note note--green"><span class="note__icon">📉</span><span><strong>Бесплатного тарифа хватит.</strong> Дают <strong>1500&nbsp;запросов в&nbsp;месяц</strong>, курсы обновляются раз в&nbsp;сутки. Бот обращается за&nbsp;курсом <strong>только когда валюта операции отличается от&nbsp;валюты компании</strong>: платите в&nbsp;рублях и&nbsp;считаете в&nbsp;рублях — запросов не&nbsp;будет вообще. Полторы тысячи — это примерно 50&nbsp;операций в&nbsp;чужой валюте каждый день.</span></div>
+        <div class="item" data-key="fx-confirm"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 2. Подтвердить почту</div>
+            <div class="item__hint">На&nbsp;почту придёт письмо со&nbsp;ссылкой — перейдите по&nbsp;ней и&nbsp;задайте пароль. Без подтверждения ключ работать не&nbsp;будет.</div>
+          </div>
+        </div>
 
-        <div class="note note--info"><span class="note__icon">💡</span><span>Если лимит всё&nbsp;же кончится, бот не&nbsp;потеряет запись: он&nbsp;сохранит операцию с&nbsp;пустой суммой в&nbsp;валюте компании и&nbsp;напишет об&nbsp;этом руководителю, чтобы тот проставил её&nbsp;руками.</span></div>
+        <div class="item" data-key="fx-key"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 3. Скопировать ключ</div>
+            <div class="item__hint">В&nbsp;личном кабинете на&nbsp;главном экране будет строка <strong>Your API Key</strong> — длинный набор букв и&nbsp;цифр. Скопируйте его&nbsp;в&nbsp;блокнот: Claude&nbsp;Code попросит его&nbsp;на&nbsp;пятом шаге промпта.</div>
+            <a href="https://app.exchangerate-api.com/dashboard" target="_blank" class="item__link" onclick="event.stopPropagation()">app.exchangerate-api.com/dashboard</a>
+          </div>
+        </div>
+
+        <div class="note note--green"><span class="note__icon">📉</span><span><strong>Бесплатного тарифа хватит с&nbsp;запасом.</strong> Дают <strong>1500&nbsp;запросов в&nbsp;месяц</strong>, курсы обновляются раз в&nbsp;сутки. Бот идёт за&nbsp;курсом <strong>только когда валюта операции отличается от&nbsp;валюты компании</strong>: платите в&nbsp;рублях и&nbsp;считаете в&nbsp;рублях — запросов не&nbsp;будет вообще.</span></div>
+
+        <div class="note note--info"><span class="note__icon">💡</span><span>Если лимит всё&nbsp;же кончится, бот не&nbsp;потеряет запись: сохранит операцию с&nbsp;пустой суммой в&nbsp;валюте компании и&nbsp;напишет об&nbsp;этом руководителю, чтобы тот проставил её&nbsp;руками.</span></div>
 
       </div>
     </div>
 
-    <!-- ================= 08 ================= -->
     <div class="section">
-      <div class="section__header"><div class="section__num">08</div><div class="section__title">Репозиторий и главный промпт</div></div>
+      <div class="section__header"><div class="section__num">06</div><div class="section__title">Проверьте, что всё работает</div></div>
       <div class="section__card">
 
-        <div class="note note--info"><span class="note__icon">📦</span><span>Код бота открыт и&nbsp;лежит в&nbsp;репозитории. Claude&nbsp;Code возьмёт его&nbsp;оттуда, подставит ваши ключи и&nbsp;поднимет контейнер на&nbsp;сервере. Секретов в&nbsp;репозитории нет — вы&nbsp;подставляете свои.</span></div>
+        <div class="note note--info"><span class="note__icon">🧪</span><span>Пройдите подряд — эти пункты проверяют всю цепочку: речь, фото, валюту, права и&nbsp;аналитику.</span></div>
 
-        <div class="item" data-key="repo-open"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="t-start"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Открыть репозиторий связки 3</div>
-            <div class="item__hint">Внутри: код бота, техзадание в&nbsp;папке <code>docs/</code>, чек-лист приёмки и&nbsp;код скрипта смены валюты.</div>
-            <a href="https://github.com/stavzzz/svyazka-3" target="_blank" class="item__link" onclick="event.stopPropagation()">github.com/stavzzz/svyazka-3</a>
+            <div class="item__text">Нажать Start и назвать своё имя</div>
+            <div class="item__hint">Первым запуском вы&nbsp;становитесь <strong>главным админом</strong>, бот сам заводит вашу строку в&nbsp;таблице. Затем команда <code>/name</code> — напишите имя и&nbsp;фамилию: по&nbsp;ним в&nbsp;таблице видно, кто внёс расход.</div>
           </div>
         </div>
-
-        <div class="note note--warn"><span class="note__icon">⚠</span><span>Перед тем как отдавать промпт, закройте блоки&nbsp;03–07: у&nbsp;вас на&nbsp;руках должны быть ссылка на&nbsp;свою копию таблицы, ключи Google, токен бота, ваш числовой ID и&nbsp;три ключа сервисов. Claude&nbsp;Code спросит их&nbsp;по&nbsp;ходу.</span></div>
-
-        <div class="item" data-key="repo-prompt"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Отдать промпт Claude Code</div>
-            <div class="item__hint">Скопируйте текст ниже целиком и&nbsp;вставьте в&nbsp;Claude&nbsp;Code, запущенный в&nbsp;отдельной папке проекта. Дальше он&nbsp;будет задавать вопросы — отвечайте по&nbsp;своим записям.</div>
-          </div>
-        </div>
-
-        <div class="cmd-copy"><div class="cmd-copy__text" id="mainPrompt">Собери финансового Telegram-бота компании по открытому репозиторию https://github.com/stavzzz/svyazka-3 и разверни его на моём сервере с OpenClaw.
-
-Порядок работы:
-1. Прочитай README репозитория и папку docs/ целиком — там техзадание, все тексты сообщений и чек-лист приёмки.
-2. Спроси у меня по одному: ссылку на мою копию Google-таблицы, токен Telegram-бота, мой числовой Telegram ID (я буду главным админом), ключ модели MiniMax, ключ Groq, ключ ExchangeRate-API.
-3. Настрой доступ к Google Sheets: скажи мне, какой redirect URI вписать в OAuth Client ID, проведи авторизацию и сохрани токен доступа на сервере в файл с правами 600.
-4. Собери .env на сервере из моих ключей. В репозиторий и в git секреты не клади никогда.
-5. Разверни бота докер-контейнером, включи автоперезапуск, покажи лог старта.
-6. Прогони юнит-тесты из репозитория и покажи результат таблицей.
-7. Проверь связь с таблицей: бот при старте должен прочитать название компании, базовую валюту и списки категорий.
-8. Скажи мне нажать Start у бота — первым запуском я стану главным админом, и бот сам создаст мою строку на листе ДОСТУП. Руками в таблицу никого не вписывай.
-9. Проведи меня по чек-listу приёмки из docs/: запись текстом, голосом, фото чека, правка, удаление, аналитика, сводка.
-
-Важные правила, не нарушай их:
-— Бот только ДОБАВЛЯЕТ строки на лист PNL. Формулы, структуру листов и другие вкладки не трогать никогда: таблица сама считает месяцы и аналитику.
-— Строки писать только через append с перезаписью, не вставкой: вставка сдвигает адреса в формулах и ломает подсчёты.
-— Все суммы, проценты и курсы считает код, а не модель.
-— Кнопки аналитики и отказы в правах должны работать без единого обращения к модели.</div><button class="btn-copy" onclick="copyBlock('mainPrompt', this)">📋 Копировать</button></div>
-
-        <div class="note note--green"><span class="note__icon">🧠</span><span><strong>Почему бот самописный, а&nbsp;не&nbsp;«агент на&nbsp;промптах».</strong> Деньги не&nbsp;прощают фантазий. Все суммы, курсы и&nbsp;проценты считает программа, а&nbsp;модель только переводит живую фразу в&nbsp;понятные боту поля. Поэтому цифра в&nbsp;таблице всегда сходится с&nbsp;тем, что сказал человек.</span></div>
-
-      </div>
-    </div>
-
-    <!-- ================= 09 ================= -->
-    <div class="section">
-      <div class="section__header"><div class="section__num">09</div><div class="section__title">Первый запуск: вы, команда и права</div></div>
-      <div class="section__card">
-
-        <div class="item" data-key="run-start"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Шаг 1. Нажать Start первым</div>
-            <div class="item__hint">Откройте своего бота и&nbsp;нажмите <strong>Start</strong>. Бот сам заведёт вам строку на&nbsp;листе ДОСТУП и&nbsp;сделает вас <strong>главным админом</strong>. Вписывать себя в&nbsp;таблицу руками не&nbsp;нужно — и&nbsp;не&nbsp;надо: бот сверяет ваш номер с&nbsp;тем, что в&nbsp;настройках.</div>
-          </div>
-        </div>
-
-        <div class="item" data-key="run-name"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Шаг 2. Назвать своё имя</div>
-            <div class="item__hint">Команда <code>/name</code> → напишите имя и&nbsp;фамилию. В&nbsp;профиле Telegram у&nbsp;людей бывает что угодно, а&nbsp;в&nbsp;таблице должно стоять человеческое имя — по&nbsp;нему видно, кто внёс расход.</div>
-          </div>
-        </div>
-
-        <div class="item" data-key="run-team"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Шаг 3. Позвать сотрудников</div>
-            <div class="item__hint">Дайте им&nbsp;ссылку на&nbsp;бота. Человек нажимает <strong>Запросить доступ</strong> → вам приходит заявка с&nbsp;кнопками → жмёте <strong>Одобрить</strong> и&nbsp;выбираете роль. Дальше бот сам просит человека представиться и&nbsp;только потом пускает к&nbsp;работе.</div>
-          </div>
-        </div>
-
-        <div class="note note--info"><span class="note__icon">👥</span><span><strong>Три уровня доступа.</strong><br>
-        •&nbsp;<strong>🎖 Главный админ</strong> — вы. Единственный, кто назначает и&nbsp;снимает админов.<br>
-        •&nbsp;<strong>👑 Админ</strong> — одобряет заявки, управляет правами сотрудников, меняет настройки. Других админов трогать не&nbsp;может.<br>
-        •&nbsp;<strong>👤 Сотрудник</strong> — вносит операции по&nbsp;своим галочкам.</span></div>
-
-        <div class="item" data-key="run-rights"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Шаг 4. Раздать права</div>
-            <div class="item__hint"><code>/settings</code> → <strong>👥 Люди и права</strong> → нажмите на&nbsp;человека. Три галочки: расходы, доходы, аналитика. Человеку приходит уведомление о&nbsp;каждом изменении.</div>
-          </div>
-        </div>
-
-        <div class="item" data-key="run-cats"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Шаг 5. Настроить категории и сводку</div>
-            <div class="item__hint"><code>/settings</code> → <strong>🏷 Категории</strong>: добавьте свои статьи расходов и&nbsp;доходов. <strong>📅 Сводка по&nbsp;финансам</strong>: дни недели, время и&nbsp;часовой пояс — сводка уходит всем, у&nbsp;кого включена аналитика.</div>
-          </div>
-        </div>
-
-        <div class="item" data-key="run-plan"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Шаг 6. Вписать планы по месяцам (по желанию)</div>
-            <div class="item__hint">На&nbsp;листе нужного месяца есть колонка <strong>ПЛАН</strong>. Впишете суммы — бот начнёт показывать «план/факт» со&nbsp;светофором и&nbsp;предупреждать о&nbsp;перерасходе. Не&nbsp;впишете — честно скажет «План не&nbsp;задан».</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ================= 10 ================= -->
-    <div class="section">
-      <div class="section__header"><div class="section__num">10</div><div class="section__title">Проверьте, что всё работает</div></div>
-      <div class="section__card">
-
-        <div class="note note--info"><span class="note__icon">🧪</span><span>Пройдите эти пункты подряд — они проверяют всю цепочку: речь, фото, валюту, права и&nbsp;аналитику.</span></div>
 
         <div class="item" data-key="t-text"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Записать расход текстом</div>
-            <div class="item__hint">Напишите: <em>«Потратил 1500&nbsp;рублей на&nbsp;ручки и&nbsp;стикеры. Купил канцтовары сегодня»</em>. В&nbsp;ответ придёт карточка с&nbsp;номером записи, а&nbsp;в&nbsp;таблице на&nbsp;листе PNL появится строка.</div>
-          </div>
-        </div>
-
-        <div class="item" data-key="t-voice"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">То же самое голосом</div>
-            <div class="item__hint">Наговорите ту&nbsp;же фразу голосовым. Результат должен быть таким&nbsp;же.</div>
+            <div class="item__text">Записать расход текстом и голосом</div>
+            <div class="item__hint">Напишите: <em>«Потратил 1500&nbsp;рублей на&nbsp;ручки и&nbsp;стикеры. Купил канцтовары сегодня»</em>. Придёт карточка с&nbsp;номером записи, в&nbsp;таблице на&nbsp;листе PNL появится строка. Повторите голосовым — результат должен быть таким&nbsp;же.</div>
           </div>
         </div>
 
         <div class="item" data-key="t-photo"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Прислать фото чека</div>
-            <div class="item__hint">Бот покажет карточку «Распознал чек — проверь» с&nbsp;тремя кнопками. <strong>До&nbsp;нажатия «Записать» в&nbsp;таблице ничего нет.</strong> Нажмите «✏️ Исправить» и&nbsp;скажите голосом «сумма 1600» — карточка перерисуется.</div>
+            <div class="item__hint">Бот покажет карточку «Распознал чек — проверь». <strong>До&nbsp;нажатия «Записать» в&nbsp;таблице ничего нет.</strong> Нажмите «✏️ Исправить» и&nbsp;скажите голосом «сумма 1600» — карточка перерисуется.</div>
           </div>
         </div>
 
         <div class="item" data-key="t-currency"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Внести трату в чужой валюте</div>
-            <div class="item__hint">Например: <em>«потратил 50&nbsp;лари на&nbsp;продукты»</em>. В&nbsp;таблице должны заполниться <strong>обе</strong> колонки: исходная сумма в&nbsp;лари и&nbsp;пересчитанная в&nbsp;валюте компании.</div>
+            <div class="item__hint">Например: <em>«потратил 50&nbsp;лари на&nbsp;продукты»</em>. В&nbsp;таблице должны заполниться <strong>обе</strong> колонки: исходная сумма и&nbsp;пересчитанная в&nbsp;валюте компании.</div>
           </div>
         </div>
 
         <div class="item" data-key="t-fix"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Поправить и удалить</div>
+            <div class="item__text">Поправить и удалить запись</div>
             <div class="item__hint">Скажите <em>«ошибся, удали»</em> — уйдёт ваша последняя запись. Затем <em>«в R-2 сумма 2000»</em> — бот пересчитает и&nbsp;покажет «было / стало».</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-team"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Позвать сотрудника и раздать права</div>
+            <div class="item__hint">Дайте ему&nbsp;ссылку на&nbsp;бота: он&nbsp;жмёт «Запросить доступ» → вам приходит заявка → «Одобрить» и&nbsp;выбор роли. Бот сам попросит у&nbsp;него имя и&nbsp;фамилию. Права — <code>/settings</code> → <strong>👥 Люди и&nbsp;права</strong>, человеку приходит уведомление о&nbsp;каждом изменении.</div>
           </div>
         </div>
 
         <div class="item" data-key="t-boss"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Проверить, что руководителю приходит копия</div>
-            <div class="item__hint">Попросите сотрудника внести трату. Вам должна прийти та&nbsp;же карточка, но&nbsp;с&nbsp;именем и&nbsp;ником автора в&nbsp;строке «Источник». Между собой сотрудники таких копий не&nbsp;получают.</div>
-          </div>
-        </div>
-
-        <div class="item" data-key="t-deny"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Проверить права</div>
-            <div class="item__hint">Выключите сотруднику «Аналитику» и&nbsp;попросите его&nbsp;спросить «сколько потратили». Должен прийти вежливый отказ. Включите обратно — ему придёт уведомление, что право открыли.</div>
+            <div class="item__text">Проверить копию операции руководителю</div>
+            <div class="item__hint">Попросите сотрудника внести трату. Вам придёт та&nbsp;же карточка, но&nbsp;с&nbsp;именем и&nbsp;ником автора в&nbsp;строке «Источник». Между собой сотрудники таких копий не&nbsp;получают.</div>
           </div>
         </div>
 
         <div class="item" data-key="t-analytics"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Прогнать аналитику</div>
-            <div class="item__hint"><code>/menu</code> → нажмите все восемь кнопок подряд, они должны отвечать мгновенно. Потом спросите словами: <em>«сколько потратили в&nbsp;июле»</em>, <em>«кто больше потратил»</em>.</div>
+            <div class="item__text">Прогнать аналитику и сводку</div>
+            <div class="item__hint"><code>/menu</code> → нажмите все восемь кнопок, они отвечают мгновенно. Потом спросите словами: <em>«сколько потратили в&nbsp;июле»</em>, <em>«кто больше потратил»</em>. Сводку проверьте так: <code>/settings</code> → <strong>📅 Сводка</strong> → поставьте сегодняшний день и&nbsp;ближайшее время.</div>
           </div>
         </div>
 
-        <div class="item" data-key="t-weekly"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Проверить сводку</div>
-            <div class="item__hint"><code>/settings</code> → <strong>📅 Сводка по&nbsp;финансам</strong>: поставьте сегодняшний день и&nbsp;ближайшее время. Дождитесь — сводка придёт один раз, дубля быть не&nbsp;должно.</div>
-          </div>
-        </div>
+        <div class="note note--info"><span class="note__icon">🕒</span><span>Время бот считает по&nbsp;часовому поясу из&nbsp;настроек: <code>/settings</code> → <strong>📅 Сводка по&nbsp;финансам</strong> → <strong>🌍 Часовой пояс</strong>. От&nbsp;него зависит, что считается «сегодня» и&nbsp;когда уходит сводка.</span></div>
 
       </div>
     </div>
 
-    <!-- ================= 11 ================= -->
     <div class="section">
-      <div class="section__header"><div class="section__num">11</div><div class="section__title">Если что-то пошло не так</div></div>
+      <div class="section__header"><div class="section__num">07</div><div class="section__title">Если что-то пошло не так</div></div>
       <div class="section__card">
 
         <table class="data-table">
-          <thead><tr><th>Что видите</th><th>Что делать</th></tr></thead>
-          <tbody>
-            <tr><td>Бот молчит на&nbsp;любое сообщение</td><td>Контейнер упал или не&nbsp;стартовал. Попросите Claude&nbsp;Code показать лог бота — в&nbsp;первых строках будет причина.</td></tr>
-            <tr><td>«Тебя ещё нет в&nbsp;списке команды», хотя вы&nbsp;владелец</td><td>В&nbsp;настройках бота не&nbsp;тот числовой ID. Сверьте его&nbsp;с&nbsp;тем, что дал @userinfobot.</td></tr>
-            <tr><td>Операции не&nbsp;попадают в&nbsp;таблицу</td><td>Чаще всего доступ к&nbsp;Google протух: приложение осталось в&nbsp;режиме «Тестирование». Опубликуйте его&nbsp;(блок&nbsp;05, шаг&nbsp;5) и&nbsp;пройдите авторизацию заново.</td></tr>
-            <tr><td>Пишет «не&nbsp;знаю такую валюту»</td><td>Назовите валюту кодом из&nbsp;трёх букв: RUB, USD, KZT, GEL.</td></tr>
-            <tr><td>Сумма в&nbsp;валюте компании пустая</td><td>Кончился лимит курсов или сервис не&nbsp;ответил. Запись сохранена — проставьте сумму руками, а&nbsp;лимит проверьте в&nbsp;кабинете ExchangeRate-API.</td></tr>
-            <tr><td>Фото чека не&nbsp;читается вообще, любое</td><td>Модель не&nbsp;умеет смотреть картинки. Возьмите ту, что умеет (блок&nbsp;07).</td></tr>
-            <tr><td>Меню «💱 Финбот» не&nbsp;появилось в&nbsp;таблице</td><td>Обновите страницу таблицы. Если не&nbsp;помогло — <strong>Расширения → Apps Script</strong>, проверьте, что проект на&nbsp;месте.</td></tr>
-            <tr><td>Валюту поменяли руками, таблица не&nbsp;перекрасилась</td><td>Не&nbsp;включён автозапуск скрипта: меню <strong>💱 Финбот</strong> → включить автозапуск (блок&nbsp;04, шаг&nbsp;3).</td></tr>
-            <tr><td>В&nbsp;аналитике один человек считается дважды</td><td>Он&nbsp;менял имя, а&nbsp;прошлые строки остались со&nbsp;старым. Обычно бот переписывает их&nbsp;сам; если нет — поправьте колонку ИСТОЧНИК в&nbsp;PNL.</td></tr>
-            <tr><td>Аналитика показывает «План не&nbsp;задан»</td><td>Это не&nbsp;ошибка: планы вписываются руками в&nbsp;колонку ПЛАН на&nbsp;листе месяца.</td></tr>
-            <tr><td>Формулы в&nbsp;таблице сломались (#REF!)</td><td><strong>Файл → История версий → Восстановить</strong>. Вернёт таблицу целиком, включая удалённые вкладки.</td></tr>
-          </tbody>
+          <tr><th>Что видите</th><th>Что делать</th></tr>
+          <tr><td>Бот молчит на&nbsp;любое сообщение</td><td>Контейнер упал или не&nbsp;стартовал. Попросите Claude&nbsp;Code показать лог бота — в&nbsp;первых строках будет причина.</td></tr>
+          <tr><td>«Тебя ещё нет в&nbsp;списке команды», хотя вы&nbsp;владелец</td><td>В&nbsp;настройках бота не&nbsp;тот числовой id. Сверьте его&nbsp;с&nbsp;тем, что дал @userinfobot.</td></tr>
+          <tr><td>Операции не&nbsp;попадают в&nbsp;таблицу</td><td>Чаще всего доступ к&nbsp;Google протух: приложение осталось в&nbsp;режиме «Тестирование». Опубликуйте его&nbsp;(блок&nbsp;04, шаг&nbsp;10) и&nbsp;пройдите авторизацию заново.</td></tr>
+          <tr><td>Ошибка доступа к&nbsp;таблице сразу после сборки</td><td>Вероятно, боту дали адрес шаблона, а&nbsp;не&nbsp;своей копии. Проверьте ссылку.</td></tr>
+          <tr><td>Пишет «не&nbsp;знаю такую валюту»</td><td>Назовите валюту кодом из&nbsp;трёх букв: RUB, USD, KZT, GEL.</td></tr>
+          <tr><td>Сумма в&nbsp;валюте компании пустая</td><td>Кончился лимит курсов или сервис не&nbsp;ответил. Запись сохранена — проставьте сумму руками, лимит проверьте в&nbsp;кабинете ExchangeRate-API.</td></tr>
+          <tr><td>Любое фото чека не&nbsp;читается</td><td>Выбранная модель не&nbsp;умеет смотреть картинки. Переключитесь на&nbsp;ту, что умеет (блок&nbsp;02).</td></tr>
+          <tr><td>Меню «💱 Финбот» не&nbsp;появилось в&nbsp;таблице</td><td>Обновите страницу таблицы. Если не&nbsp;помогло — <strong>Расширения → Apps Script</strong>, проверьте, что проект на&nbsp;месте.</td></tr>
+          <tr><td>Поменяли валюту руками, таблица не&nbsp;перекрасилась</td><td>Не&nbsp;включён автозапуск скрипта: меню <strong>💱 Финбот</strong> → автозапуск (блок&nbsp;04, шаг&nbsp;5).</td></tr>
+          <tr><td>Аналитика пишет «План не&nbsp;задан»</td><td>Это не&nbsp;ошибка: планы вписываются руками в&nbsp;колонку ПЛАН на&nbsp;листе месяца.</td></tr>
+          <tr><td>Формулы в&nbsp;таблице сломались (#REF!)</td><td><strong>Файл → История версий → Восстановить</strong>. Вернёт таблицу целиком, включая удалённые вкладки.</td></tr>
         </table>
 
         <div class="note note--green"><span class="note__icon">🛟</span><span>Любую поломку таблицы лечит <strong>История версий</strong>: Google хранит все состояния файла. Это ваша страховка — не&nbsp;бойтесь экспериментировать с&nbsp;планами и&nbsp;категориями.</span></div>
