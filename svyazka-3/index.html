@@ -296,7 +296,7 @@
         <div class="note note--green"><span class="note__icon">✅</span><span><strong>Это настроим дальше по&nbsp;чек-листу, заранее ничего делать не&nbsp;нужно:</strong><br>
         •&nbsp;<strong>Google-таблица</strong> — копия готового шаблона к&nbsp;себе на&nbsp;Диск <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
         •&nbsp;<strong>Доступ к&nbsp;Google Таблицам</strong> — Google&nbsp;Sheets&nbsp;API и&nbsp;ключи в&nbsp;консоли <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
-        •&nbsp;<strong>Скрипт смены валюты</strong> — уже вшит в&nbsp;шаблон, надо только включить <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
+        •&nbsp;<strong>Google Скрипты</strong> — уже вшиты в&nbsp;шаблон, ставить и&nbsp;включать нечего <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
         •&nbsp;<strong>Ключ курсов валют</strong> — бесплатный, регистрация на&nbsp;минуту <span style="opacity:.6">(блок&nbsp;05, руками)</span><br>
         •&nbsp;<strong>Telegram-бот</strong> — заводим нового, отдельно под&nbsp;финансы <span style="opacity:.6">(блок&nbsp;03, по&nbsp;промпту)</span></span></div>
       </div>
@@ -366,7 +366,7 @@
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">04</div><div class="section__title">Google: таблица, доступ и скрипт</div></div>
+      <div class="section__header"><div class="section__num">04</div><div class="section__title">Google: таблица, доступ и скрипты</div></div>
       <div class="section__card">
 
         <div class="note note--info"><span class="note__icon">📊</span><span>Вся финансовая машина — одна <strong>Google-таблица</strong> (Google&nbsp;Sheets). Бот только добавляет строки на&nbsp;лист&nbsp;PNL, а&nbsp;листы месяцев и&nbsp;аналитика считают всё сами формулами. Шаблон уже собран — вам нужна своя копия.</span></div>
@@ -375,7 +375,7 @@
           <div class="item__body">
             <div class="item__text">Шаг 1. Сделать копию шаблона на свой Google Диск</div>
             <div class="item__hint">Откройте шаблон по&nbsp;ссылке и&nbsp;выберите <strong>Файл</strong> → <strong>Создать копию</strong> (<em>File → Make a&nbsp;copy</em>). Название любое. Копия ляжет на&nbsp;ваш Диск, дальше вы&nbsp;работаете <strong>только с&nbsp;ней</strong>.</div>
-            <a href="https://docs.google.com/spreadsheets/d/1INbzQ8dQV3xwlWqDecqnzOGJCpNKK-Nj8SJsAE3kBjI/edit?usp=sharing" target="_blank" class="item__link" onclick="event.stopPropagation()">Шаблон «ФИНАНСЫ КОМПАНИИ 2026»</a>
+            <a href="https://docs.google.com/spreadsheets/d/123_tPT0cs1zvBG-rhcKabPG-cngwOL5sRjl-e7zKaZs/edit?usp=sharing" target="_blank" class="item__link" onclick="event.stopPropagation()">Шаблон «ФИНАНСЫ КОМПАНИИ 2026»</a>
           </div>
         </div>
 
@@ -395,23 +395,33 @@
 
         <div class="note note--alert"><span class="note__icon">🚫</span><span><strong>Не&nbsp;переделывайте структуру таблицы.</strong> Не&nbsp;удаляйте и&nbsp;не&nbsp;переименовывайте вкладки, не&nbsp;трогайте формулы, не&nbsp;переставляйте колонки. Месяцы и&nbsp;аналитика тянут данные из&nbsp;PNL по&nbsp;точным адресам: сломав одну формулу, вы&nbsp;потеряете все подсчёты. Планы вписывать можно и&nbsp;нужно — для&nbsp;этого есть колонка ПЛАН на&nbsp;листах месяцев.</span></div>
 
-        <div class="note note--green"><span class="note__icon">📎</span><span><strong>Скрипт смены валюты копируется вместе с&nbsp;таблицей.</strong> В&nbsp;шаблон вшита маленькая программа Apps&nbsp;Script: если поменять базовую валюту руками в&nbsp;таблице, она перекрасит символы и&nbsp;заголовки на&nbsp;всех вкладках. Ставить её&nbsp;отдельно не&nbsp;нужно, но&nbsp;<strong>разрешение на&nbsp;запуск и&nbsp;автозапуск</strong> Google просит подтвердить у&nbsp;каждого нового владельца — это два шага ниже.</span></div>
+        <div class="note note--green"><span class="note__icon">📎</span><span><strong>В&nbsp;шаблон вшиты два Google Скрипта, и&nbsp;они копируются вместе с&nbsp;таблицей.</strong> Это маленькие программы Apps&nbsp;Script, которые живут внутри вашей копии и&nbsp;работают только с&nbsp;ней. <strong>Ставить и&nbsp;включать ничего не&nbsp;нужно</strong> — они запускаются сами, как только вы&nbsp;правите таблицу руками.</span></div>
 
-        <div class="item" data-key="gs-auth"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <table class="data-table">
+          <tr><th>Скрипт</th><th>Что делает</th></tr>
+          <tr><td>💱 Смена валюты</td><td>Поменяли базовую валюту в&nbsp;КОНФИГ — символы и&nbsp;заголовки перекрашиваются во&nbsp;всех вкладках</td></tr>
+          <tr><td>📝 Заметки</td><td>Комментарий операции вешается примечанием на&nbsp;ячейку «категория&nbsp;× день» в&nbsp;листе месяца: наводите мышь на&nbsp;цифру — видно, из&nbsp;чего она сложилась</td></tr>
+        </table>
+
+        <div class="item" data-key="gs-menu"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 4. Разрешить скрипту работать</div>
-            <div class="item__hint">Обновите страницу своей копии — в&nbsp;меню сверху появится пункт <strong>💱 Финбот</strong>. Нажмите любой его&nbsp;пункт: Google попросит авторизацию → <strong>Продолжить</strong> → ваш аккаунт → на&nbsp;жёлтом экране «Приложение не&nbsp;проверено» нажмите <strong>Дополнительные настройки</strong> → <strong>Перейти к&nbsp;проекту</strong> → <strong>Разрешить</strong>. Экран пугает, но&nbsp;вы&nbsp;разрешаете своей копии работать с&nbsp;самой собой.</div>
+            <div class="item__text">Шаг 4. Обновить страницу таблицы</div>
+            <div class="item__hint">В&nbsp;меню сверху сам собой появится пункт <strong>💱 Финбот</strong> — значит скрипты приехали вместе с&nbsp;копией и&nbsp;на&nbsp;месте. Ничего нажимать не&nbsp;нужно, это просто проверка.</div>
           </div>
         </div>
 
-        <div class="item" data-key="gs-trigger"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="note note--info"><span class="note__icon">🔧</span><span><strong>Почему не&nbsp;надо ничего включать.</strong> Скрипты запускает <strong>простой триггер</strong> — функция со&nbsp;специальным именем, которую Google зовёт сам на&nbsp;каждую правку таблицы. Она едет вместе с&nbsp;кодом в&nbsp;любую копию. Обычные триггеры, заведённые руками, при&nbsp;копировании таблицы <strong>не&nbsp;переносятся</strong> — код уезжает, а&nbsp;запускать его&nbsp;некому, и&nbsp;в&nbsp;копии всё молча перестаёт работать. Здесь этой ловушки нет.</span></div>
+
+        <div class="item" data-key="gs-check"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 5. Включить автозапуск скрипта</div>
-            <div class="item__hint">Меню <strong>💱 Финбот</strong> → пункт про&nbsp;автозапуск. Триггеры при копировании таблицы не&nbsp;переносятся, поэтому включить нужно один раз руками. Проверить: смените валюту в&nbsp;КОНФИГ — через пару секунд символы поменяются по&nbsp;всей таблице.</div>
+            <div class="item__text">Шаг 5. Проверить, что скрипты живые</div>
+            <div class="item__hint">Смените валюту в&nbsp;<strong>КОНФИГ</strong> — через пару секунд символы поменяются по&nbsp;всей таблице. Затем впишите руками на&nbsp;листе <strong>PNL</strong> строку с&nbsp;датой, категорией, суммой и&nbsp;комментарием — в&nbsp;листе нужного месяца на&nbsp;пересечении «категория&nbsp;× день» появится примечание с&nbsp;этим комментарием.</div>
           </div>
         </div>
 
-        <div class="note note--info"><span class="note__icon">💡</span><span>Скрипт нужен только для&nbsp;<strong>ручной</strong> смены валюты. Когда валюту меняете через бота (<code>/settings</code>), он&nbsp;перекрашивает таблицу сам: Google не&nbsp;запускает триггеры на&nbsp;изменения, сделанные программой.</span></div>
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>В&nbsp;меню <strong>💱 Финбот</strong> есть кнопка «Перекрасить валюту сейчас» — на&nbsp;случай, если что-то не&nbsp;перекрасилось. При&nbsp;первом нажатии Google попросит авторизацию: <strong>Продолжить</strong> → ваш аккаунт → на&nbsp;жёлтом экране «Приложение не&nbsp;проверено» нажмите <strong>Дополнительные настройки</strong> → <strong>Перейти к&nbsp;проекту</strong> → <strong>Разрешить</strong>. Экран пугает, но&nbsp;вы&nbsp;разрешаете своей копии работать с&nbsp;самой собой. Для&nbsp;автоматической работы скриптов эта авторизация не&nbsp;нужна — только для&nbsp;кнопки.</span></div>
+
+        <div class="note note--info"><span class="note__icon">💡</span><span><strong>Строки, которые пишет бот, скрипты не&nbsp;видят:</strong> Google не&nbsp;запускает триггеры на&nbsp;изменения, сделанные программой. На&nbsp;деле это ничего не&nbsp;ломает — когда валюту меняете через бота (<code>/settings</code>), он&nbsp;перекрашивает таблицу сам. Заметки появляются у&nbsp;строк, вписанных руками.</span></div>
 
         <div class="note note--warn"><span class="note__icon">⚠</span><span>Дальше — доступ к&nbsp;таблицам в&nbsp;консоли Google. Это единственная часть, которую нельзя поручить Claude&nbsp;Code: он&nbsp;не&nbsp;может зайти в&nbsp;вашу консоль. Каждый шаг со&nbsp;ссылкой, которая открывает сразу нужный экран. Займёт минут пятнадцать.</span></div>
 
@@ -598,8 +608,9 @@
           <tr><td>Пишет «не&nbsp;знаю такую валюту»</td><td>Назовите валюту кодом из&nbsp;трёх букв: RUB, USD, KZT, GEL.</td></tr>
           <tr><td>Сумма в&nbsp;валюте компании пустая</td><td>Кончился лимит курсов или сервис не&nbsp;ответил. Запись сохранена — проставьте сумму руками, лимит проверьте в&nbsp;кабинете ExchangeRate-API.</td></tr>
           <tr><td>Любое фото чека не&nbsp;читается</td><td>Выбранная модель не&nbsp;умеет смотреть картинки. Переключитесь на&nbsp;ту, что умеет (блок&nbsp;02).</td></tr>
-          <tr><td>Меню «💱 Финбот» не&nbsp;появилось в&nbsp;таблице</td><td>Обновите страницу таблицы. Если не&nbsp;помогло — <strong>Расширения → Apps Script</strong>, проверьте, что проект на&nbsp;месте.</td></tr>
-          <tr><td>Поменяли валюту руками, таблица не&nbsp;перекрасилась</td><td>Не&nbsp;включён автозапуск скрипта: меню <strong>💱 Финбот</strong> → автозапуск (блок&nbsp;04, шаг&nbsp;5).</td></tr>
+          <tr><td>Меню «💱 Финбот» не&nbsp;появилось в&nbsp;таблице</td><td>Обновите страницу таблицы. Если не&nbsp;помогло — <strong>Расширения → Apps Script</strong>, проверьте, что проект на&nbsp;месте. Меню показывается только при&nbsp;наличии вкладки КОНФИГ.</td></tr>
+          <tr><td>Поменяли валюту руками, таблица не&nbsp;перекрасилась</td><td>Обновите страницу таблицы и&nbsp;поменяйте валюту ещё раз. Не&nbsp;помогло — меню <strong>💱 Финбот</strong> → «Перекрасить валюту сейчас»: в&nbsp;первый раз Google спросит разрешение (блок&nbsp;04).</td></tr>
+          <tr><td>Заметки не&nbsp;появляются под&nbsp;цифрами в&nbsp;листе месяца</td><td>Заметка строится из&nbsp;<strong>комментария</strong> операции — без него её&nbsp;не&nbsp;из&nbsp;чего собрать. И&nbsp;помните: строки, записанные ботом, скрипт не&nbsp;видит, это ограничение Google (блок&nbsp;04).</td></tr>
           <tr><td>Аналитика пишет «План не&nbsp;задан»</td><td>Это не&nbsp;ошибка: планы вписываются руками в&nbsp;колонку ПЛАН на&nbsp;листе месяца.</td></tr>
           <tr><td>Формулы в&nbsp;таблице сломались (#REF!)</td><td><strong>Файл → История версий → Восстановить</strong>. Вернёт таблицу целиком, включая удалённые вкладки.</td></tr>
         </table>
