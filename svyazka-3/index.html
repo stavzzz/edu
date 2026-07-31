@@ -288,14 +288,14 @@
 
         <div class="item" data-key="pre-gmcp"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Google-аккаунт с доступом к Google Таблицам</div>
+            <div class="item__text">Google-аккаунт с доступом к Google-таблицам</div>
             <div class="item__hint">Обычного Gmail достаточно, платный Google&nbsp;Workspace не&nbsp;нужен. Если на&nbsp;курсе уже подключали Google&nbsp;MCP&nbsp;— проект в&nbsp;консоли и&nbsp;ключи у&nbsp;вас есть, останется добавить доступ к&nbsp;таблицам в&nbsp;блоке&nbsp;04.</div>
           </div>
         </div>
 
         <div class="note note--green"><span class="note__icon">✅</span><span><strong>Это настроим дальше по&nbsp;чек-листу, заранее ничего делать не&nbsp;нужно:</strong><br>
         •&nbsp;<strong>Google-таблица</strong> — копия готового шаблона к&nbsp;себе на&nbsp;Диск <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
-        •&nbsp;<strong>Доступ к&nbsp;Google Таблицам</strong> — Google&nbsp;Sheets&nbsp;API и&nbsp;ключи в&nbsp;консоли <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
+        •&nbsp;<strong>Доступ к&nbsp;Google-таблицам</strong> — Google&nbsp;Sheets&nbsp;API и&nbsp;ключи в&nbsp;консоли <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
         •&nbsp;<strong>Google Скрипты</strong> — уже вшиты в&nbsp;шаблон, останется нажать две кнопки <span style="opacity:.6">(блок&nbsp;04, руками)</span><br>
         •&nbsp;<strong>Ключ курсов валют</strong> — бесплатный, регистрация на&nbsp;минуту <span style="opacity:.6">(блок&nbsp;05, руками)</span><br>
         •&nbsp;<strong>Telegram-бот</strong> — заводим нового, отдельно под&nbsp;финансы <span style="opacity:.6">(блок&nbsp;03, по&nbsp;промпту)</span></span></div>
@@ -328,7 +328,7 @@
 
 Шаг 2. Заведи Telegram-бота: нужен НОВЫЙ бот отдельно под финансы, даже если у меня уже есть другие. Продиктуй, что нажимать в @BotFather (/newbot, имя, username), забери у меня токен. Затем подскажи написать @userinfobot и забери мой Telegram id — это будет OWNER_CHAT_ID, то есть я, главный админ.
 
-Шаг 3. Спроси у меня ссылку на мою копию Google-таблицы — я её уже сделал руками (блок 04). Из адреса вида docs.google.com/spreadsheets/d/XXXXXXXX/edit сам достань идентификатор таблицы. Дальше нужен доступ к Google Таблицам: возьми креды (client_id, client_secret, refresh_token) — например, из файла кредов Google Workspace MCP, если он у меня уже настроен, — и пропиши путь к этому файлу в docker-compose.yml. Если кредов нет, спроси у меня идентификатор клиента и секрет клиента, скажи, какой redirect URI вписать в OAuth Client ID, проведи авторизацию и сохрани файл с доступом на сервере с правами 600. OAuth Client ID я уже создал и Google Sheets API включил (блок 04).
+Шаг 3. Спроси у меня ссылку на мою копию Google-таблицы — я её уже сделал руками (блок 04). Из адреса вида docs.google.com/spreadsheets/d/XXXXXXXX/edit сам достань идентификатор таблицы. Дальше нужен доступ к Google-таблицам: возьми креды (client_id, client_secret, refresh_token) — например, из файла кредов Google Workspace MCP, если он у меня уже настроен, — и пропиши путь к этому файлу в docker-compose.yml. Если кредов нет, спроси у меня идентификатор клиента и секрет клиента, скажи, какой redirect URI вписать в OAuth Client ID, проведи авторизацию и сохрани файл с доступом на сервере с правами 600. OAuth Client ID я уже создал и Google Sheets API включил (блок 04).
 
 Шаг 4. Проверь связь с таблицей: прочитай вкладку КОНФИГ и покажи мне название компании, базовую валюту и количество категорий. Убедись, что на месте вкладки PNL, СИСТЕМА, ДОСТУП, КОНФИГ, КАТЕГОРИИ и двенадцать листов месяцев. Если чего-то нет — скажи мне, что именно, дальше не иди.
 
@@ -373,7 +373,7 @@
       <div class="section__header"><div class="section__num">04</div><div class="section__title">Google: таблица, доступ и скрипты</div></div>
       <div class="section__card">
 
-        <div class="note note--info"><span class="note__icon">📊</span><span>Вся финансовая машина — одна <strong>Google-таблица</strong> (Google&nbsp;Sheets). Бот только добавляет строки на&nbsp;лист&nbsp;PNL, а&nbsp;листы месяцев и&nbsp;аналитика считают всё сами формулами. Шаблон уже собран — вам нужна своя копия.</span></div>
+        <div class="note note--info"><span class="note__icon">📊</span><span>Вся финансовая машина — одна <strong>Google-таблица</strong>. Бот только добавляет строки на&nbsp;лист&nbsp;PNL, а&nbsp;листы месяцев и&nbsp;аналитика считают всё сами формулами. Шаблон уже собран — вам нужна своя копия.</span></div>
 
         <div class="item" data-key="tbl-copy"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
@@ -468,7 +468,7 @@
         <div class="item" data-key="g-api"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Шаг 10. Включить Google Sheets API</div>
-            <div class="item__hint">Ссылка открывает сразу карточку нужного API — это доступ к&nbsp;гугл-таблицам. Нажмите синюю кнопку «Включить». Если вместо неё написано «Управлять», значит API уже включён, идите дальше.</div>
+            <div class="item__hint">Ссылка открывает сразу карточку нужного API — это доступ к&nbsp;Google-таблицам. Нажмите синюю кнопку «Включить». Если вместо неё написано «Управлять», значит API уже включён, идите дальше.</div>
             <a href="https://console.cloud.google.com/apis/library/sheets.googleapis.com" target="_blank" class="item__link" onclick="event.stopPropagation()">Открыть Google Sheets API</a>
           </div>
         </div>
@@ -484,7 +484,7 @@
         <div class="item" data-key="g-scopes"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Шаг 12. Выдать права на таблицы</div>
-            <div class="item__hint">На&nbsp;шаге «Области доступа» нажмите «Добавить или удалить области». В&nbsp;поиске наберите <strong>sheets</strong> и&nbsp;отметьте строку <strong>.../auth/spreadsheets</strong> — это чтение и&nbsp;запись гугл-таблиц. «Обновить» → «Сохранить и&nbsp;продолжить».</div>
+            <div class="item__hint">На&nbsp;шаге «Области доступа» нажмите «Добавить или удалить области». В&nbsp;поиске наберите <strong>sheets</strong> и&nbsp;отметьте строку <strong>.../auth/spreadsheets</strong> — это чтение и&nbsp;запись Google-таблиц. «Обновить» → «Сохранить и&nbsp;продолжить».</div>
           </div>
         </div>
 
