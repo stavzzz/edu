@@ -536,8 +536,21 @@
           <tr><td>ZIP-архив, папка Google&nbsp;Диска</td><td>Разбирает пачкой: карточка на&nbsp;каждый документ, до&nbsp;двадцати за&nbsp;раз</td></tr>
           <tr><td>Ссылка на&nbsp;Google&nbsp;Документ, Таблицу, сайт</td><td>Забирает содержимое и&nbsp;следит за&nbsp;источником: поменяли — заведёт новую версию</td></tr>
           <tr><td>Файл больше 20&nbsp;МБ</td><td>Отказ с&nbsp;выходом: «положи на&nbsp;Google&nbsp;Диск и&nbsp;пришли ссылку»</td></tr>
-          <tr><td>Word&nbsp;97, Excel&nbsp;97, Keynote, Numbers</td><td>Честный отказ с&nbsp;подсказкой, во&nbsp;что пересохранить</td></tr>
+          <tr><td>Word&nbsp;97, Excel&nbsp;97, Pages, Keynote, Numbers</td><td>Честный отказ с&nbsp;подсказкой, во&nbsp;что пересохранить</td></tr>
         </table>
+
+        <div class="note note--green"><span class="note__icon">📥</span><span><strong>Документ можно забрать обратно.</strong> Под ответом есть кнопка «📥&nbsp;Прислать файл»: бот кладёт документ прямо в&nbsp;чат, а&nbsp;под&nbsp;ним ссылку на&nbsp;оригинал. Файл в&nbsp;руках — это&nbsp;копия на&nbsp;момент загрузки, а&nbsp;по&nbsp;ссылке лежит живой документ, который мог с&nbsp;тех пор поменяться.</span></div>
+
+        <table class="data-table">
+          <tr><th>Что лежит в&nbsp;базе</th><th>Что придёт по&nbsp;кнопке</th></tr>
+          <tr><td>Google&nbsp;Документ</td><td>файл <strong>Word</strong>, привычный <code>.docx</code></td></tr>
+          <tr><td>Google&nbsp;Таблица</td><td>файл <strong>Excel</strong>, <code>.xlsx</code></td></tr>
+          <tr><td>Google&nbsp;Презентация</td><td>файл <strong>PowerPoint</strong>, <code>.pptx</code></td></tr>
+          <tr><td>PDF, Word, Excel с&nbsp;Диска или из&nbsp;чата</td><td>оригинал как есть</td></tr>
+          <tr><td>Забрать файл не&nbsp;вышло</td><td>придёт <strong>ссылка</strong> — по&nbsp;ней можно запросить доступ</td></tr>
+        </table>
+
+        <div class="note note--warn"><span class="note__icon">🍎</span><span><strong>Храните документы в&nbsp;родных форматах.</strong> Файлы Pages, Numbers и&nbsp;Keynote бот не&nbsp;принимает: это&nbsp;закрытые форматы Apple, читать их&nbsp;умеет только сама Apple. То&nbsp;же с&nbsp;Word&nbsp;97 и&nbsp;Excel&nbsp;97. Держите документы в&nbsp;Google&nbsp;Документах и&nbsp;Таблицах или пересохраняйте в&nbsp;Word, Excel и&nbsp;PDF — тогда работает всё, и&nbsp;загрузка, и&nbsp;возврат файла.</span></div>
 
         <div class="item" data-key="kb-file"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
@@ -674,6 +687,13 @@
           <div class="item__body">
             <div class="item__text">Проверить источник и фрагмент</div>
             <div class="item__hint">Под&nbsp;ответом — название документа и&nbsp;версия. Нажмите «📎&nbsp;Показать фрагмент»: вы&nbsp;увидите тот&nbsp;самый кусок текста, по&nbsp;которому собран ответ. Если он&nbsp;не&nbsp;про&nbsp;то — проблема в&nbsp;документе, а&nbsp;не&nbsp;в&nbsp;модели.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-getfile"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Забрать документ обратно файлом</div>
+            <div class="item__hint">Нажмите «📥&nbsp;Прислать файл». Документ придёт в&nbsp;чат, под&nbsp;ним будет ссылка на&nbsp;оригинал. Спросите что-нибудь по&nbsp;Google&nbsp;Документу и&nbsp;проверьте: он&nbsp;обязан прийти файлом&nbsp;Word, а&nbsp;Таблица — файлом&nbsp;Excel.</div>
           </div>
         </div>
 
