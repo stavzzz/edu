@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ИИ-ВИЗАЦИЯ — Связка 5: Транскрибатор аудио, видео и YouTube</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0a0a0f;
+    --bg-card: #12121a;
+    --bg-card-hover: #181825;
+    --border: #1e1e2e;
+    --border-accent: #2a2a3e;
+    --text-primary: #e8e6f0;
+    --text-secondary: #8b879e;
+    --text-muted: #5a5670;
+    --accent: #7c5bf5;
+    --accent-glow: #9d7cff;
+    --accent-soft: rgba(124, 91, 245, 0.12);
+    --green: #34d399;
+    --green-glow: #6ee7b7;
+    --green-soft: rgba(52, 211, 153, 0.1);
+    --amber: #fbbf24;
+    --amber-soft: rgba(251, 191, 36, 0.1);
+    --red-soft: rgba(248, 113, 113, 0.1);
+    --red: #f87171;
+    --radius: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Onest', sans-serif; background: var(--bg-deep); color: var(--text-primary); line-height: 1.65; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: radial-gradient(circle at 20% 20%, rgba(124,91,245,0.04) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(52,211,153,0.03) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+  .wrapper { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  /* Шапка */
+  .header { text-align: center; margin-bottom: 48px; }
+  .header__badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-glow); background: var(--accent-soft); border: 1px solid rgba(124,91,245,0.2); padding: 6px 16px; border-radius: 100px; margin-bottom: 24px; animation: fadeDown .6s ease both; }
+  .header__title { font-size: clamp(28px,6vw,40px); font-weight: 800; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 12px; animation: fadeDown .6s ease .1s both; }
+  .header__title span { background: linear-gradient(135deg, var(--accent-glow), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .header__topics { list-style:none; display:flex; flex-direction:column; gap:7px; max-width:460px; margin:16px auto 0; animation:fadeDown .6s ease .3s both; }
+  .header__topics li { font-size:13.5px; color:var(--text-secondary); display:flex; align-items:flex-start; gap:8px; text-align:left; }
+  .header__topics li::before { content:'→'; color:var(--accent); flex-shrink:0; font-family:'JetBrains Mono',monospace; font-size:11px; margin-top:3px; }
+  .header__subtitle { font-size: 15px; color: var(--text-secondary); max-width: 500px; margin: 0 auto; animation: fadeDown .6s ease .2s both; }
+
+  /* Прогресс-бар (sticky) */
+  .progress-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 36px; position: sticky; top: 12px; z-index: 10; backdrop-filter: blur(16px); background: rgba(18,18,26,0.92); animation: fadeDown .6s ease .3s both; }
+  .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .progress-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-family: 'JetBrains Mono', monospace; }
+  .progress-count { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: var(--accent-glow); }
+  .progress-bar { width: 100%; height: 8px; background: var(--border); border-radius: 100px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 100px; transition: width .5s cubic-bezier(.34,1.56,.64,1); width: 0%; }
+
+  /* Секции */
+  .section { margin-bottom: 28px; }
+  .section__header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding-left: 2px; }
+  .section__num { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: var(--accent); background: var(--accent-soft); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; flex-shrink: 0; }
+  .section__title { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
+  .section__card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color .3s; }
+  .section__card:hover { border-color: var(--border-accent); }
+
+  /* Пункт чек-листа */
+  .item { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--border); transition: background .2s; cursor: pointer; user-select: none; }
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: var(--bg-card-hover); }
+  .item.checked .item__text { color: var(--text-muted); text-decoration: line-through; }
+  .item.checked .item__link { opacity: 0.4; }
+  .item__check { position: relative; width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px; }
+  .item__check input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 2; }
+  .item__check .cm { width: 22px; height: 22px; border: 2px solid var(--border-accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: all .25s cubic-bezier(.34,1.56,.64,1); }
+  .item__check .cm svg { width: 12px; height: 12px; opacity: 0; transform: scale(0); transition: all .25s cubic-bezier(.34,1.56,.64,1); }
+  .item__check input:checked + .cm { background: var(--green); border-color: var(--green); }
+  .item__check input:checked + .cm svg { opacity: 1; transform: scale(1); }
+  .item__body { flex: 1; min-width: 0; }
+  .item__text { font-size: 14.5px; font-weight: 500; color: var(--text-primary); transition: all .3s; }
+  .item__hint { font-size: 13px; color: var(--text-secondary); margin-top: 4px; line-height: 1.6; }
+  .item__hint a { color: var(--accent-glow); text-decoration: none; font-weight: 600; }
+  .item__hint a:hover { text-decoration: underline; }
+  .item__hint strong { color: var(--text-primary); }
+  .item__link { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--accent-glow); text-decoration: none; margin-top: 5px; transition: all .2s; word-break: break-all; }
+  .item__link:hover { color: #bba4ff; text-decoration: underline; }
+  .item__link svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .lnk { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--accent-glow); text-decoration: none; word-break: break-all; }
+  .lnk:hover { color: #bba4ff; text-decoration: underline; }
+
+  /* Заметки */
+  .note { display: flex; align-items: flex-start; gap: 10px; padding: 14px 20px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; border-bottom: 1px solid var(--border); }
+  .note:last-child { border-bottom: none; }
+  .note--warn { background: var(--amber-soft); color: var(--amber); }
+  .note--info { background: var(--accent-soft); }
+  .note--alert { background: var(--red-soft); color: var(--red); }
+  .note--green { background: var(--green-soft); color: var(--green-glow); }
+  .note__icon { flex-shrink: 0; font-size: 15px; }
+  .note a { color: var(--accent-glow); text-decoration: none; font-weight: 600; }
+  .note a:hover { text-decoration: underline; }
+  .note strong { color: inherit; }
+  .tg { color: #2dd4bf !important; font-weight: 700; text-decoration: underline; text-decoration-color: rgba(45,212,191,0.4); text-underline-offset: 2px; transition: all .2s; }
+  .tg:hover { color: #5eead4 !important; text-decoration-color: #5eead4; }
+
+  /* Спойлер */
+  .spoiler { border-bottom: 1px solid var(--border); }
+  .spoiler:last-child { border-bottom: none; }
+  .spoiler summary { padding: 14px 20px; font-size: 13.5px; font-weight: 600; color: var(--text-secondary); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; transition: color .2s; }
+  .spoiler summary:hover { color: var(--text-primary); }
+  .spoiler summary::before { content: '▸'; font-size: 12px; transition: transform .2s; }
+  .spoiler[open] summary::before { transform: rotate(90deg); }
+  .spoiler__content { padding: 0 20px 16px 34px; font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+  .spoiler__content p { margin-bottom: 8px; }
+  .spoiler__content strong { color: var(--text-primary); font-weight: 600; }
+
+  /* Таблицы */
+  .os-table { width: 100%; font-size: 13px; border-collapse: collapse; margin: 8px 0; }
+  .os-table th { text-align: left; font-weight: 600; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .os-table td { padding: 8px 0; border-bottom: 1px solid var(--border); color: var(--text-secondary); vertical-align: top; }
+  .os-table tr:last-child td { border-bottom: none; }
+  .os-table td:first-child { color: var(--text-primary); font-weight: 500; }
+  .data-table { width:100%; font-size:13px; border-collapse:collapse; }
+  .data-table th { text-align:left; font-weight:600; color:var(--text-muted); font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:1.2px; padding:10px 20px; border-bottom:1px solid var(--border); background:rgba(0,0,0,0.2); }
+  .data-table td { padding:11px 20px; border-bottom:1px solid var(--border); color:var(--text-secondary); vertical-align:top; line-height:1.5; }
+  .data-table tr:last-child td { border-bottom:none; }
+  .data-table td:first-child { color:var(--text-primary); font-weight:600; }
+
+  /* Промпт (копировать → в Claude Code) */
+  .prompt-block { background:rgba(0,0,0,0.25); border:1px solid var(--border-accent); border-radius:10px; padding:18px 20px; margin:12px 16px; }
+  .prompt-block__title { font-size:13px; font-weight:700; color:var(--accent-glow); margin-bottom:10px; display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:1px; }
+  .prompt-block__text { font-size:13px; color:var(--text-secondary); line-height:1.7; white-space:pre-wrap; margin-bottom:14px; word-break:break-word; }
+  .btn-copy { display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; color:var(--accent-glow); background:var(--accent-soft); border:1px solid rgba(124,91,245,0.3); padding:8px 16px; border-radius:8px; cursor:pointer; transition:all .2s; text-transform:uppercase; letter-spacing:1px; }
+  .btn-copy:hover { background:rgba(124,91,245,0.2); border-color:var(--accent); }
+  .btn-copy.copied { color:var(--green); background:var(--green-soft); border-color:rgba(52,211,153,0.3); }
+
+  /* Команды */
+  .code-block { background:rgba(0,0,0,0.4); border:1px solid var(--border-accent); border-radius:10px; padding:16px 20px; margin:12px 16px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--green-glow); line-height:1.8; white-space:pre-wrap; word-break:break-all; overflow-x:auto; }
+  .code-block__label { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; display:block; }
+  .code-block .btn-copy { margin-top:12px; }
+  .cmd-copy { background:rgba(0,0,0,0.35); border:1px solid var(--border-accent); border-radius:8px; padding:10px 14px; margin:8px 0; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .cmd-copy__text { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--green-glow); line-height:1.6; word-break:break-all; flex:1; white-space:pre-wrap; }
+  .cmd-copy .btn-copy { flex-shrink:0; padding:5px 12px; font-size:10px; }
+
+  /* Кнопка скачивания */
+  .btn-dl { display:inline-flex; align-items:center; gap:7px; font-family:'Onest',sans-serif; font-size:13px; font-weight:600; color:var(--accent-glow); background:var(--accent-soft); border:1px solid rgba(124,91,245,0.35); padding:9px 18px; border-radius:10px; text-decoration:none; transition:all .2s; cursor:pointer; }
+  .btn-dl:hover { background:rgba(124,91,245,0.2); border-color:var(--accent); }
+
+  /* Разделитель */
+  .section-divider { text-align:center; margin:48px 0 32px; padding:0 20px; }
+  .section-divider__line { height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent); margin-bottom:20px; }
+  .section-divider__title { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:var(--accent-glow); text-transform:uppercase; letter-spacing:3px; }
+
+  /* Футер */
+  .footer { text-align: center; margin-top: 48px; }
+  .footer__done { display: none; background: var(--green-soft); border: 1px solid rgba(52,211,153,0.25); border-radius: var(--radius); padding: 32px 24px; margin-bottom: 24px; }
+  .footer__done.visible { display: block; animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+  .footer__done-emoji { font-size: 48px; margin-bottom: 10px; }
+  .footer__done-text { font-size: 22px; font-weight: 800; color: var(--green); margin-bottom: 6px; }
+  .footer__done-sub { font-size: 15px; color: var(--text-secondary); }
+  .footer__contact { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; }
+  .footer__contact a { color: #2dd4bf; text-decoration: underline; text-decoration-color: rgba(45,212,191,0.4); font-weight: 700; }
+  .btn-reset { background: none; border: 1px solid var(--border); color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 8px 20px; border-radius: 100px; cursor: pointer; transition: all .2s; }
+  .btn-reset:hover { border-color: var(--red); color: var(--red); }
+  .footer__final-part3 { background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(219,39,119,0.08)); border:1px solid rgba(251,191,36,0.25); border-radius:var(--radius); padding:34px 24px; margin-bottom:24px; text-align:center; position:relative; overflow:hidden; }
+  .footer__final-part3::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 20% 0%, rgba(251,191,36,0.12), transparent 50%), radial-gradient(circle at 80% 100%, rgba(219,39,119,0.12), transparent 50%); pointer-events:none; }
+  .footer__final-emoji { font-size:54px; margin-bottom:12px; line-height:1; position:relative; }
+  .footer__final-text { font-size:24px; font-weight:800; background:linear-gradient(90deg,#fbbf24,#db2777); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:10px; letter-spacing:-0.4px; position:relative; }
+  .footer__final-sub { font-size:15px; color:var(--text-secondary); line-height:1.6; max-width:560px; margin:0 auto; position:relative; }
+
+  #confetti-canvas { position: fixed; inset: 0; z-index: 9999; pointer-events: none; }
+
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+  /* Клик по .item переключает только чекбокс; ссылки/кнопки кликабельны */
+  .item { cursor: default; }
+  .item__body { pointer-events: none; user-select: text; }
+  .item__body a, .item__body .item__link, .item__body .lnk, .item__body .tg,
+  .item__body .cmd-copy, .item__body .btn-copy { pointer-events: auto !important; cursor: pointer !important; }
+  .item__check { pointer-events: auto; cursor: pointer; }
+  .item__check:hover { cursor: pointer; }
+  .cm { cursor: pointer; }
+
+  @media (max-width: 480px) {
+    .wrapper { padding: 28px 14px 60px; }
+    .item { padding: 14px 16px; gap: 12px; }
+    .note { padding: 12px 16px; }
+    .spoiler summary { padding: 12px 16px; }
+    .spoiler__content { padding: 0 16px 14px 28px; }
+    .progress-wrap { padding: 16px 18px; top: 8px; }
+    .cmd-copy { padding:8px 12px; flex-direction:column; align-items:flex-start; }
+    .data-table th,.data-table td { padding:8px 14px; }
+    .prompt-block { margin:10px 12px; }
+    .code-block { margin:10px 12px; font-size:11px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="wrapper">
+  <header class="header">
+    <div class="header__badge">ИИ-ВИЗАЦИЯ · СВЯЗКА 5</div>
+    <h1 class="header__title">Транскрибатор: аудио, видео и&nbsp;YouTube&nbsp;<span>в текст</span></h1>
+    <ul class="header__topics">
+      <li>Кидаете боту голосовое, запись встречи или файл — через минуту готовый текст</li>
+      <li>Или перетаскиваете аудио и&nbsp;видео на&nbsp;свой сайт под&nbsp;логином, если запись длинная</li>
+      <li>По&nbsp;кнопкам поверх расшифровки: резюме, чистовик, протокол встречи, задачи, теги</li>
+      <li>YouTube по&nbsp;ссылке: субтитры превращаются в&nbsp;чистый русский текст, иностранные переводятся</li>
+      <li>Каждая расшифровка ложится во&nbsp;второй мозг в&nbsp;нужный проект — с&nbsp;заголовком и&nbsp;связями</li>
+      <li>Полнотекстовый поиск по&nbsp;всему архиву: по&nbsp;тексту, задачам, протоколам и&nbsp;тегам</li>
+      <li>Всё живёт на&nbsp;вашем сервере, аудио удаляется сразу после расшифровки</li>
+    </ul>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span class="progress-label">Прогресс</span>
+      <span class="progress-count" id="progressCount">0 / 0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div id="sections">
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">01</div><div class="section__title">Зачем это нужно</div></div>
+      <div class="section__card">
+        <div class="note note--info"><span class="note__icon">🎯</span><span>Записи встреч, интервью и&nbsp;голосовые копятся часами. Слушать заново некогда, расшифровка руками стоит денег, и&nbsp;договорённости остаются внутри аудио. Транскрибатор превращает любую запись в&nbsp;текст, а&nbsp;текст — в&nbsp;протокол, задачи и&nbsp;заметку во&nbsp;втором мозге.</span></div>
+
+        <div class="note"><span class="note__icon">🎙</span><span><strong>Что вы делаете:</strong><br>
+        •&nbsp;Кидаете боту голосовое или файл — прямо в&nbsp;Telegram<br>
+        •&nbsp;Длинную запись перетаскиваете на&nbsp;сайт: там лимита в&nbsp;20&nbsp;МБ нет<br>
+        •&nbsp;Выбираете проект, в&nbsp;который ляжет заметка — бот сам подсказывает подходящий<br>
+        •&nbsp;Жмёте нужные кнопки: резюме, чистовик, протокол, задачи, теги</span></div>
+
+        <div class="note"><span class="note__icon">🧠</span><span><strong>Что делает транскрибатор:</strong> достаёт звук из&nbsp;любого видео, режет длинную запись на&nbsp;куски, расшифровывает, придумывает грамотный заголовок, пишет заметку с&nbsp;резюме и&nbsp;связями во&nbsp;второй мозг и&nbsp;удаляет аудио с&nbsp;сервера.</span></div>
+
+        <table class="data-table">
+          <tr><th>Что присылаете</th><th>Что получаете</th></tr>
+          <tr><td>Голосовое в&nbsp;Telegram</td><td>Текст, заголовок и&nbsp;резюме — заметка уже во&nbsp;втором мозге</td></tr>
+          <tr><td>Запись встречи на&nbsp;час</td><td>Расшифровку, а&nbsp;по&nbsp;кнопке — протокол с&nbsp;решениями и&nbsp;список задач</td></tr>
+          <tr><td>Видео с&nbsp;телефона</td><td>То&nbsp;же самое: звук достаётся сам, видео на&nbsp;сервере не&nbsp;остаётся</td></tr>
+          <tr><td>Ссылку на&nbsp;YouTube</td><td>Чистый текст из&nbsp;субтитров; иностранное переводится на&nbsp;русский</td></tr>
+          <tr><td>Интервью или созвон с&nbsp;клиентом</td><td>Чистовик — то&nbsp;же самое, но&nbsp;без слов-паразитов и&nbsp;оговорок</td></tr>
+        </table>
+
+        <div class="note note--green"><span class="note__icon">🔎</span><span><strong>Архив ищется целиком.</strong> Поиск идёт по&nbsp;тексту расшифровки, по&nbsp;протоколам, задачам и&nbsp;тегам — со&nbsp;сниппетами и&nbsp;подсветкой. Ищет обычный код на&nbsp;вашем сервере, без нейросетей и&nbsp;без оплаты за&nbsp;запрос.</span></div>
+
+        <div class="note note--warn"><span class="note__icon">🔐</span><span><strong>Расшифровки — это ваши встречи.</strong> Поэтому сайт живёт только под&nbsp;настоящим логином и&nbsp;по&nbsp;HTTPS, а&nbsp;второй мозг обязан лежать в&nbsp;<strong>приватном</strong> репозитории. Публичная страница со&nbsp;списком записей — это&nbsp;протоколы ваших переговоров в&nbsp;поиске Google.</span></div>
+
+        <div class="note note--green"><span class="note__icon">✅</span><span>Программный код руками писать не&nbsp;нужно. Вы&nbsp;отдаёте ссылку и&nbsp;промпт в&nbsp;Claude&nbsp;Code, дальше он&nbsp;всё делает сам и&nbsp;ведёт вас по&nbsp;шагам.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">02</div><div class="section__title">Что нужно иметь до старта</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">💡</span><span>Почти всё из&nbsp;этого списка вы&nbsp;уже настраивали на&nbsp;курсе и&nbsp;в&nbsp;прошлых связках. Пробегитесь и&nbsp;отметьте, что живо. Новый здесь только один пункт — ключ OpenAI, им&nbsp;занимается блок&nbsp;04.</span></div>
+
+        <div class="item" data-key="pre-vpn"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">VPN</div>
+            <div class="item__hint">Нужен для&nbsp;доступа к&nbsp;зарубежным сервисам.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="pre-cc"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Claude Code</div>
+            <div class="item__hint">Установлен и&nbsp;запускается на&nbsp;вашем компьютере.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="pre-vps"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Сервер VPS с Docker</div>
+            <div class="item__hint">Тот&nbsp;же, что и&nbsp;в&nbsp;прошлых связках. <strong>OpenClaw здесь не&nbsp;нужен вовсе</strong>: транскрибатор ходит в&nbsp;Groq и&nbsp;OpenAI напрямую по&nbsp;ключам. Видеокарта тоже не&nbsp;нужна — расшифровка считается не&nbsp;на&nbsp;вашем сервере. Хватит 2&nbsp;ГБ памяти.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="pre-groq"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Ключ Groq — им расшифровывается речь</div>
+            <div class="item__hint">Тот&nbsp;же ключ, что делали на&nbsp;курсе (console.groq.com). Здесь он&nbsp;<strong>главный</strong>: именно Groq превращает звук в&nbsp;текст моделью Whisper. Бесплатного тарифа хватает на&nbsp;личное использование. Держите ключ под&nbsp;рукой — Claude&nbsp;Code попросит его.</div>
+            <a href="https://console.groq.com/keys" target="_blank" class="item__link" onclick="event.stopPropagation()">console.groq.com/keys</a>
+          </div>
+        </div>
+
+        <div class="item" data-key="pre-openai"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Ключ OpenAI Platform — им делаются заголовки и разборы</div>
+            <div class="item__hint">Единственный новый пункт связки. Расшифровка сама по&nbsp;себе — просто полотно текста; заголовок, резюме, протокол, задачи и&nbsp;теги делает модель по&nbsp;этому ключу. Как его&nbsp;получить и&nbsp;пополнить баланс — <strong>блок&nbsp;04</strong>, там всё по&nbsp;шагам.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="pre-obsidian"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Второй мозг в Obsidian и приватный репозиторий к нему</div>
+            <div class="item__hint">Тот&nbsp;же второй мозг, что вы&nbsp;собирали на&nbsp;курсе. Расшифровки будут ложиться в&nbsp;него сами. Проверьте главное: репозиторий второго мозга <strong>приватный</strong>. Подробности — блок&nbsp;05. Без второго мозга связка тоже работает: есть режим «не&nbsp;грузить в&nbsp;Obsidian», записи остаются на&nbsp;сервере.</div>
+            <a href="https://obsidian.md/download" target="_blank" class="item__link" onclick="event.stopPropagation()">obsidian.md/download</a>
+          </div>
+        </div>
+
+        <div class="note note--green"><span class="note__icon">✅</span><span><strong>Это настроим дальше по&nbsp;чек-листу, заранее ничего делать не&nbsp;нужно:</strong><br>
+        •&nbsp;<strong>Telegram-бот</strong> — заводим нового, отдельно под&nbsp;транскрибатор <span style="opacity:.6">(блок&nbsp;03, по&nbsp;промпту)</span><br>
+        •&nbsp;<strong>Ключ доступа второму мозгу</strong> — чтобы бот дописывал заметки <span style="opacity:.6">(блок&nbsp;05, по&nbsp;промпту)</span><br>
+        •&nbsp;<strong>Домен, HTTPS и&nbsp;сайт-витрина</strong> — по&nbsp;желанию <span style="opacity:.6">(блок&nbsp;06)</span></span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">03</div><div class="section__title">Репозиторий и главный промпт</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">📦</span><span>Весь код, тесты и&nbsp;документация лежат в&nbsp;репозитории. Вы&nbsp;отдаёте ссылку и&nbsp;промпт в&nbsp;Claude&nbsp;Code, он&nbsp;делает всё по&nbsp;инструкции и&nbsp;ведёт вас за&nbsp;руку.</span></div>
+
+        <div class="item" data-key="repo-open"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Открыть репозиторий связки</div>
+            <div class="item__hint">Ссылка понадобится в&nbsp;промпте ниже.</div>
+            <a href="https://github.com/stavzzz/svyazka-5" target="_blank" class="item__link" onclick="event.stopPropagation()">Репозиторий связки 5</a>
+          </div>
+        </div>
+
+        <div class="note note--info"><span class="note__icon">🧠</span><span><strong>Как устроен транскрибатор внутри.</strong><br><br>Это&nbsp;<strong>самописный код</strong> на&nbsp;вашем сервере: сайт и&nbsp;Телеграм-бот работают на&nbsp;одном и&nbsp;том&nbsp;же конвейере. Нейросети зовутся ровно дважды. Первая — <strong>Whisper в&nbsp;Groq</strong>: превращает звук в&nbsp;текст. Вторая — <strong>gpt-5-mini в&nbsp;OpenAI</strong>: придумывает заголовок, пишет резюме и&nbsp;делает обработки по&nbsp;кнопкам.<br><br>Всё остальное считает код: достаёт звук из&nbsp;видео, режет длинную запись на&nbsp;куски и&nbsp;собирает обратно, показывает прогресс по&nbsp;стадиям, пишет заметку с&nbsp;фронтматтером, обновляет индекс, ищет по&nbsp;архиву и&nbsp;складывает всё в&nbsp;git второго мозга.<br><br>Модель <strong>не&nbsp;хранит</strong> ваши записи — она получает текст, отдаёт заголовок и&nbsp;резюме и&nbsp;забывает. Аудио на&nbsp;сервере временное: расшифровал — удалил. Постоянно хранится только текст.</span></div>
+
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>Перед промптом получите ключ OpenAI (блок&nbsp;04) и&nbsp;проверьте, что репозиторий второго мозга приватный (блок&nbsp;05). Без ключа промпт остановится на&nbsp;третьем шаге.</span></div>
+
+        <div class="prompt-block">
+          <div class="prompt-block__title">📋 Промпт: собрать транскрибатор (в Claude Code)</div>
+          <div class="prompt-block__text" id="promptMain">Ты разворачиваешь мне транскрибатор аудио и видео: сайт под логином плюс Телеграм-бот на одном коде. Готовый код, тесты и документация лежат здесь: https://github.com/stavzzz/svyazka-5 — с нуля ничего не пиши, работай с этим репозиторием. Веди меня по шагам, после каждого шага показывай результат и жди подтверждения.
+
+Шаг 1. Проверь, что сервер жив и на нём есть Docker. Склонируй репозиторий в /root/transcribator, прочитай PROJECT.md и папку docs/ целиком — там архитектура, деплой, формат заметки, рунбук по безопасности и спеки фич. OpenClaw для этой связки не нужен: транскрибатор ходит в Groq и OpenAI напрямую по ключам.
+
+Шаг 2. Заведи Telegram-бота: нужен НОВЫЙ бот отдельно под транскрибатор, даже если у меня уже есть другие. Продиктуй, что нажимать в @BotFather (/newbot, имя, username), забери у меня токен. Затем подскажи написать @userinfobot и забери мой Telegram id — это будет OWNER_TELEGRAM_ID. Задай его явно: тогда писать боту смогу только я, остальных бот молча игнорирует.
+
+Шаг 3. Собери .env по образцу .env.example: ключ Groq для расшифровки, ключ OpenAI для заголовков и обработок, токен бота, мой id, логин и пароль для сайта, лимит на размер загрузки. Пароль в открытом виде нигде не хранится — сгенерируй bcrypt-хеш и положи в DASHBOARD_PASSWORD_HASH, а SESSION_SECRET сделай длинной случайной строкой. Каждая строка в образце подписана — читай подписи, а не угадывай. Файл .env в git не коммить никогда.
+
+Шаг 4. Подключи мой второй мозг. Спроси у меня ssh-адрес приватного репозитория с vault и сделай для него отдельный ключ доступа: сгенерируй ssh-ключ на сервере, покажи мне публичную часть и продиктуй, куда её вставить в настройках репозитория (Deploy keys, обязательно с правом записи). Приватную часть положи в /root/transcribator/deploy_key_ed25519 с правами 600 — сборка монтирует этот файл в контейнеры сама, путь менять не нужно. Склонируй vault в data/vault и включи GIT_PUSH=true. Проверь живьём: сделай тестовый коммит и push в vault, потом откати его. Если второй мозг подключать не хотим — скажи мне об этом и оставь GIT_PUSH выключенным: записи будут храниться только на сервере, в data/local.
+
+Шаг 5. Подними всё в докере: docker compose up -d --build. Поднимутся три контейнера: сайт, бот и сайдкар WARP для YouTube. Покажи мне лог старта бота — там должно быть имя моего бота и строка про то, что он на связи. Контейнер, падающий по кругу, между падениями выглядит работающим: проверяй docker ps и логи, а не «сервис запущен».
+
+Шаг 6. Прогони автотесты из репозитория (PYTHONPATH=. pytest -q) и покажи результат таблицей. Ожидается 130 зелёных, падать не должно ничего.
+
+Шаг 7. Проверим бота живьём. Я пишу ему /start, потом присылаю голосовое. Проведи меня по кругу: расшифровка с прогрессом, выбор проекта, сохранение, кнопки обработок — резюме, чистовик, протокол, задачи, теги — и «Прислать .md». Затем проверь, что заметка появилась в моём втором мозге: заголовок, резюме, связи и текст на месте.
+
+Шаг 8. Проверь YouTube по ссылке. Пришли боту ссылку на ролик с субтитрами: должен прийти текст, а по кнопке «Транскрипт» — вычищенная русская версия. Если приходит «временно недоступно», проверь сайдкар WARP командой docker exec transcribator-warp curl -s https://www.cloudflare.com/cdn-cgi/trace | grep warp= — должно быть warp=on. Серверные адреса YouTube часто просит подтвердить, WARP это и лечит.
+
+Шаг 9. Сайт — этот шаг только если у меня есть домен, спроси. Пропиши A-запись домена на IP сервера, добавь блок из deploy/Caddyfile.snippet в Caddyfile моего Caddy и перезагрузи его. Проверь: домен открывается по https, отдаёт форму входа, мой логин и пароль подходят. Наружу порт приложения не публикуй — только через Caddy. Если домена нет, пропусти шаг целиком: бот работает и без него.
+
+Шаг 10. Прогони со мной приёмку: длинная запись через сайт, голосовое в боте, поиск по архиву, скачивание .md, удаление записи. Покажи, что аудио после расшифровки на сервере не осталось.
+
+Важные правила, не нарушай их:
+— Модель gpt-5-mini не меняй на другую: под неё откалиброваны промпты и тесты.
+— Файлы в Телеграме ограничены 20 МБ — это лимит самого Telegram, а не бота. Длинные записи идут через сайт, и бот должен объяснять это словами, а не молчать.
+— Сайт публикуется только под логином и по HTTPS. Никакого GitHub Pages: там нет авторизации, а внутри расшифровки моих встреч.
+— Репозиторий второго мозга обязан быть приватным. Проверь это до первого push.
+— Перед push в vault всегда pull --rebase: сайт и бот пишут в один и тот же клон.
+— Ошибки не глотай: на каждое действие бот отвечает человеку или пишет в журнал.
+— Долгую работу не держи в обработчике кнопки: Telegram отдаёт обновления строго по одному, и всё остальное встаёт в очередь.</div>
+          <button class="btn-copy" onclick="copyBlock('promptMain', this)">📋 Копировать промпт</button>
+        </div>
+
+        <div class="item" data-key="prompt-main-done"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Отправить промпт в Claude Code</div>
+            <div class="item__hint">Скопируйте промпт целиком и&nbsp;вставьте в&nbsp;Claude&nbsp;Code. Дальше отвечайте на&nbsp;его вопросы и&nbsp;подтверждайте шаги.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">04</div><div class="section__title">Ключ OpenAI: платформа и оплата</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">🔑</span><span>Этим ключом делается всё, что превращает полотно текста в&nbsp;документ: заголовок, резюме, связи, чистовик, протокол, задачи и&nbsp;теги. Занимает минут десять, один раз.</span></div>
+
+        <div class="note note--alert"><span class="note__icon">🚫</span><span><strong>Подписка ChatGPT здесь не&nbsp;подходит.</strong> Это&nbsp;два разных продукта с&nbsp;разными кошельками: подписка — для&nbsp;чата в&nbsp;браузере, а&nbsp;программе нужен ключ с&nbsp;платформы разработчика, и&nbsp;баланс у&nbsp;него отдельный. Оплаченная подписка на&nbsp;платформе денег не&nbsp;даёт.</span></div>
+
+        <div class="item" data-key="oa-signup"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 1. Зайти на платформу OpenAI</div>
+            <div class="item__hint">Включите VPN и&nbsp;откройте platform.openai.com. Войти можно тем&nbsp;же аккаунтом, которым вы&nbsp;пользуетесь в&nbsp;ChatGPT — заводить новый не&nbsp;нужно. Если аккаунта нет, регистрация обычная: почта и&nbsp;подтверждение.</div>
+            <a href="https://platform.openai.com/" target="_blank" class="item__link" onclick="event.stopPropagation()">platform.openai.com</a>
+          </div>
+        </div>
+
+        <div class="item" data-key="oa-pay"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 2. Привязать карту и пополнить баланс</div>
+            <div class="item__hint">Раздел <strong>Billing</strong> → «Add payment method» → зарубежная карта, та&nbsp;же, которой платите за&nbsp;Claude&nbsp;Code. Затем «Add to credit balance» и&nbsp;сумма: <strong>минимум 5&nbsp;долларов, и&nbsp;этого хватит надолго</strong>. Автопополнение включать не&nbsp;нужно — деньги списываются только за&nbsp;фактические запросы.</div>
+            <a href="https://platform.openai.com/settings/organization/billing/overview" target="_blank" class="item__link" onclick="event.stopPropagation()">Billing → пополнить баланс</a>
+          </div>
+        </div>
+
+        <div class="item" data-key="oa-key"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 3. Создать ключ и сразу его скопировать</div>
+            <div class="item__hint">Раздел <strong>API keys</strong> → «Create new secret key». Имя любое, например «Транскрибатор». Ключ начинается на&nbsp;<code>sk-</code> и&nbsp;<strong>показывается ровно один раз</strong>: закрыли окно — придётся делать новый. Скопируйте в&nbsp;блокнот, Claude&nbsp;Code попросит его&nbsp;на&nbsp;третьем шаге промпта.</div>
+            <a href="https://platform.openai.com/api-keys" target="_blank" class="item__link" onclick="event.stopPropagation()">platform.openai.com/api-keys</a>
+          </div>
+        </div>
+
+        <div class="item" data-key="oa-limit"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 4. Поставить предел трат — на всякий случай</div>
+            <div class="item__hint">В&nbsp;разделе <strong>Limits</strong> задайте месячный потолок, например 10&nbsp;долларов. Это&nbsp;страховка от&nbsp;случайности: реальный расход связки в&nbsp;разы меньше, но&nbsp;спокойнее, когда потолок стоит.</div>
+            <a href="https://platform.openai.com/settings/organization/limits" target="_blank" class="item__link" onclick="event.stopPropagation()">Limits</a>
+          </div>
+        </div>
+
+        <div class="note note--green"><span class="note__icon">💰</span><span><strong>Сколько это стоит на самом деле.</strong> Модель работает <strong>с&nbsp;текстом, а&nbsp;не&nbsp;со&nbsp;звуком</strong>: сам звук расшифровывает Groq, и&nbsp;он&nbsp;бесплатный. Поэтому час записи обходится в&nbsp;центы, а&nbsp;пяти долларов хватает на&nbsp;сотни расшифровок. Дорого станет только если гонять каждую запись через все пять обработок подряд — но&nbsp;и&nbsp;тогда счёт идёт на&nbsp;центы за&nbsp;встречу.</span></div>
+
+        <div class="note note--warn"><span class="note__icon">🔒</span><span>Ключ — это&nbsp;деньги. Не&nbsp;выкладывайте его&nbsp;в&nbsp;репозиторий и&nbsp;не&nbsp;пересылайте в&nbsp;общие чаты: утёкшим ключом чужие люди тратят ваш баланс. На&nbsp;сервер его&nbsp;положит Claude&nbsp;Code сам, в&nbsp;файл <code>.env</code>, который в&nbsp;git не&nbsp;уходит. Засветился — идите в&nbsp;API&nbsp;keys, удаляйте и&nbsp;делайте новый.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">05</div><div class="section__title">Второй мозг: куда ложатся расшифровки</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">🧩</span><span>Отдельной базы у&nbsp;транскрибатора нет — каждая расшифровка это&nbsp;обычный файл <code>.md</code> в&nbsp;вашем втором мозге: <code>Проект/Транскрипты/дата_тема.md</code>. Внутри заголовок, резюме, связанные заметки и&nbsp;текст. Рядом бот ведёт <code>INDEX.md</code> — хаб по&nbsp;проекту.</span></div>
+
+        <div class="note note--warn"><span class="note__icon">🧭</span><span><strong>Obsidian никуда не&nbsp;подключается.</strong> Это&nbsp;просто редактор папки на&nbsp;диске. Задача не&nbsp;«подключить Obsidian к&nbsp;серверу», а&nbsp;доставить заметки с&nbsp;сервера в&nbsp;вашу папку. Делает это&nbsp;git: бот пишет в&nbsp;репозиторий второго мозга, вы&nbsp;у&nbsp;себя забираете обновления.</span></div>
+
+        <div class="item" data-key="v-private"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Проверить, что репозиторий второго мозга приватный</div>
+            <div class="item__hint">Откройте его&nbsp;на&nbsp;GitHub: под&nbsp;названием должно стоять <strong>Private</strong>. Это&nbsp;единственная проверка блока, которую нельзя пропустить: туда поедут расшифровки ваших встреч. Публичный — идите в&nbsp;Settings&nbsp;→&nbsp;Danger&nbsp;Zone&nbsp;→&nbsp;Change visibility и&nbsp;закройте.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="v-url"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Держать под рукой адрес репозитория</div>
+            <div class="item__hint">Понадобится на&nbsp;четвёртом шаге промпта. Нужен ssh-адрес вида <code>git@github.com:ваш-ник/имя-репозитория.git</code> — кнопка «Code» на&nbsp;странице репозитория, вкладка SSH.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="v-deploykey"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Вставить ключ доступа, когда Claude Code его покажет</div>
+            <div class="item__hint">Claude&nbsp;Code сделает для&nbsp;сервера отдельный ключ и&nbsp;покажет вам публичную половину. Её&nbsp;нужно вставить в&nbsp;репозиторий второго мозга: <strong>Settings&nbsp;→&nbsp;Deploy&nbsp;keys&nbsp;→&nbsp;Add deploy key</strong>, и&nbsp;обязательно поставить галочку <strong>«Allow write access»</strong> — без неё бот сможет читать, но&nbsp;не&nbsp;сможет дописывать заметки.</div>
+          </div>
+        </div>
+
+        <div class="note note--green"><span class="note__icon">🔑</span><span><strong>Почему отдельный ключ, а&nbsp;не&nbsp;ваш личный.</strong> Ключ доступа выдан ровно одному репозиторию: даже если сервер однажды скомпрометируют, чужой получит доступ к&nbsp;одному этому хранилищу, а&nbsp;не&nbsp;ко&nbsp;всем вашим репозиториям сразу. Отобрать его&nbsp;— одна кнопка в&nbsp;настройках репозитория.</span></div>
+
+        <div class="item" data-key="v-check"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Забрать первую заметку к себе в Obsidian</div>
+            <div class="item__hint">После первой расшифровки обновите свой второй мозг привычным способом — заметка появится в&nbsp;папке проекта, в&nbsp;подпапке <code>Транскрипты</code>. Откройте её&nbsp;в&nbsp;Obsidian: сверху заголовок и&nbsp;резюме, ниже текст, в&nbsp;связях — соседние заметки.</div>
+          </div>
+        </div>
+
+        <div class="note note--info"><span class="note__icon">🙅</span><span><strong>Не&nbsp;хотите отдавать записи во&nbsp;второй мозг?</strong> У&nbsp;каждой расшифровки есть тумблер «не&nbsp;грузить в&nbsp;Obsidian»: тогда она&nbsp;остаётся только на&nbsp;сервере и&nbsp;видна в&nbsp;архиве с&nbsp;пометкой. Удобно для&nbsp;разового: продиктовали список дел — забрали текст — забыли.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">06</div><div class="section__title">Сайт и домен — по желанию</div></div>
+      <div class="section__card">
+
+        <div class="note note--green"><span class="note__icon">🤷</span><span><strong>Этот блок можно пропустить целиком.</strong> Бот работает без домена и&nbsp;без сайта: он&nbsp;сам ходит в&nbsp;Телеграм, внешний адрес ему&nbsp;не&nbsp;нужен. Сайт нужен ровно для&nbsp;двух вещей — <strong>длинные записи</strong> и&nbsp;<strong>архив с&nbsp;поиском</strong>.</span></div>
+
+        <table class="data-table">
+          <tr><th>Что умеет</th><th>Бот</th><th>Сайт</th></tr>
+          <tr><td>Голосовые и&nbsp;файлы до&nbsp;20&nbsp;МБ</td><td>да</td><td>да</td></tr>
+          <tr><td>Запись встречи на&nbsp;час, видео целиком</td><td>нет, лимит Telegram</td><td>да</td></tr>
+          <tr><td>Обработки: резюме, протокол, задачи</td><td>да</td><td>да</td></tr>
+          <tr><td>Поиск по&nbsp;всему архиву со&nbsp;сниппетами</td><td>да, командой</td><td>да, с&nbsp;фильтрами</td></tr>
+          <tr><td>Перетащить файл мышкой и&nbsp;видеть прогресс</td><td>нет</td><td>да</td></tr>
+        </table>
+
+        <div class="item" data-key="web-domain"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 1. Взять домен и направить его на сервер</div>
+            <div class="item__hint">Подойдёт любой домен от&nbsp;200&nbsp;рублей в&nbsp;год, можно самый непримечательный: адрес всё&nbsp;равно только ваш. В&nbsp;настройках домена заведите <strong>A-запись</strong> на&nbsp;IP вашего сервера. Обновление адресов занимает от&nbsp;пары минут до&nbsp;часа.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="web-caddy"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 2. Сказать Claude Code, что домен есть</div>
+            <div class="item__hint">Девятый шаг промпта из&nbsp;блока&nbsp;03 — как раз про&nbsp;это. Заготовка настроек лежит в&nbsp;репозитории (<code>deploy/Caddyfile.snippet</code>), сертификат HTTPS выпишется сам и&nbsp;будет продлеваться сам. Вручную ничего писать не&nbsp;нужно.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="web-login"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 3. Проверить вход и тёмную тему</div>
+            <div class="item__hint">Откройте домен: должна открыться форма входа, а&nbsp;не&nbsp;содержимое. Зайдите своим логином и&nbsp;паролем, загрузите файл, посмотрите архив. Тема переключается кнопкой и&nbsp;по&nbsp;умолчанию следует за&nbsp;системой.</div>
+          </div>
+        </div>
+
+        <div class="note note--alert"><span class="note__icon">🚫</span><span><strong>Публичной страницу не&nbsp;делайте никогда.</strong> Внутри — расшифровки ваших встреч и&nbsp;переговоров. Никакого GitHub&nbsp;Pages и&nbsp;никакого «пока без пароля, потом закрою»: закрытый порт и&nbsp;форма входа стоят в&nbsp;сборке с&nbsp;самого начала, не&nbsp;выключайте их.</span></div>
+
+        <div class="note note--info"><span class="note__icon">💡</span><span>Домена нет и&nbsp;не&nbsp;хочется? Живите ботом. Длинные записи режьте на&nbsp;куски любым бесплатным конвертером — или добавьте домен позже, сборку ради этого пересобирать не&nbsp;придётся.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">07</div><div class="section__title">Проверьте, что всё работает</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">🧪</span><span>Проверка идёт двумя уровнями: автотесты и&nbsp;живые действия. Автотесты ловят поломки кода, живые — поломки настроек. Ни&nbsp;один не&nbsp;заменяет другой.</span></div>
+
+        <div class="item" data-key="t-tests"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Автотесты зелёные</div>
+            <div class="item__hint"><code>PYTHONPATH=. pytest -q</code> — 130&nbsp;проверок за&nbsp;пару секунд, без сети и&nbsp;без бота. Зелёные тесты при&nbsp;молчащем боте означают одно: дело в&nbsp;настройках, а&nbsp;не&nbsp;в&nbsp;коде.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-voice"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Прислать боту голосовое</div>
+            <div class="item__hint">Наговорите полминуты. Бот покажет прогресс, потом расшифровку и&nbsp;предложит выбрать проект — с&nbsp;подсказкой подходящего. Заголовок он&nbsp;придумает сам: это&nbsp;и&nbsp;есть признак, что ключ OpenAI работает.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-meeting"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Расшифровать настоящую запись встречи</div>
+            <div class="item__hint">Не&nbsp;тестовую диктовку, а&nbsp;живой созвон: там перебивают, говорят разом и&nbsp;половину проглатывают. Нажмите «Протокол» и&nbsp;«Задачи» — и&nbsp;сверьте с&nbsp;тем, что помните сами. Это&nbsp;единственная проверка, которая покажет реальное качество.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-vault"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Найти заметку во втором мозге</div>
+            <div class="item__hint">Обновите свой второй мозг и&nbsp;откройте папку проекта. Заметка лежит в&nbsp;<code>Транскрипты</code>, рядом обновлённый <code>INDEX.md</code>. Если её&nbsp;нет — почти всегда забыта галочка «Allow write access» у&nbsp;ключа доступа.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-youtube"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Прислать ссылку на YouTube</div>
+            <div class="item__hint">Возьмите ролик с&nbsp;субтитрами. Текст придёт сразу, а&nbsp;кнопка «Транскрипт» вычистит его&nbsp;до&nbsp;читаемого вида. Проверьте и&nbsp;англоязычный ролик: он&nbsp;должен приехать переведённым на&nbsp;русский.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-search"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Поискать по архиву</div>
+            <div class="item__hint">Команда <code>/search</code> в&nbsp;боте или строка поиска на&nbsp;сайте. Ищите слово, которое звучало в&nbsp;середине разговора: найтись должно и&nbsp;в&nbsp;тексте расшифровки, и&nbsp;в&nbsp;протоколе, и&nbsp;в&nbsp;задачах.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-md"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Забрать расшифровку файлом и удалить запись</div>
+            <div class="item__hint">Кнопка «Прислать .md» кладёт файл прямо в&nbsp;чат. Затем удалите тестовую запись: она&nbsp;должна исчезнуть и&nbsp;из&nbsp;архива, и&nbsp;из&nbsp;второго мозга — вместе с&nbsp;опустевшей папкой.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-owner"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Проверить, что бот отвечает только вам</div>
+            <div class="item__hint">Попросите знакомого написать боту. Правильное поведение — <strong>полная тишина</strong>: бот не&nbsp;отвечает и&nbsp;даже не&nbsp;подтверждает, что существует. Если он&nbsp;ответил чужому — в&nbsp;настройках не&nbsp;тот числовой id, сверьте с&nbsp;тем, что дал @userinfobot.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">08</div><div class="section__title">Если что-то пошло не так</div></div>
+      <div class="section__card">
+
+        <table class="data-table">
+          <tr><th>Что видите</th><th>Что делать</th></tr>
+          <tr><td>Бот молчит на&nbsp;любое сообщение</td><td>Контейнер упал или не&nbsp;стартовал. Попросите Claude&nbsp;Code показать журнал бота — причина будет в&nbsp;первых строках.</td></tr>
+          <tr><td>Бот молчит только вам, а&nbsp;раньше отвечал</td><td>Сменился числовой id в&nbsp;настройках либо бот застолбил чужой. Сверьте <code>OWNER_TELEGRAM_ID</code> с&nbsp;тем, что дал @userinfobot.</td></tr>
+          <tr><td>Расшифровка не&nbsp;начинается</td><td>Кончился или не&nbsp;вписан ключ Groq. Ищите в&nbsp;журнале строки со&nbsp;словом groq.</td></tr>
+          <tr><td>Текст пришёл, а&nbsp;заголовок и&nbsp;резюме пустые</td><td>Ключ OpenAI не&nbsp;работает или на&nbsp;балансе ноль. Проверьте баланс в&nbsp;Billing и&nbsp;что ключ не&nbsp;удалён.</td></tr>
+          <tr><td>«Файл слишком большой»</td><td>Telegram отдаёт боту максимум 20&nbsp;МБ, это&nbsp;не&nbsp;лечится. Длинную запись загружайте через сайт.</td></tr>
+          <tr><td>Заметка не&nbsp;появилась во&nbsp;втором мозге</td><td>Чаще всего у&nbsp;ключа доступа не&nbsp;стоит «Allow write access» либо выключен <code>GIT_PUSH</code>. Проверьте оба.</td></tr>
+          <tr><td>YouTube отвечает «временно недоступно»</td><td>Адрес сервера просят подтвердить. Проверьте сайдкар: <code>docker exec transcribator-warp curl -s https://www.cloudflare.com/cdn-cgi/trace | grep warp=</code> — должно быть <code>warp=on</code>.</td></tr>
+          <tr><td>По&nbsp;ссылке YouTube приходит «Субтитров нет»</td><td>Так и&nbsp;есть: у&nbsp;ролика их&nbsp;нет. Звук с&nbsp;YouTube связка намеренно не&nbsp;качает.</td></tr>
+          <tr><td>Сайт не&nbsp;открывается по&nbsp;домену</td><td>Либо A-запись ещё не&nbsp;разошлась, либо контейнер не&nbsp;в&nbsp;одной сети с&nbsp;Caddy. Второе чинит Claude&nbsp;Code: имя сети подставляется в&nbsp;настройках сборки.</td></tr>
+          <tr><td>Кнопки в&nbsp;боте «залипли» и&nbsp;не&nbsp;отвечают</td><td>Идёт долгая расшифровка. Telegram отдаёт обновления строго по&nbsp;одному — дождитесь конца, это&nbsp;не&nbsp;поломка.</td></tr>
+          <tr><td>Расшифровка обрывается на&nbsp;середине длинной записи</td><td>Кончилось место или память на&nbsp;сервере. Отдайте Claude&nbsp;Code вывод <code>df -h</code> и&nbsp;журнал контейнера.</td></tr>
+        </table>
+
+        <div class="note note--info"><span class="note__icon">💬</span><span>Любую ошибку отправляйте в&nbsp;Claude&nbsp;Code целиком, вместе с&nbsp;текстом из&nbsp;терминала. Он&nbsp;разберёт и&nbsp;починит.</span></div>
+
+        <div class="note note--green"><span class="note__icon">🛟</span><span><strong>Терять тут почти нечего.</strong> Все расшифровки — обычные файлы <code>.md</code> в&nbsp;вашем втором мозге. Даже если сервер придётся собрать заново, тексты останутся у&nbsp;вас на&nbsp;компьютере.</span></div>
+
+        <div class="note note--green"><span class="note__icon">💡</span><span><strong>На&nbsp;будущее:</strong> это&nbsp;пятый сотрудник вашего AI-офиса. Секретарь ведёт календарь, менеджер — задачи, финансист — деньги, консультант помнит документы компании, а&nbsp;транскрибатор превращает разговоры в&nbsp;текст, который можно найти через год.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer__done" id="doneBlock">
+      <div class="footer__done-emoji">🎉</div>
+      <div class="footer__done-text">Транскрибатор на связи!</div>
+      <div class="footer__done-sub">Все пункты закрыты. Записи больше не копятся мёртвым грузом.</div>
+    </div>
+    <div class="footer__final-part3">
+      <div class="footer__final-emoji">🎙</div>
+      <div class="footer__final-text">Связка 5 собрана!</div>
+      <div class="footer__final-sub">Теперь любая запись — голосовое, созвон, интервью или ролик с&nbsp;YouTube — за&nbsp;минуту превращается в&nbsp;текст с&nbsp;протоколом и&nbsp;задачами и&nbsp;ложится во&nbsp;второй мозг, где найдётся и&nbsp;через год.</div>
+    </div>
+    <div class="footer__contact">Возникли вопросы? Напишите <a href="https://t.me/stavzzz" target="_blank" class="tg">@stavzzz</a> в&nbsp;Telegram</div>
+    <button class="btn-reset" onclick="resetProgress()">Сбросить прогресс</button>
+  </div>
+
+</div>
+<script>
+// ====== CONFETTI ======
+const C = document.getElementById('confetti-canvas');
+const ctx = C.getContext('2d');
+let particles = [];
+let confettiActive = false;
+function resizeCanvas() { C.width = window.innerWidth; C.height = window.innerHeight; }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+const COLORS = ['#7c5bf5','#9d7cff','#34d399','#6ee7b7','#fbbf24','#f87171','#fb7185','#38bdf8','#facc15','#a78bfa','#f472b6','#4ade80'];
+function rand(a,b){ return Math.random()*(b-a)+a; }
+function createBurst(x, y, count) {
+  for(let i=0;i<count;i++){
+    const angle=rand(0,Math.PI*2),speed=rand(4,14),size=rand(4,10);
+    particles.push({x,y,vx:Math.cos(angle)*speed+rand(-2,2),vy:Math.sin(angle)*speed*-0.8-rand(2,6),size,color:COLORS[Math.floor(Math.random()*COLORS.length)],rotation:rand(0,Math.PI*2),rotSpeed:rand(-0.2,0.2),gravity:rand(0.12,0.25),friction:rand(0.97,0.995),opacity:1,fadeSpeed:rand(0.005,0.015),shape:Math.random()>0.4?'rect':'circle'});
+  }
+}
+function launchConfetti(){
+  if(confettiActive)return;confettiActive=true;particles=[];
+  const W=C.width,H=C.height;
+  [[W*0.5,H*0.3,120],[W*0.15,H*0.2,80],[W*0.85,H*0.2,80],[W*0.5,H*0.1,100],[W*0.3,H*0.5,60],[W*0.7,H*0.5,60],[0,H*0.6,50],[W,H*0.6,50],[W*0.5,H*0.6,80]].forEach(([x,y,c],i)=>{setTimeout(()=>createBurst(x,y,c),i*150)});
+  setTimeout(()=>{createBurst(W*0.2,H*0.15,90);createBurst(W*0.8,H*0.15,90);createBurst(W*0.5,H*0.05,100)},1500);
+  setTimeout(()=>{createBurst(W*0.5,H*0.25,120);createBurst(W*0.1,H*0.4,60);createBurst(W*0.9,H*0.4,60)},2500);
+  animate();setTimeout(()=>{confettiActive=false},8000);
+}
+function animate(){
+  ctx.clearRect(0,0,C.width,C.height);
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i];p.vx*=p.friction;p.vy*=p.friction;p.vy+=p.gravity;p.x+=p.vx;p.y+=p.vy;p.rotation+=p.rotSpeed;p.opacity-=p.fadeSpeed;
+    if(p.opacity<=0){particles.splice(i,1);continue}
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rotation);ctx.globalAlpha=p.opacity;ctx.fillStyle=p.color;
+    if(p.shape==='rect'){ctx.fillRect(-p.size/2,-p.size/4,p.size,p.size/2)}else{ctx.beginPath();ctx.arc(0,0,p.size/2,0,Math.PI*2);ctx.fill()}
+    ctx.restore();
+  }
+  if(particles.length>0||confettiActive){requestAnimationFrame(animate)}else{ctx.clearRect(0,0,C.width,C.height)}
+}
+
+// ====== CHECKLIST ======
+const STORAGE_KEY='iivizaciya_checklist_svyazka5_v1';
+const items=document.querySelectorAll('.item[data-key]');
+const totalCount=items.length;
+let wasComplete=false;
+function loadState(){
+  try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');let c=0;items.forEach(item=>{const cb=item.querySelector('input[type="checkbox"]');if(s[item.dataset.key]){cb.checked=true;item.classList.add('checked');c++}});wasComplete=c===totalCount}catch(e){}
+  updateProgress(false);
+}
+function saveState(){const s={};items.forEach(item=>{s[item.dataset.key]=item.querySelector('input[type="checkbox"]').checked});try{localStorage.setItem(STORAGE_KEY,JSON.stringify(s))}catch(e){}}
+function updateProgress(canCelebrate=true){
+  let c=0;items.forEach(item=>{if(item.querySelector('input[type="checkbox"]').checked)c++});
+  document.getElementById('progressCount').textContent=`${c} / ${totalCount}`;
+  document.getElementById('progressFill').style.width=(totalCount>0?(c/totalCount)*100:0)+'%';
+  const done=document.getElementById('doneBlock');
+  if(c===totalCount){done.classList.add('visible');if(canCelebrate&&!wasComplete){launchConfetti()}wasComplete=true}else{done.classList.remove('visible');wasComplete=false}
+}
+items.forEach(item=>{
+  const cb=item.querySelector('input[type="checkbox"]');
+  item.addEventListener('click',function(e){
+    if(e.target.closest('a'))return;
+    if(e.target!==cb){cb.checked=!cb.checked;cb.dispatchEvent(new Event('change'))}
+  });
+  cb.addEventListener('change',function(){item.classList.toggle('checked',this.checked);saveState();updateProgress(true)});
+});
+function resetProgress(){if(!confirm('Сбросить весь прогресс?'))return;items.forEach(item=>{const cb=item.querySelector('input[type="checkbox"]');cb.checked=false;item.classList.remove('checked')});wasComplete=false;saveState();updateProgress(false)}
+loadState();
+
+// ====== COPY (промпты и команды) ======
+function copyBlock(id, btn){
+  const text=document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const orig=btn.innerHTML;
+    btn.classList.add('copied');
+    btn.innerHTML='✅ Скопировано!';
+    setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML=orig;},2000);
+  });
+}
+</script>
+
+<script>
+// клик по .item не срабатывает на вложенных ссылках
+(function() {
+  document.querySelectorAll('.item').forEach(function(item) {
+    var check = item.querySelector('.item__check');
+    if (!check) return;
+    item.addEventListener('click', function(e) {
+      if (e.target.closest('a')) return;
+      if (check.contains(e.target)) return;
+      e.preventDefault();
+      e.stopPropagation();
+    }, true);
+  });
+})();
+</script>
+
+</body>
+</html>
