@@ -201,7 +201,7 @@
     <ul class="header__topics">
       <li>Вы&nbsp;загружаете в&nbsp;бота регламенты, прайсы, инструкции, брендбук — файлом, ссылкой или фотографией</li>
       <li>Сотрудник спрашивает словами: «сколько дней на&nbsp;возврат», «что делать с&nbsp;жалобой»</li>
-      <li>Бот отвечает <strong>только по&nbsp;документам</strong> и&nbsp;показывает источник с&nbsp;версией</li>
+      <li>Бот отвечает только по&nbsp;документам компании и&nbsp;показывает источник с&nbsp;версией</li>
       <li>Чего в&nbsp;документах нет — честное «не&nbsp;нашёл», а&nbsp;не&nbsp;выдумка</li>
       <li>Права по&nbsp;отделам: чужой регламент сотрудник не&nbsp;увидит даже случайно</li>
       <li>Голосовые вопросы, фото документов и&nbsp;сканы бот распознаёт сам</li>
@@ -273,7 +273,7 @@
         <div class="item" data-key="pre-vps"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Сервер VPS с&nbsp;установленным OpenClaw</div>
-            <div class="item__hint">Тот&nbsp;же, что и&nbsp;в&nbsp;прошлых связках. Здесь OpenClaw обязателен: через него бот и&nbsp;разбирает документы, и&nbsp;считает вектора для&nbsp;поиска. Docker тоже нужен — бот живёт в&nbsp;контейнере; на&nbsp;вашем сервере он&nbsp;уже стоит с&nbsp;курса.</div>
+            <div class="item__hint">Тот&nbsp;же, что и&nbsp;в&nbsp;прошлых связках. Здесь OpenClaw обязателен: через него бот разбирает документы и&nbsp;ищет по&nbsp;смыслу. Смысловой поиск считает встроенная в&nbsp;OpenClaw модель — она уже там, ставить и&nbsp;оплачивать её&nbsp;отдельно не&nbsp;нужно. Docker тоже нужен: бот живёт в&nbsp;контейнере, на&nbsp;вашем сервере он&nbsp;стоит с&nbsp;курса.</div>
           </div>
         </div>
 
@@ -281,13 +281,6 @@
           <div class="item__body">
             <div class="item__text">Модель на выбор: подписка ChatGPT ИЛИ ключ MiniMax</div>
             <div class="item__hint">Подключается к&nbsp;OpenClaw так&nbsp;же, как в&nbsp;прошлых связках. <strong>Совет:</strong> здесь модель ещё и&nbsp;<strong>читает фото документов, сканы и&nbsp;брендбуки</strong>, поэтому нужна та, что умеет смотреть картинки. Слепая модель об&nbsp;этом не&nbsp;скажет — просто вернёт пустой текст, и&nbsp;это&nbsp;будет выглядеть как «бот не&nbsp;разобрал скан».</div>
-          </div>
-        </div>
-
-        <div class="item" data-key="pre-embed"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Локальная модель векторов в OpenClaw</div>
-            <div class="item__hint">Это&nbsp;она превращает текст в&nbsp;числа, по&nbsp;которым идёт смысловой поиск. Работает <strong>на&nbsp;вашем сервере и&nbsp;бесплатно</strong>, платить за&nbsp;неё не&nbsp;нужно. Проверит Claude&nbsp;Code на&nbsp;четвёртом шаге промпта — заранее делать ничего не&nbsp;надо.</div>
           </div>
         </div>
 
@@ -617,14 +610,14 @@
         <div class="item" data-key="graph-open"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Открыть экран графа</div>
-            <div class="item__hint">Команда <code>/obsidian</code> — она есть только у&nbsp;владельца. Видно, сколько заметок в&nbsp;графе и&nbsp;когда он&nbsp;обновлялся, а&nbsp;под&nbsp;этим три кнопки: пересобрать, настроить синхронизацию, прислать граф архивом.</div>
+            <div class="item__hint">Команда <code>/obsidian</code> — она есть только у&nbsp;владельца. Видно, сколько заметок в&nbsp;графе и&nbsp;когда он&nbsp;обновлялся, а&nbsp;под&nbsp;этим две кнопки: пересобрать граф и&nbsp;настроить синхронизацию.</div>
           </div>
         </div>
 
-        <div class="item" data-key="graph-zip"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="graph-build"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Минимум: забрать граф архивом</div>
-            <div class="item__hint">Кнопка «📥&nbsp;Прислать граф архивом» → распаковать → в&nbsp;Obsidian «Open folder as vault». Ноль установок сверх Obsidian. Обновлять придётся руками — зато работает сразу.</div>
+            <div class="item__text">Собрать граф заново</div>
+            <div class="item__hint">Кнопка «🔄&nbsp;Пересобрать граф» переписывает заметки по&nbsp;всей базе и&nbsp;убирает лишние. Бот покажет, сколько документов в&nbsp;графе и&nbsp;сколько заметок-сирот удалил. Вашу собственную зону «Заметки компании» он&nbsp;не&nbsp;трогает.</div>
           </div>
         </div>
 
