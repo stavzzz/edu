@@ -75,6 +75,7 @@
   .item__hint a { color: var(--accent-glow); text-decoration: none; font-weight: 600; }
   .item__hint a:hover { text-decoration: underline; }
   .item__hint strong { color: var(--text-primary); }
+  .item__hint code { font-family:'JetBrains Mono',monospace; font-size:12px; background:rgba(0,0,0,0.35); padding:1px 5px; border-radius:4px; color:var(--green-glow); }
   .item__link { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--accent-glow); text-decoration: none; margin-top: 5px; transition: all .2s; word-break: break-all; }
   .item__link:hover { color: #bba4ff; text-decoration: underline; }
   .item__link svg { width: 13px; height: 13px; flex-shrink: 0; }
@@ -91,6 +92,7 @@
   .note a { color: var(--accent-glow); text-decoration: none; font-weight: 600; }
   .note a:hover { text-decoration: underline; }
   .note strong { color: inherit; }
+  .note code { font-family:'JetBrains Mono',monospace; font-size:12px; background:rgba(0,0,0,0.3); padding:1px 5px; border-radius:4px; }
   .tg { color: #2dd4bf !important; font-weight: 700; text-decoration: underline; text-decoration-color: rgba(45,212,191,0.4); text-underline-offset: 2px; transition: all .2s; }
   .tg:hover { color: #5eead4 !important; text-decoration-color: #5eead4; }
 
@@ -103,6 +105,7 @@
   .spoiler__content { padding: 0 20px 16px 34px; font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
   .spoiler__content p { margin-bottom: 8px; }
   .spoiler__content strong { color: var(--text-primary); font-weight: 600; }
+  .spoiler__content code { font-family:'JetBrains Mono',monospace; font-size:12px; background:rgba(0,0,0,0.35); padding:1px 5px; border-radius:4px; color:var(--green-glow); }
 
   .os-table { width: 100%; font-size: 13px; border-collapse: collapse; margin: 8px 0; }
   .os-table th { text-align: left; font-weight: 600; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; padding: 6px 0; border-bottom: 1px solid var(--border); }
@@ -114,6 +117,7 @@
   .data-table td { padding:11px 20px; border-bottom:1px solid var(--border); color:var(--text-secondary); vertical-align:top; line-height:1.5; }
   .data-table tr:last-child td { border-bottom:none; }
   .data-table td:first-child { color:var(--text-primary); font-weight:600; }
+  .data-table code { font-family:'JetBrains Mono',monospace; font-size:12px; background:rgba(0,0,0,0.3); padding:1px 5px; border-radius:4px; color:var(--green-glow); }
 
   .prompt-block { background:rgba(0,0,0,0.25); border:1px solid var(--border-accent); border-radius:10px; padding:18px 20px; margin:12px 16px; }
   .prompt-block__title { font-size:13px; font-weight:700; color:var(--accent-glow); margin-bottom:10px; display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:1px; }
@@ -186,11 +190,12 @@
     <div class="header__badge">ИИ-ВИЗАЦИЯ · СВЯЗКА 6</div>
     <h1 class="header__title">Suvvy: ИИ-менеджер по&nbsp;<span>продажам</span></h1>
     <ul class="header__topics">
-      <li>ИИ отвечает клиентам круглосуточно в директе Instagram, Telegram, WhatsApp, Avito и на маркетплейсах</li>
-      <li>Ведёт диалог по вашей базе знаний и скриптам продаж</li>
-      <li>Передаёт лид в CRM: amoCRM, Битрикс24, RetailCRM</li>
-      <li>Зовёт живого менеджера, когда нужен человек</li>
-      <li>Никакого кода и своего сервера — всё настраивается в веб-интерфейсе Suvvy</li>
+      <li>Бот отвечает клиентам в&nbsp;Telegram круглосуточно — сразу, а&nbsp;не&nbsp;через час</li>
+      <li>Ведёт диалог по&nbsp;вашей базе знаний и&nbsp;скрипту продаж</li>
+      <li>Квалифицирует лида и&nbsp;зовёт живого человека, когда нужен человек</li>
+      <li>Проверить агента можно ещё до&nbsp;подключения бота — по&nbsp;демо-ссылке</li>
+      <li>Настраивать агента можно прямо из&nbsp;Claude&nbsp;Code: у&nbsp;Suvvy есть MCP</li>
+      <li>Никакого кода, своего сервера и&nbsp;VPN — всё в&nbsp;браузере</li>
     </ul>
   </header>
 
@@ -207,190 +212,351 @@
     <div class="section">
       <div class="section__header"><div class="section__num">01</div><div class="section__title">Зачем это нужно</div></div>
       <div class="section__card">
-        <div class="note note--info"><span class="note__icon">🎯</span><span>Первичные запросы приходят круглосуточно, а&nbsp;отвечают на&nbsp;них через часы. Лиды остывают и&nbsp;уходят к&nbsp;конкурентам. Suvvy — ИИ-сотрудник на&nbsp;базе языковой модели и&nbsp;вашей базы знаний: отвечает клиентам сразу, ведёт диалог по&nbsp;скрипту продаж и&nbsp;квалифицирует лида.</span></div>
+        <div class="note note--info"><span class="note__icon">🎯</span><span>Первичные запросы приходят круглосуточно, а&nbsp;отвечают на&nbsp;них через часы. Лиды остывают и&nbsp;уходят к&nbsp;конкурентам. Suvvy — ИИ-сотрудник на&nbsp;базе языковой модели и&nbsp;вашей базы знаний: отвечает сразу, ведёт диалог по&nbsp;скрипту и&nbsp;квалифицирует лида.</span></div>
 
         <div class="note"><span class="note__icon">💬</span><span><strong>Что вы делаете:</strong><br>
-        •&nbsp;Пишете боту в&nbsp;директ как обычный клиент<br>
-        •&nbsp;Получаете осмысленный ответ по&nbsp;вашему продукту<br>
-        •&nbsp;Лид падает в&nbsp;CRM, если она подключена (в&nbsp;этой связке — обзорно)<br>
-        •&nbsp;В&nbsp;сложных случаях бот сам зовёт живого менеджера</span></div>
+        •&nbsp;Создаёте агента и&nbsp;пишете ему инструкцию — кто он&nbsp;и&nbsp;что продаёт<br>
+        •&nbsp;Складываете факты о&nbsp;продукте в&nbsp;базу знаний<br>
+        •&nbsp;Проверяете его по&nbsp;демо-ссылке, ещё до&nbsp;всякого Telegram<br>
+        •&nbsp;Подключаете своего бота и&nbsp;пишете ему как обычный клиент</span></div>
 
-        <table class="data-table">
-          <tr><th>Канал</th><th>Что делает</th></tr>
-          <tr><td>Telegram</td><td>Обязательный шаг связки — свой бот через @BotFather</td></tr>
-          <tr><td>Instagram, WhatsApp, Avito, маркетплейсы</td><td>Поддерживаются платформой, в чек-лист не включены</td></tr>
-          <tr><td>amoCRM, Битрикс24, RetailCRM</td><td>Обзорно, без реальной настройки (блок 07)</td></tr>
-        </table>
+        <div class="note note--green"><span class="note__icon">✅</span><span>Единственная связка курса <strong>без своего сервера, без кода и&nbsp;без VPN</strong>. Подходит тем, кто застрял на&nbsp;технической настройке в&nbsp;прошлых связках.</span></div>
 
-        <div class="note note--green"><span class="note__icon">✅</span><span>Это единственная связка курса без своего сервера и без кода. Подходит тем, кто застрял на технической настройке в прошлых связках.</span></div>
+        <div class="note note--warn"><span class="note__icon">🧭</span><span><strong>Здесь другой принцип, чем в&nbsp;остальных связках.</strong> Раньше вы&nbsp;собирали своего бота на&nbsp;своём сервере и&nbsp;платили только за&nbsp;модель. Suvvy — <strong>чужая готовая платформа</strong>: быстро и&nbsp;без техники, но&nbsp;за&nbsp;каждый диалог платите ей, а&nbsp;данные лежат у&nbsp;неё. Это&nbsp;честный размен, и&nbsp;его полезно почувствовать руками.</span></div>
       </div>
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">02</div><div class="section__title">Что нужно иметь до старта</div></div>
+      <div class="section__header"><div class="section__num">02</div><div class="section__title">Что нужно до старта</div></div>
       <div class="section__card">
 
-        <div class="note note--info"><span class="note__icon">💡</span><span>Список короткий — это самая простая связка курса.</span></div>
+        <div class="note note--green"><span class="note__icon">💳</span><span><strong>Карта на&nbsp;старте не&nbsp;нужна.</strong> При&nbsp;регистрации Suvvy кладёт на&nbsp;баланс <strong>500&nbsp;₽</strong>, и&nbsp;весь этот чек-лист проходится на&nbsp;них. Карта понадобится, только если захотите продолжить.</span></div>
 
         <div class="item" data-key="pre-account"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Аккаунт в Suvvy</div>
-            <div class="item__hint">Регистрация — блок 03. Российская версия, VPN не&nbsp;нужен.</div>
-          </div>
-        </div>
-
-        <div class="item" data-key="pre-card"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Российская карта или счёт юрлица</div>
-            <div class="item__hint">Оплата pay-as-you-go: на балансе — 500₽ бонус при регистрации, дальше платите за фактические диалоги.</div>
+            <div class="item__hint">Регистрация — блок&nbsp;03. Российский сервис, VPN не&nbsp;нужен.</div>
           </div>
         </div>
 
         <div class="item" data-key="pre-content"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Материалы для базы знаний</div>
-            <div class="item__hint">Описание продукта/услуги, ответы на частые вопросы, скрипт продаж — что угодно в текстовом виде, файлах или таблицах.</div>
+            <div class="item__text">Материал про ваш продукт</div>
+            <div class="item__hint">Чем занимаетесь, что продаёте, цены, частые вопросы клиентов. Хватит и&nbsp;пары абзацев — можно вообще дать <strong>ссылку на&nbsp;свой сайт</strong>, Suvvy сама вытащит оттуда текст.</div>
           </div>
         </div>
 
-        <div class="note note--green"><span class="note__icon">🚫</span><span><strong>Не нужно:</strong> свой сервер, VPN, зарубежная карта, GitHub, знание кода.</span></div>
+        <div class="note note--warn"><span class="note__icon">⏳</span><span><strong>Главная ловушка связки: бонус живёт 7&nbsp;дней.</strong> Дословно из&nbsp;документации: «При регистрации мы&nbsp;даем 500&nbsp;руб. на&nbsp;баланс <strong>на&nbsp;7&nbsp;дней</strong>… Если вы&nbsp;не&nbsp;успели попробовать сервис в&nbsp;течение 7&nbsp;дней, тестовый баланс сгорает». Поэтому <strong>регистрируйтесь в&nbsp;тот&nbsp;же день, когда садитесь делать связку</strong>, а&nbsp;не&nbsp;заранее.</span></div>
+
+        <div class="note note--green"><span class="note__icon">🚫</span><span><strong>Не&nbsp;нужно:</strong> свой сервер, VPN, зарубежная карта, GitHub, знание кода.</span></div>
       </div>
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">03</div><div class="section__title">Регистрация и подключение Telegram-бота</div></div>
+      <div class="section__header"><div class="section__num">03</div><div class="section__title">Регистрация и создание агента</div></div>
       <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">🧩</span><span><strong>Агент — это и&nbsp;есть ваш будущий бот.</strong> Сначала создаём и&nbsp;обучаем его&nbsp;внутри Suvvy, и&nbsp;только в&nbsp;конце цепляем к&nbsp;нему Telegram. Порядок именно такой: канал подключается к&nbsp;готовому агенту, а&nbsp;не&nbsp;наоборот.</span></div>
 
         <div class="item" data-key="reg-signup"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Шаг 1. Зарегистрироваться в Suvvy</div>
-            <div class="item__hint">Обычная регистрация по почте. На баланс сразу упадёт 500₽ бонус.</div>
+            <div class="item__hint">Обычная регистрация по&nbsp;почте. Сразу после неё на&nbsp;балансе появятся 500&nbsp;₽ — с&nbsp;этого момента пошли те&nbsp;самые 7&nbsp;дней.</div>
             <a href="https://suvvy.ai/" target="_blank" class="item__link" onclick="event.stopPropagation()">suvvy.ai</a>
           </div>
         </div>
 
-        <div class="item" data-key="reg-botfather"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="reg-newagent"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Шаг 2. Завести бота в @BotFather</div>
-            <div class="item__hint">Команда <code>/newbot</code>, задать имя и username. Получите токен — он показывается сразу в чате, скопируйте в блокнот.</div>
-            <a href="https://t.me/BotFather" target="_blank" class="item__link" onclick="event.stopPropagation()">t.me/BotFather</a>
+            <div class="item__text">Шаг 2. Создать агента</div>
+            <div class="item__hint">Кнопка <strong>«Новый агент»</strong> вверху страницы. Задайте <strong>название агента</strong> — оно&nbsp;только для&nbsp;вас, клиент его&nbsp;не&nbsp;видит. Внутри уже будет лежать заготовка инструкции, её&nbsp;и&nbsp;будем править в&nbsp;блоке&nbsp;04.</div>
+            <a href="https://docs.suvvy.ai/ru/bystryi-start" target="_blank" class="item__link" onclick="event.stopPropagation()">Документация: быстрый старт</a>
           </div>
         </div>
 
-        <div class="item" data-key="reg-connect"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Шаг 3. Подключить токен в Suvvy</div>
-            <div class="item__hint">Раздел <strong>Каналы → Telegram</strong>, вставить токен, нажать «Сохранить». Опционально настройте приветствие на команду <code>/start</code>.</div>
-            <a href="https://docs.suvvy.ai/ru/kanaly/messendzhery/telegram" target="_blank" class="item__link" onclick="event.stopPropagation()">Документация: подключение Telegram</a>
-          </div>
-        </div>
-
-        <div class="note note--warn"><span class="note__icon">🔒</span><span>Токен бота — как пароль. Не выкладывайте его в общие чаты и репозитории: получивший токен сможет отвечать от имени вашего бота.</span></div>
+        <div class="note note--info"><span class="note__icon">🗺</span><span><strong>Официальный порядок сборки</strong> — по&nbsp;нему и&nbsp;построен этот чек-лист: создать агента&nbsp;→ написать инструкцию&nbsp;→ выставить время ожидания&nbsp;→ наполнить базу знаний&nbsp;→ подключить канал.</span></div>
       </div>
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">04</div><div class="section__title">База знаний</div></div>
+      <div class="section__header"><div class="section__num">04</div><div class="section__title">Инструкция агента — главный файл</div></div>
       <div class="section__card">
 
-        <div class="note note--info"><span class="note__icon">🧠</span><span>База знаний — картотека, к которой агент обращается за&nbsp;фактами. Три блока, можно использовать любой или все сразу.</span></div>
+        <div class="note note--info"><span class="note__icon">📜</span><span>Инструкция задаёт <strong>поведение</strong>: кто агент, что делает, как разговаривает. Всё, что касается <strong>правил общения</strong>, живёт здесь. Всё, что касается <strong>фактов</strong> — цены, услуги, условия — уходит в&nbsp;базу знаний (блок&nbsp;05).</span></div>
+
+        <div class="note"><span class="note__icon">🧱</span><span><strong>Официальная структура: пять разделов, каждый начинается со&nbsp;знака&nbsp;<code>#</code></strong> — так модель понимает, где кончается один смысловой кусок и&nbsp;начинается другой.</span></div>
 
         <table class="data-table">
-          <tr><th>Блок</th><th>Когда использовать</th></tr>
-          <tr><td>Быстрые ответы</td><td>Короткие прямые вопрос/ответ — цены, режим работы, условия доставки</td></tr>
-          <tr><td>Документы</td><td>Большие файлы: PDF-каталог, презентация, подробное описание услуги</td></tr>
-          <tr><td>Таблицы</td><td>Структурированные данные: CSV/XLS или Google Sheets — прайс, список товаров</td></tr>
+          <tr><th>Раздел</th><th>Что писать</th></tr>
+          <tr><td><code>#ОБЩИЕ СВЕДЕНИЯ</code></td><td>Чем занимается компания, где работает, что продаёт — <strong>общими фразами, без конкретики</strong>. Конкретика пойдёт в базу знаний. Плюс роль и имя самого агента</td></tr>
+          <tr><td><code>#ЦЕЛИ И ЗАДАЧИ</code></td><td>Что агент должен делать. «Чем детальнее, НО лаконичнее вы опишете данный раздел, тем лучше агент будет справляться с ответами»</td></tr>
+          <tr><td><code>#ПРИВЕТСТВИЕ</code></td><td>Как агент здоровается, текст первого сообщения</td></tr>
+          <tr><td><code>#ЯЗЫК ОТВЕТОВ</code></td><td>На каком языке общается</td></tr>
+          <tr><td><code>#СТИЛЬ ОТВЕТА</code></td><td>Манера и тон. «Меняя инструкцию в этой части можно добиться кардинально разных ответов»</td></tr>
+        </table>
+
+        <div class="item" data-key="instr-write"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Написать инструкцию по пяти разделам</div>
+            <div class="item__hint">Вкладка <strong>«Инструкция»</strong> в&nbsp;агенте. Не&nbsp;хочется писать с&nbsp;нуля — рядом есть кнопка <strong>«Сгенерировать инструкцию»</strong>: можно дать ссылку на&nbsp;свой сайт, и&nbsp;платформа сама вытащит оттуда информацию. Учтите: генерация <strong>расходует токены и&nbsp;тарифицируется</strong> как обычная работа агента.</div>
+            <a href="https://docs.suvvy.ai/ru/osnovnye-nastroiki/prompts" target="_blank" class="item__link" onclick="event.stopPropagation()">Документация: системная инструкция</a>
+          </div>
+        </div>
+
+        <details class="spoiler">
+          <summary>Три правила, на которых спотыкаются все — из официальной доки</summary>
+          <div class="spoiler__content">
+            <p><strong>1. Лаконичность.</strong> «Важно избегать большого количества описаний там, где этого можно избежать». Чем короче инструкция, тем внимательнее модель к&nbsp;каждому пункту и&nbsp;тем дешевле диалог.</p>
+            <p><strong>2. Точность.</strong> «Любая обобщенность будет снижать качество ответов». Пример из&nbsp;доки: ❌&nbsp;«Всегда здоровайся с&nbsp;клиентом» → ✅&nbsp;«Всегда здоровайся с&nbsp;клиентом <strong>при начале диалога</strong>». Иначе агент будет здороваться в&nbsp;каждом сообщении — «он понимает инструкцию буквально».</p>
+            <p><strong>3. Недвусмысленность.</strong> «Часто встречающаяся ошибка — дублирование или противоречие одной и&nbsp;той&nbsp;же инструкции в&nbsp;разных её&nbsp;частях».</p>
+            <p><strong>Пишите утверждениями, а&nbsp;не&nbsp;запретами.</strong> ❌&nbsp;«Не говори клиенту информацию о&nbsp;наших реквизитах» → ✅&nbsp;«Тебе запрещено предоставлять информацию о&nbsp;реквизитах компании».</p>
+            <p><strong>Готовые формулировки, которые советует сама Suvvy:</strong><br>
+            «<strong>Шаг за&nbsp;шагом, только после ответа собеседника</strong>» — чтобы агент не&nbsp;вываливал пять вопросов разом.<br>
+            «<strong>…если это ранее еще не&nbsp;известно из&nbsp;контекста диалога</strong>» — чтобы не&nbsp;переспрашивал то, что уже сказали.<br>
+            «<strong>Всегда</strong>» — усиливает нужный пункт.<br>
+            «<strong>Если клиент написал…</strong>» — задаёт условие срабатывания.</p>
+          </div>
+        </details>
+
+        <div class="item" data-key="instr-wait"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Выставить «Время ожидания»</div>
+            <div class="item__hint">Пауза перед ответом. Нужна из-за&nbsp;живой привычки людей писать мысль в&nbsp;три сообщения подряд: «Добрый день!» / «У&nbsp;меня вопрос» / «Сколько стоит?». Пауза <strong>склеивает их&nbsp;в&nbsp;одно</strong>, и&nbsp;агент отвечает один раз, а&nbsp;не&nbsp;трижды. Второй смысл — «дополнительная задержка в&nbsp;ответе позволяет имитировать поведение человека».</div>
+          </div>
+        </div>
+
+        <div class="note note--green"><span class="note__icon">🔍</span><span><strong>Есть встроенная проверка вашей инструкции.</strong> Кнопка <strong>«Аудит инструкции»</strong> ищет противоречия, дубли, пустые разделы и&nbsp;нечитаемые для&nbsp;модели формулировки. Занимает до&nbsp;10&nbsp;минут и&nbsp;тоже тарифицируется.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">05</div><div class="section__title">База знаний — факты о продукте</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">🧠</span><span>База знаний — «картотека агента, в&nbsp;которую он&nbsp;может обращаться, когда нужно найти ответ». Она&nbsp;<strong>разгружает инструкцию</strong>: чем короче инструкция, тем точнее агент и&nbsp;дешевле диалог.</span></div>
+
+        <table class="data-table">
+          <tr><th>Блок</th><th>Для чего</th></tr>
+          <tr><td>Быстрые ответы</td><td>Типовые вопрос-ответ: цены, адрес, доставка, оплата. Самый точный поиск. Рабочий объём — <strong>до 70–80 файлов</strong></td></tr>
+          <tr><td>Документы</td><td>Большие тексты: PDF-каталог, презентация, регламент. До <strong>10 МБ</strong> на файл</td></tr>
+          <tr><td>Таблицы</td><td>Прайсы и каталоги: CSV, Excel или <strong>Google-таблица</strong> — она подтягивается сама, по умолчанию раз в сутки</td></tr>
         </table>
 
         <div class="item" data-key="kb-fill"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Заполнить базу знаний своим материалом</div>
-            <div class="item__hint">Раздел «База знаний» в личном кабинете Suvvy. Начните с малого: 5–10 частых вопросов достаточно для первого теста.</div>
+            <div class="item__text">Завести 5–10 файлов в «Быстрых ответах»</div>
+            <div class="item__hint">Раздел <strong>«База знаний»</strong>&nbsp;→ кнопка <strong>«Создать»</strong>. Для&nbsp;первого запуска этого хватает с&nbsp;головой — начните с&nbsp;вопросов, которые клиенты задают чаще всего.</div>
             <a href="https://docs.suvvy.ai/ru/baza-znanii/baza-znanii" target="_blank" class="item__link" onclick="event.stopPropagation()">Документация: база знаний</a>
           </div>
         </div>
 
-        <div class="note note--warn"><span class="note__icon">⚠</span><span><strong>Инструкция всегда приоритетнее базы знаний.</strong> Если агент делает не то, что нужно, — сначала правьте инструкцию (блок 05), база знаний только подсказывает факты.</span></div>
+        <div class="note note--warn"><span class="note__icon">🏷</span><span><strong>Самое важное про базу знаний: агент ищет файл по&nbsp;его&nbsp;названию, а&nbsp;не&nbsp;по&nbsp;тексту внутри.</strong> Поэтому названия должны быть короткими и&nbsp;без вопросительных знаков. Примеры прямо из&nbsp;доки: на&nbsp;запрос «Как к&nbsp;вам проехать?» нужен файл <strong>«Адрес офиса»</strong>; на&nbsp;«Сколько стоит?» — <strong>«Стоимость»</strong> или <strong>«Прайс-лист»</strong>; на&nbsp;«Как оплатить?» — <strong>«Оплата»</strong>.</span></div>
 
-        <div class="note note--green"><span class="note__icon">💡</span><span><strong>Демо от Стаса:</strong> база знаний собирается на материалах курса «2. Курс по OpenClaw» — бот-лид-квалификатор отвечает на вопросы по программе курса.</span></div>
+        <div class="note"><span class="note__icon">⚖️</span><span><strong>Кто главнее.</strong> Дословно: «инструкция всегда имеет более приоритетное значение, чем база знаний, которая является скорее вспомогательным инструментом». Поэтому если агент ведёт себя не&nbsp;так — правьте <strong>инструкцию</strong>. Если путается в&nbsp;фактах — правьте <strong>базу знаний</strong>.</span></div>
+
+        <div class="note note--green"><span class="note__icon">✂️</span><span>Не&nbsp;делайте файлы-простыни: «не&nbsp;создавайте файлы с&nbsp;большим текстом, разбивайте его&nbsp;на&nbsp;более мелкие смысловые файлы». Прайс на&nbsp;сотню позиций вообще не&nbsp;место в&nbsp;тексте — для&nbsp;него есть <strong>Таблицы</strong>.</span></div>
       </div>
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">05</div><div class="section__title">Сценарий продаж и инструкция агента</div></div>
+      <div class="section__header"><div class="section__num">06</div><div class="section__title">Проверка агента — ещё без Telegram</div></div>
       <div class="section__card">
 
-        <div class="note note--info"><span class="note__icon">📜</span><span>Выберите готовый сценарий из библиотеки Suvvy под свою нишу — либо напишите собственную инструкцию. Быстрый старт по готовому сценарию занимает 5–15 минут.</span></div>
+        <div class="note note--green"><span class="note__icon">🧪</span><span><strong>Агента можно погонять до&nbsp;того, как заведён бот.</strong> Это&nbsp;экономит время: сначала доводим ответы до&nbsp;ума, и&nbsp;только потом подключаем Telegram.</span></div>
 
-        <div class="item" data-key="script-choose"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="demo-test"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Выбрать сценарий или написать инструкцию</div>
-            <div class="item__hint">Инструкция должна явно описывать: кто агент, что продаёт, какой тон общения, когда передавать диалог живому менеджеру.</div>
+            <div class="item__text">Открыть демо-ссылку и поговорить с агентом</div>
+            <div class="item__hint">На&nbsp;странице агента нажмите <strong>☰</strong> в&nbsp;правом верхнем углу&nbsp;→ <strong>«Демо-ссылка»</strong>&nbsp;→ включите тумблер <strong>«Публичный доступ»</strong> (пока он&nbsp;выключен, ссылка не&nbsp;работает)&nbsp;→ выберите срок&nbsp;→ <strong>«Копировать»</strong>. Ссылка вида <code>app.suvvy.ai/a/…</code> открывается без входа в&nbsp;Suvvy — можно скинуть коллеге.</div>
+            <a href="https://docs.suvvy.ai/ru/osnovnye-nastroiki/demo-ssylka" target="_blank" class="item__link" onclick="event.stopPropagation()">Документация: демо-ссылка</a>
           </div>
         </div>
 
-        <div class="note note--green"><span class="note__icon">✅</span><span>Можно комбинировать: на стандартные вопросы отвечают заранее заданные блоки сценария, на сложные подключается модель через базу знаний.</span></div>
+        <div class="note"><span class="note__icon">🎛</span><span>В&nbsp;демо-чате есть быстрые кнопки: <strong>«Поздоровайтесь»</strong>, <strong>«Узнайте про цены»</strong>, <strong>«Спросите про доставку»</strong>, <strong>«Попросите оператора»</strong>. Прогоните все четыре — это&nbsp;и&nbsp;есть мини-приёмка агента.</span></div>
+
+        <div class="note note--warn"><span class="note__icon">💸</span><span><strong>Демо тратит ваш баланс</strong> так&nbsp;же, как настоящие диалоги: «Сообщения и&nbsp;звонки в&nbsp;демо тратят баланс вашего аккаунта». И&nbsp;ещё: первое приветствие в&nbsp;демо-чате — часть демо-режима, в&nbsp;реальном чате клиент его&nbsp;не&nbsp;увидит.</span></div>
+
+        <div class="note note--info"><span class="note__icon">🔒</span><span>Показали демо и&nbsp;больше не&nbsp;нужно — нажмите <strong>«Отозвать и&nbsp;создать новую ссылку»</strong>: старая перестанет работать сразу.</span></div>
       </div>
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">06</div><div class="section__title">Тест диалога и оплата</div></div>
+      <div class="section__header"><div class="section__num">07</div><div class="section__title">Подключение Telegram-бота</div></div>
       <div class="section__card">
 
-        <div class="item" data-key="test-chat"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="tg-botfather"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Написать боту как клиент</div>
-            <div class="item__hint">Откройте бота в Telegram, напишите обычный вопрос про продукт. Проверьте: ответ по теме, использует базу знаний, тон совпадает с заданным.</div>
+            <div class="item__text">Шаг 1. Завести бота в @BotFather</div>
+            <div class="item__hint">Команда <code>/newbot</code>&nbsp;→ придумать имя&nbsp;→ придумать username (обязан заканчиваться на&nbsp;<code>bot</code>). В&nbsp;ответ придёт <strong>токен</strong> — длинная строка через двоеточие. Скопируйте её&nbsp;в&nbsp;блокнот. Если бот у&nbsp;вас уже есть, токен достаётся командой <code>/token</code>.</div>
+            <a href="https://t.me/BotFather" target="_blank" class="item__link" onclick="event.stopPropagation()">t.me/BotFather</a>
           </div>
         </div>
 
-        <div class="item" data-key="test-balance"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="tg-token"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Проверить баланс после теста</div>
-            <div class="item__hint">Каждый ответ бота — платный диалог (~10–20₽). Счётчик — в личном кабинете Suvvy.</div>
+            <div class="item__text">Шаг 2. Вставить токен в Suvvy</div>
+            <div class="item__hint">Раздел <strong>«Каналы»</strong>&nbsp;→ <strong>Telegram</strong>&nbsp;→ поле токена&nbsp;→ <strong>«Сохранить»</strong>. Признак, что токен принят: <strong>ниже раскроется блок настроек канала</strong>, которого до&nbsp;этого не&nbsp;было.</div>
+            <a href="https://docs.suvvy.ai/ru/kanaly/messendzhery/telegram" target="_blank" class="item__link" onclick="event.stopPropagation()">Документация: канал Telegram</a>
           </div>
         </div>
 
-        <div class="note note--green"><span class="note__icon">💰</span><span>500₽ приветственного бонуса хватает на 25–50 тестовых диалогов — достаточно, чтобы прогнать чек-лист и показать бота вживую.</span></div>
+        <div class="item" data-key="tg-start"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 3. Задать приветствие и включить сброс контекста</div>
+            <div class="item__hint">Поле <strong>«Сообщение при команде /start»</strong> — это&nbsp;то, что увидит человек, впервые открывший бота. Рядом включите <strong>«Очищать контекст по&nbsp;команде /start»</strong>: тогда каждый <code>/start</code> начинает диалог с&nbsp;чистого листа — незаменимо, пока тестируете. Не&nbsp;забудьте <strong>«Сохранить»</strong>.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="tg-check"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Шаг 4. Написать боту как клиент</div>
+            <div class="item__hint">Откройте своего бота в&nbsp;Telegram, нажмите <code>/start</code>, задайте живой вопрос про продукт. Проверьте: ответ по&nbsp;теме, факты из&nbsp;базы знаний на&nbsp;месте, тон такой, как вы&nbsp;задали в&nbsp;инструкции.</div>
+          </div>
+        </div>
+
+        <details class="spoiler">
+          <summary>Полезные настройки канала, которые не видно сразу</summary>
+          <div class="spoiler__content">
+            <p><strong>Белый список.</strong> Впишите свой Telegram&nbsp;ID — и&nbsp;бот будет отвечать <strong>только вам</strong>. Идеально, пока обкатываете. Чёрный список работает наоборот: перечисленным не&nbsp;отвечает.</p>
+            <p><strong>Как узнать свой ID.</strong> Включите флаг <strong>«Обрабатывать команду /get_id»</strong>, отправьте боту <code>/get_id</code> и&nbsp;нажмите кнопку <strong>MY ID</strong>. Там&nbsp;же достаются ID&nbsp;группы, канала и&nbsp;другого пользователя.</p>
+            <p><strong>«Ответы агента».</strong> Выключатель, который глушит бота, не&nbsp;разрывая подключение. Удобно, когда надо срочно остановить его&nbsp;без демонтажа канала.</p>
+            <p><strong>Работа в&nbsp;группах.</strong> Есть флаг «Отвечать в&nbsp;группах только при&nbsp;упоминании» и&nbsp;поле ключевых слов. Учтите: чтобы бот в&nbsp;группе вообще видел обычные сообщения, в&nbsp;@BotFather нужно выключить <strong>Group Privacy</strong> (<code>/mybots</code> → ваш бот → Bot Settings → Group Privacy → Turn off). В&nbsp;документации Suvvy этот шаг не&nbsp;описан — а&nbsp;без него бот в&nbsp;группе будет молчать.</p>
+            <p><strong>Кнопки под сообщениями.</strong> Настраиваются не&nbsp;здесь, а&nbsp;во&nbsp;вкладке «Действия». Они&nbsp;динамические: «не&nbsp;отображаются в&nbsp;чате Telegram сразу после создания действия», а&nbsp;появляются, когда агент вызовет нужную функцию.</p>
+          </div>
+        </details>
+
+        <div class="note note--warn"><span class="note__icon">🔒</span><span>Токен бота — это&nbsp;пароль. Не&nbsp;выкладывайте его&nbsp;в&nbsp;общие чаты и&nbsp;репозитории: с&nbsp;ним чужой человек сможет писать от&nbsp;имени вашего бота. Засветился — в&nbsp;@BotFather командой <code>/revoke</code> выпускаете новый.</span></div>
       </div>
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">07</div><div class="section__title">CRM — опционально, только обзор</div></div>
+      <div class="section__header"><div class="section__num">08</div><div class="section__title">Страховка от слитого баланса</div></div>
       <div class="section__card">
 
-        <div class="note note--green"><span class="note__icon">🤷</span><span><strong>Этот блок можно пропустить целиком.</strong> Реальную интеграцию не настраиваем — просто смотрим, что доступно.</span></div>
+        <div class="note note--alert"><span class="note__icon">🛡</span><span><strong>Не&nbsp;пропускайте этот блок.</strong> Бот отвечает всем и&nbsp;круглосуточно, а&nbsp;каждый ответ стоит денег. Документация говорит прямо: без ограничителя «есть риск «слить» бюджет».</span></div>
 
-        <div class="note"><span class="note__icon">🔌</span><span>Suvvy подключается к <strong>amoCRM</strong>, <strong>Битрикс24</strong> и <strong>RetailCRM</strong>. Подключение — из раздела «Каналы», кнопка «Подключить», дальше редирект на авторизацию в CRM.</span></div>
+        <div class="item" data-key="limit-cost"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Включить «Защиту от спама»</div>
+            <div class="item__hint">Доп.&nbsp;настройки&nbsp;→ вкладка <strong>«Защита от&nbsp;спама»</strong>. Два ограничителя: <strong>максимальное количество сообщений в&nbsp;диалоге</strong> и&nbsp;<strong>максимальная стоимость диалога</strong> — «при&nbsp;достижении заданной стоимости диалога, агент перестаёт отвечать». Поставьте оба, пока учитесь.</div>
+          </div>
+        </div>
 
-        <a href="https://docs.suvvy.ai/ru/kanaly/crm-sistemy/amocrm" target="_blank" class="lnk" style="margin:0 20px 16px;display:inline-flex" onclick="event.stopPropagation()">Документация: подключение amoCRM</a>
+        <div class="note note--info"><span class="note__icon">🗄</span><span><strong>Заодно загляните во&nbsp;вкладку «Безопасность».</strong> По&nbsp;умолчанию переписки с&nbsp;клиентами хранятся на&nbsp;серверах Suvvy <strong>90&nbsp;дней</strong> — срок настраивается, а&nbsp;для&nbsp;работы с&nbsp;персональными данными есть флаг <strong>«Маскировать персональные данные»</strong>: в&nbsp;модель уходит обезличенный текст, расшифровка происходит в&nbsp;России.</span></div>
       </div>
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">08</div><div class="section__title">API и вебхуки — опционально, только обзор</div></div>
+      <div class="section__header"><div class="section__num">09</div><div class="section__title">Когда нужен живой человек</div></div>
       <div class="section__card">
 
-        <div class="note note--green"><span class="note__icon">🤷</span><span><strong>Тоже можно пропустить.</strong> Для этой связки не настраиваем.</span></div>
+        <div class="note note--info"><span class="note__icon">🙋</span><span>Отдельной кнопки «перевести на&nbsp;оператора» в&nbsp;Suvvy нет — сценарий собирается из&nbsp;двух настроек, и&nbsp;вторую все забывают.</span></div>
 
-        <div class="note"><span class="note__icon">🔗</span><span>У Suvvy есть система вебхуков и персональный канал API — можно связать бота с внешними базами данных (например, 1С) или со своим агентом на OpenClaw. Продвинутый уровень, для тех, кто хочет пойти дальше связки.</span></div>
+        <div class="item" data-key="manager-file"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Сделать файл «Позвать менеджера»</div>
+            <div class="item__hint">Заведите в&nbsp;<strong>Быстрых ответах</strong> файл с&nbsp;таким названием и&nbsp;включите в&nbsp;нём два тумблера: <strong>«Уведомление в&nbsp;Telegram»</strong> — чтобы вам прилетело сообщение, и&nbsp;<strong>«Прерывать диалог»</strong> — чтобы агент замолчал. Без второго «агент продолжит отвечать и&nbsp;дальше», и&nbsp;вы&nbsp;будете говорить с&nbsp;клиентом хором.</div>
+          </div>
+        </div>
+
+        <div class="note"><span class="note__icon">🔔</span><span><strong>Чтобы уведомления приходили,</strong> подпишитесь на&nbsp;бота оповещений: раздел <strong>«Интеграции»</strong>&nbsp;→ <strong>«Оповещения в&nbsp;Telegram»</strong>&nbsp;→ кнопка <strong>«START BOT»</strong>. В&nbsp;уведомление можно вложить краткий пересказ диалога — переменная <code>summary</code>.</span></div>
+
+        <div class="note note--green"><span class="note__icon">↩️</span><span>Обратно агента можно вернуть автоматически: в&nbsp;доп.&nbsp;настройках есть «время возвращения управления агенту в&nbsp;минутах». А&nbsp;флаг «Не&nbsp;отвечать при&nbsp;прерывании диалога человеком» заставляет бота умолкать всякий раз, когда в&nbsp;переписку вмешался живой сотрудник.</span></div>
       </div>
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">09</div><div class="section__title">Если что-то пошло не так</div></div>
+      <div class="section__header"><div class="section__num">10</div><div class="section__title">Сколько это стоит на самом деле</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">💰</span><span>Оплата по&nbsp;модели <strong>pay-as-you-go</strong>: пополняете баланс, он&nbsp;тратится за&nbsp;ответы. «Баланс не&nbsp;расходуется, если Савви не&nbsp;используется» — абонентской платы нет.</span></div>
+
+        <table class="data-table">
+          <tr><th>Что</th><th>Сколько по документации</th></tr>
+          <tr><td>Простой диалог</td><td><strong>7–15 ₽</strong> за диалог (один ответ — 1–3 ₽)</td></tr>
+          <tr><td>Сложный диалог</td><td><strong>15–30 ₽</strong> за диалог (один ответ — 3–7 ₽)</td></tr>
+          <tr><td>В среднем по платформе</td><td>10–20 ₽ за диалог</td></tr>
+          <tr><td>Пример месяца</td><td>20 диалогов в день × 30 дней × 10 ₽ = <strong>6 000 ₽/мес</strong></td></tr>
+        </table>
+
+        <div class="note note--warn"><span class="note__icon">🧮</span><span><strong>Диалог — это не&nbsp;одно сообщение.</strong> Клиент может написать вам десять раз подряд — это&nbsp;по-прежнему один диалог. Считается вся переписка целиком, поэтому длинные ветки дороже коротких: каждый новый ответ тащит за&nbsp;собой всю историю.</span></div>
+
+        <div class="note note--green"><span class="note__icon">🎁</span><span><strong>Про 500&nbsp;₽ ещё раз, потому что это&nbsp;важно.</strong> Успеете пополнить баланс <strong>в&nbsp;течение 7&nbsp;дней</strong> — бонус сохранится и&nbsp;прибавится к&nbsp;вашим деньгам. Не&nbsp;успеете — сгорит. На&nbsp;прохождение чек-листа его&nbsp;хватает с&nbsp;запасом: это&nbsp;примерно 30–50&nbsp;тестовых диалогов.</span></div>
+
+        <details class="spoiler">
+          <summary>Как платить меньше — советы из документации</summary>
+          <div class="spoiler__content">
+            <p><strong>Короткая инструкция дешевле.</strong> Она&nbsp;отправляется в&nbsp;модель при&nbsp;каждом сообщении, поэтому лишний абзац в&nbsp;промпте — это&nbsp;налог на&nbsp;каждый ответ. Факты держите в&nbsp;базе знаний.</p>
+            <p><strong>Не&nbsp;тащите прайс текстом.</strong> Большой файл, один раз сработав, оседает в&nbsp;истории и&nbsp;удорожает все последующие сообщения. Для&nbsp;прайсов есть Таблицы.</p>
+            <p><strong>Ограничьте историю.</strong> В&nbsp;доп.&nbsp;настройках можно передавать не&nbsp;всю переписку, а&nbsp;последние N&nbsp;сообщений: «когда вся переписка идет в&nbsp;рамках одного диалога и&nbsp;если он&nbsp;очень длинный, каждое сообщение становится очень дорогим».</p>
+            <p><strong>Тесты дороже боя.</strong> Дока честно предупреждает: «Средняя стоимость диалога при&nbsp;тестировании обычно выше» — на&nbsp;тестах вы&nbsp;гоняете самые длинные сценарии.</p>
+            <p><strong>Про выбор модели.</strong> Suvvy даёт список моделей от&nbsp;OpenAI, Anthropic, Google, Yandex и&nbsp;других, и&nbsp;сама рекомендует OpenAI: «они показывают наилучшие результаты». Но&nbsp;учтите — <strong>смена модели доступна с&nbsp;тарифа PRO</strong>, на&nbsp;старте работаете с&nbsp;тем, что стоит по&nbsp;умолчанию.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">11</div><div class="section__title">Suvvy прямо из Claude Code — по желанию</div></div>
+      <div class="section__card">
+
+        <div class="note note--green"><span class="note__icon">🔌</span><span><strong>Приятная новость для&nbsp;тех, кто прошёл курс:</strong> у&nbsp;Suvvy есть <strong>MCP-сервер</strong>. Это&nbsp;значит, что агента можно собирать и&nbsp;чинить <strong>разговором в&nbsp;Claude&nbsp;Code</strong>, а&nbsp;не&nbsp;кликами в&nbsp;интерфейсе.</span></div>
+
+        <div class="note"><span class="note__icon">🤖</span><span><strong>Что он&nbsp;умеет:</strong> создавать агентов с&nbsp;нуля по&nbsp;описанию задачи, писать и&nbsp;улучшать инструкцию, вести базу знаний (в&nbsp;том числе импортировать PDF, DOCX и&nbsp;Excel), настраивать действия и&nbsp;триггеры, <strong>гонять тестовые диалоги от&nbsp;лица клиента</strong> и&nbsp;разбирать реальные переписки — искать, где агент ломается.</span></div>
+
+        <div class="prompt-block">
+          <div class="prompt-block__title">⌨️ Установка в Claude Code</div>
+          <div class="cmd-copy"><span class="cmd-copy__text" id="mcp1">/plugin marketplace add suvvyai/agent-skill</span><button class="btn-copy" onclick="copyBlock('mcp1', this)">копировать</button></div>
+          <div class="cmd-copy"><span class="cmd-copy__text" id="mcp2">/plugin install suvvy-mcp@suvvy-plugins</span><button class="btn-copy" onclick="copyBlock('mcp2', this)">копировать</button></div>
+          <div class="prompt-block__text" style="margin-top:12px;margin-bottom:0">Две команды подряд прямо в Claude Code — поставится и MCP-сервер, и навык работы с ним. Дальше введите /mcp, выберите сервер suvvy и нажмите Authenticate.</div>
+        </div>
+
+        <div class="note note--warn"><span class="note__icon">⚠️</span><span><strong>Каналы через MCP не&nbsp;настраиваются.</strong> Дословно: «Каналы (Telegram, WhatsApp, amoCRM и&nbsp;другие) и&nbsp;интеграции агент не&nbsp;настраивает — это&nbsp;делается вручную в&nbsp;личном кабинете». То&nbsp;есть блок&nbsp;07 всё равно руками. И&nbsp;если увидите ошибку <code>Tool call failed: 403</code> — попробуйте включить или сменить VPN.</span></div>
+
+        <a href="https://docs.suvvy.ai/ru/mcp/rabota-cherez-ii-agentov" target="_blank" class="lnk" style="margin:0 20px 16px;display:inline-flex">Документация: работа через ИИ-агентов</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">12</div><div class="section__title">Куда расти дальше — обзорно</div></div>
+      <div class="section__card">
+
+        <div class="note note--green"><span class="note__icon">🤷</span><span><strong>Этот блок целиком можно пропустить.</strong> Ничего из&nbsp;него для&nbsp;сдачи связки настраивать не&nbsp;нужно — просто знайте, что оно&nbsp;есть.</span></div>
+
+        <table class="data-table">
+          <tr><th>Возможность</th><th>Что даёт</th></tr>
+          <tr><td>CRM</td><td>amoCRM, Битрикс24, Kommo, RetailCRM. Агент двигает сделку по воронке, заполняет поля из диалога, ставит задачи и пишет саммари в заметки</td></tr>
+          <tr><td>Другие каналы</td><td>WhatsApp, Max, VK, чат на сайт, почта, Wildberries, OZON, Яндекс.Маркет, Авито, helpdesk-системы</td></tr>
+          <tr><td>Вебхуки</td><td>Агент дёргает любой внешний адрес: своя база, 1С, сторонний сервис. GET/POST, свои заголовки, JSON</td></tr>
+          <tr><td>Персональный канал API</td><td>Подключить Suvvy к своей системе, для которой готового канала нет</td></tr>
+          <tr><td>Мультиагентность</td><td>Агент-секретарь принимает обращение и передаёт его профильному агенту — как в живом отделе</td></tr>
+        </table>
+
+        <div class="note note--info"><span class="note__icon">🧭</span><span>Вендор сам считает подключение через CRM основным способом, а&nbsp;прямое подключение мессенджера — упрощённым. Для&nbsp;этой связки нам достаточно прямого: цель — понять принцип, а&nbsp;не&nbsp;построить отдел продаж за&nbsp;вечер.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">13</div><div class="section__title">Если что-то пошло не так</div></div>
       <div class="section__card">
 
         <table class="data-table">
           <tr><th>Что видите</th><th>Что делать</th></tr>
-          <tr><td>Бот не отвечает</td><td>Проверить, что токен вставлен верно и канал Telegram активен в Suvvy</td></tr>
-          <tr><td>Ответы не по теме или невпопад</td><td>Проверить инструкцию агента — она приоритетнее базы знаний, начните с неё</td></tr>
-          <tr><td>Баланс быстро тает</td><td>Каждый ответ бота — платный диалог; смотрите счётчик в личном кабинете</td></tr>
-          <tr><td>Не проходит оплата</td><td>Нужна российская карта или счёт юрлица — зарубежная карта не подходит</td></tr>
-          <tr><td>Бот отвечает не на все вопросы</td><td>Добавьте больше материала в базу знаний — блок «Быстрые ответы» проще всего расширять</td></tr>
+          <tr><td>Бот вообще не отвечает</td><td>Проверьте флаг <strong>«Ответы агента»</strong> в настройках канала и что токен сохранён — после верного токена ниже раскрывается блок настроек</td></tr>
+          <tr><td>Бот отвечает не вам, но молчит другим (или наоборот)</td><td>Загляните в белый и чёрный списки: если белый заполнен, агент отвечает <strong>только</strong> перечисленным ID</td></tr>
+          <tr><td>Ведёт себя не так: тон, порядок вопросов, лишние приветствия</td><td>Это инструкция, а не база знаний. Ищите обобщённые формулировки и противоречия, прогоните <strong>«Аудит инструкции»</strong></td></tr>
+          <tr><td>Путает факты, цены, условия</td><td>Это база знаний. Проверьте <strong>название файла</strong> — агент ищет по нему, а не по тексту внутри</td></tr>
+          <tr><td>Не находит нужный файл базы знаний</td><td>Переименуйте коротко и без вопросительного знака: «Стоимость», «Оплата», «Адрес офиса»</td></tr>
+          <tr><td>Отвечает несколько раз подряд на одну мысль</td><td>Увеличьте <strong>«Время ожидания»</strong> — оно склеивает сообщения клиента в одно</td></tr>
+          <tr><td>Баланс тает быстрее ожидаемого</td><td>Включите «Защиту от спама», сократите инструкцию, ограничьте передаваемую историю. Тесты всегда дороже боевых диалогов</td></tr>
+          <tr><td>Бонус исчез</td><td>Он живёт 7 дней с регистрации. Если за это время не пополнить баланс — сгорает, это штатное поведение</td></tr>
+          <tr><td>В группе бот молчит на обычные сообщения</td><td>В @BotFather выключите <strong>Group Privacy</strong>: <code>/mybots</code> → бот → Bot Settings → Group Privacy → Turn off</td></tr>
+          <tr><td>Позвали менеджера, а бот продолжает писать</td><td>В файле «Позвать менеджера» не включён тумблер <strong>«Прерывать диалог»</strong></td></tr>
         </table>
 
-        <div class="note note--info"><span class="note__icon">💬</span><span>Подробности и нюансы — в официальной документации <a href="https://docs.suvvy.ai/ru" target="_blank">docs.suvvy.ai</a> или в видео-инструкции по ссылке ниже.</span></div>
+        <div class="note note--info"><span class="note__icon">🔎</span><span><strong>Где смотреть, что случилось.</strong> Раздел <strong>«Чаты»</strong> хранит все диалоги, а&nbsp;переключатель <strong>«Продвинутый режим»</strong> показывает между строками, какие функции агент вызывал и&nbsp;с&nbsp;какими аргументами. Это&nbsp;лучший способ понять, почему он&nbsp;ответил именно так.</span></div>
+
+        <div class="note note--green"><span class="note__icon">💡</span><span><strong>На&nbsp;будущее:</strong> это&nbsp;шестой сотрудник вашего AI-офиса. Секретарь ведёт календарь, менеджер — задачи, финансист — деньги, консультант помнит документы, транскрибатор превращает разговоры в&nbsp;текст, а&nbsp;продажник встречает клиента в&nbsp;ту&nbsp;самую минуту, когда тот написал.</span></div>
       </div>
     </div>
 
@@ -399,13 +565,13 @@
   <div class="footer">
     <div class="footer__done" id="doneBlock">
       <div class="footer__done-emoji">🎉</div>
-      <div class="footer__done-text">Suvvy на связи!</div>
-      <div class="footer__done-sub">Все пункты закрыты. Клиенты получают ответ сразу, а не через часы.</div>
+      <div class="footer__done-text">Продажник на связи!</div>
+      <div class="footer__done-sub">Все пункты закрыты. Клиенты получают ответ сразу, а не через час.</div>
     </div>
     <div class="footer__final-part3">
       <div class="footer__final-emoji">🤝</div>
       <div class="footer__final-text">Связка 6 собрана!</div>
-      <div class="footer__final-sub">Теперь бот-продажник отвечает клиентам круглосуточно по&nbsp;вашей базе знаний и&nbsp;сценарию — без единой строчки кода и&nbsp;без своего сервера.</div>
+      <div class="footer__final-sub">Бот-продажник отвечает клиентам круглосуточно по&nbsp;вашей базе знаний, квалифицирует лида и&nbsp;зовёт вас, когда нужен живой человек. Без единой строчки кода и&nbsp;без своего сервера.</div>
     </div>
     <div class="footer__contact">Возникли вопросы? Напишите <a href="https://t.me/stavzzz" target="_blank" class="tg">@stavzzz</a> в&nbsp;Telegram</div>
     <button class="btn-reset" onclick="resetProgress()">Сбросить прогресс</button>
@@ -450,7 +616,7 @@ function animate(){
 }
 
 // ====== CHECKLIST ======
-const STORAGE_KEY='iivizaciya_checklist_svyazka6_v1';
+const STORAGE_KEY='iivizaciya_checklist_svyazka6_v2';
 const items=document.querySelectorAll('.item[data-key]');
 const totalCount=items.length;
 let wasComplete=false;
@@ -477,13 +643,13 @@ items.forEach(item=>{
 function resetProgress(){if(!confirm('Сбросить весь прогресс?'))return;items.forEach(item=>{const cb=item.querySelector('input[type="checkbox"]');cb.checked=false;item.classList.remove('checked')});wasComplete=false;saveState();updateProgress(false)}
 loadState();
 
-// ====== COPY (промпты и команды) ======
+// ====== COPY ======
 function copyBlock(id, btn){
   const text=document.getElementById(id).textContent;
   navigator.clipboard.writeText(text).then(()=>{
     const orig=btn.innerHTML;
     btn.classList.add('copied');
-    btn.innerHTML='✅ Скопировано!';
+    btn.innerHTML='✅ Готово';
     setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML=orig;},2000);
   });
 }
