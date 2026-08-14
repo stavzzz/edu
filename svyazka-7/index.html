@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ИИ-ВИЗАЦИЯ — Связка 7: ИИ-БИОХАКЕР, дневник тела на голосовых</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0a0a0f;
+    --bg-card: #12121a;
+    --bg-card-hover: #181825;
+    --border: #1e1e2e;
+    --border-accent: #2a2a3e;
+    --text-primary: #e8e6f0;
+    --text-secondary: #8b879e;
+    --text-muted: #5a5670;
+    --accent: #7c5bf5;
+    --accent-glow: #9d7cff;
+    --accent-soft: rgba(124, 91, 245, 0.12);
+    --green: #34d399;
+    --green-glow: #6ee7b7;
+    --green-soft: rgba(52, 211, 153, 0.1);
+    --amber: #fbbf24;
+    --amber-soft: rgba(251, 191, 36, 0.1);
+    --red-soft: rgba(248, 113, 113, 0.1);
+    --red: #f87171;
+    --radius: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Onest', sans-serif; background: var(--bg-deep); color: var(--text-primary); line-height: 1.65; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: radial-gradient(circle at 20% 20%, rgba(124,91,245,0.04) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(52,211,153,0.03) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+  .wrapper { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  .header { text-align: center; margin-bottom: 48px; }
+  .header__badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-glow); background: var(--accent-soft); border: 1px solid rgba(124,91,245,0.2); padding: 6px 16px; border-radius: 100px; margin-bottom: 24px; animation: fadeDown .6s ease both; }
+  .header__title { font-size: clamp(28px,6vw,40px); font-weight: 800; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 12px; animation: fadeDown .6s ease .1s both; }
+  .header__title span { background: linear-gradient(135deg, var(--accent-glow), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .header__topics { list-style:none; display:flex; flex-direction:column; gap:7px; max-width:460px; margin:16px auto 0; animation:fadeDown .6s ease .3s both; }
+  .header__topics li { font-size:13.5px; color:var(--text-secondary); display:flex; align-items:flex-start; gap:8px; text-align:left; }
+  .header__topics li::before { content:'→'; color:var(--accent); flex-shrink:0; font-family:'JetBrains Mono',monospace; font-size:11px; margin-top:3px; }
+  .header__subtitle { font-size: 15px; color: var(--text-secondary); max-width: 500px; margin: 0 auto; animation: fadeDown .6s ease .2s both; }
+
+  .progress-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 36px; position: sticky; top: 12px; z-index: 10; backdrop-filter: blur(16px); background: rgba(18,18,26,0.92); animation: fadeDown .6s ease .3s both; }
+  .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .progress-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-family: 'JetBrains Mono', monospace; }
+  .progress-count { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: var(--accent-glow); }
+  .progress-bar { width: 100%; height: 8px; background: var(--border); border-radius: 100px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 100px; transition: width .5s cubic-bezier(.34,1.56,.64,1); width: 0%; }
+
+  .section { margin-bottom: 28px; }
+  .section__header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding-left: 2px; }
+  .section__num { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: var(--accent); background: var(--accent-soft); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; flex-shrink: 0; }
+  .section__title { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
+  .section__card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color .3s; }
+  .section__card:hover { border-color: var(--border-accent); }
+
+  .item { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--border); transition: background .2s; cursor: pointer; user-select: none; }
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: var(--bg-card-hover); }
+  .item.checked .item__text { color: var(--text-muted); text-decoration: line-through; }
+  .item.checked .item__link { opacity: 0.4; }
+  .item__check { position: relative; width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px; }
+  .item__check input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 2; }
+  .item__check .cm { width: 22px; height: 22px; border: 2px solid var(--border-accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: all .25s cubic-bezier(.34,1.56,.64,1); }
+  .item__check .cm svg { width: 12px; height: 12px; opacity: 0; transform: scale(0); transition: all .25s cubic-bezier(.34,1.56,.64,1); }
+  .item__check input:checked + .cm { background: var(--green); border-color: var(--green); }
+  .item__check input:checked + .cm svg { opacity: 1; transform: scale(1); }
+  .item__body { flex: 1; min-width: 0; }
+  .item__text { font-size: 14.5px; font-weight: 500; color: var(--text-primary); transition: all .3s; }
+  .item__hint { font-size: 13px; color: var(--text-secondary); margin-top: 4px; line-height: 1.6; }
+  .item__hint a { color: var(--accent-glow); text-decoration: none; font-weight: 600; }
+  .item__hint a:hover { text-decoration: underline; }
+  .item__hint strong { color: var(--text-primary); }
+  .item__hint code { font-family:'JetBrains Mono',monospace; font-size:12px; background:rgba(0,0,0,0.35); padding:1px 5px; border-radius:4px; color:var(--green-glow); }
+  .item__link { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--accent-glow); text-decoration: none; margin-top: 5px; transition: all .2s; word-break: break-all; }
+  .item__link:hover { color: #bba4ff; text-decoration: underline; }
+  .item__link svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .lnk { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--accent-glow); text-decoration: none; word-break: break-all; }
+  .lnk:hover { color: #bba4ff; text-decoration: underline; }
+
+  .note { display: flex; align-items: flex-start; gap: 10px; padding: 14px 20px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; border-bottom: 1px solid var(--border); }
+  .note:last-child { border-bottom: none; }
+  .note--warn { background: var(--amber-soft); color: var(--amber); }
+  .note--info { background: var(--accent-soft); }
+  .note--alert { background: var(--red-soft); color: var(--red); }
+  .note--green { background: var(--green-soft); color: var(--green-glow); }
+  .note__icon { flex-shrink: 0; font-size: 15px; }
+  .note a { color: var(--accent-glow); text-decoration: none; font-weight: 600; }
+  .note a:hover { text-decoration: underline; }
+  .note strong { color: inherit; }
+  .note code { font-family:'JetBrains Mono',monospace; font-size:12px; background:rgba(0,0,0,0.3); padding:1px 5px; border-radius:4px; }
+  .tg { color: #2dd4bf !important; font-weight: 700; text-decoration: underline; text-decoration-color: rgba(45,212,191,0.4); text-underline-offset: 2px; transition: all .2s; }
+  .tg:hover { color: #5eead4 !important; text-decoration-color: #5eead4; }
+
+  .spoiler { border-bottom: 1px solid var(--border); }
+  .spoiler:last-child { border-bottom: none; }
+  .spoiler summary { padding: 14px 20px; font-size: 13.5px; font-weight: 600; color: var(--text-secondary); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; transition: color .2s; }
+  .spoiler summary:hover { color: var(--text-primary); }
+  .spoiler summary::before { content: '▸'; font-size: 12px; transition: transform .2s; }
+  .spoiler[open] summary::before { transform: rotate(90deg); }
+  .spoiler__content { padding: 0 20px 16px 34px; font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+  .spoiler__content p { margin-bottom: 8px; }
+  .spoiler__content strong { color: var(--text-primary); font-weight: 600; }
+  .spoiler__content code { font-family:'JetBrains Mono',monospace; font-size:12px; background:rgba(0,0,0,0.35); padding:1px 5px; border-radius:4px; color:var(--green-glow); }
+
+  .os-table { width: 100%; font-size: 13px; border-collapse: collapse; margin: 8px 0; }
+  .os-table th { text-align: left; font-weight: 600; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .os-table td { padding: 8px 0; border-bottom: 1px solid var(--border); color: var(--text-secondary); vertical-align: top; }
+  .os-table tr:last-child td { border-bottom: none; }
+  .os-table td:first-child { color: var(--text-primary); font-weight: 500; }
+  .data-table { width:100%; font-size:13px; border-collapse:collapse; }
+  .data-table th { text-align:left; font-weight:600; color:var(--text-muted); font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:1.2px; padding:10px 20px; border-bottom:1px solid var(--border); background:rgba(0,0,0,0.2); }
+  .data-table td { padding:11px 20px; border-bottom:1px solid var(--border); color:var(--text-secondary); vertical-align:top; line-height:1.5; }
+  .data-table tr:last-child td { border-bottom:none; }
+  .data-table td:first-child { color:var(--text-primary); font-weight:600; }
+  .data-table code { font-family:'JetBrains Mono',monospace; font-size:12px; background:rgba(0,0,0,0.3); padding:1px 5px; border-radius:4px; color:var(--green-glow); }
+
+  .prompt-block { background:rgba(0,0,0,0.25); border:1px solid var(--border-accent); border-radius:10px; padding:18px 20px; margin:12px 16px; }
+  .prompt-block__title { font-size:13px; font-weight:700; color:var(--accent-glow); margin-bottom:10px; display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:1px; }
+  .prompt-block__text { font-size:13px; color:var(--text-secondary); line-height:1.7; white-space:pre-wrap; margin-bottom:14px; word-break:break-word; }
+  .btn-copy { display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; color:var(--accent-glow); background:var(--accent-soft); border:1px solid rgba(124,91,245,0.3); padding:8px 16px; border-radius:8px; cursor:pointer; transition:all .2s; text-transform:uppercase; letter-spacing:1px; }
+  .btn-copy:hover { background:rgba(124,91,245,0.2); border-color:var(--accent); }
+  .btn-copy.copied { color:var(--green); background:var(--green-soft); border-color:rgba(52,211,153,0.3); }
+
+  .code-block { background:rgba(0,0,0,0.4); border:1px solid var(--border-accent); border-radius:10px; padding:16px 20px; margin:12px 16px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--green-glow); line-height:1.8; white-space:pre-wrap; word-break:break-all; overflow-x:auto; }
+  .code-block__label { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; display:block; }
+  .code-block .btn-copy { margin-top:12px; }
+  .cmd-copy { background:rgba(0,0,0,0.35); border:1px solid var(--border-accent); border-radius:8px; padding:10px 14px; margin:8px 0; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .cmd-copy__text { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--green-glow); line-height:1.6; word-break:break-all; flex:1; white-space:pre-wrap; }
+  .cmd-copy .btn-copy { flex-shrink:0; padding:5px 12px; font-size:10px; }
+
+  .btn-dl { display:inline-flex; align-items:center; gap:7px; font-family:'Onest',sans-serif; font-size:13px; font-weight:600; color:var(--accent-glow); background:var(--accent-soft); border:1px solid rgba(124,91,245,0.35); padding:9px 18px; border-radius:10px; text-decoration:none; transition:all .2s; cursor:pointer; }
+  .btn-dl:hover { background:rgba(124,91,245,0.2); border-color:var(--accent); }
+
+  .section-divider { text-align:center; margin:48px 0 32px; padding:0 20px; }
+  .section-divider__line { height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent); margin-bottom:20px; }
+  .section-divider__title { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:var(--accent-glow); text-transform:uppercase; letter-spacing:3px; }
+
+  .footer { text-align: center; margin-top: 48px; }
+  .footer__done { display: none; background: var(--green-soft); border: 1px solid rgba(52,211,153,0.25); border-radius: var(--radius); padding: 32px 24px; margin-bottom: 24px; }
+  .footer__done.visible { display: block; animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+  .footer__done-emoji { font-size: 48px; margin-bottom: 10px; }
+  .footer__done-text { font-size: 22px; font-weight: 800; color: var(--green); margin-bottom: 6px; }
+  .footer__done-sub { font-size: 15px; color: var(--text-secondary); }
+  .footer__contact { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; }
+  .footer__contact a { color: #2dd4bf; text-decoration: underline; text-decoration-color: rgba(45,212,191,0.4); font-weight: 700; }
+  .btn-reset { background: none; border: 1px solid var(--border); color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 8px 20px; border-radius: 100px; cursor: pointer; transition: all .2s; }
+  .btn-reset:hover { border-color: var(--red); color: var(--red); }
+  .footer__final-part3 { background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(219,39,119,0.08)); border:1px solid rgba(251,191,36,0.25); border-radius:var(--radius); padding:34px 24px; margin-bottom:24px; text-align:center; position:relative; overflow:hidden; }
+  .footer__final-part3::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 20% 0%, rgba(251,191,36,0.12), transparent 50%), radial-gradient(circle at 80% 100%, rgba(219,39,119,0.12), transparent 50%); pointer-events:none; }
+  .footer__final-emoji { font-size:54px; margin-bottom:12px; line-height:1; position:relative; }
+  .footer__final-text { font-size:24px; font-weight:800; background:linear-gradient(90deg,#fbbf24,#db2777); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:10px; letter-spacing:-0.4px; position:relative; }
+  .footer__final-sub { font-size:15px; color:var(--text-secondary); line-height:1.6; max-width:560px; margin:0 auto; position:relative; }
+
+  #confetti-canvas { position: fixed; inset: 0; z-index: 9999; pointer-events: none; }
+
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+  .item { cursor: default; }
+  .item__body { pointer-events: none; user-select: text; }
+  .item__body a, .item__body .item__link, .item__body .lnk, .item__body .tg,
+  .item__body .cmd-copy, .item__body .btn-copy { pointer-events: auto !important; cursor: pointer !important; }
+  .item__check { pointer-events: auto; cursor: pointer; }
+  .item__check:hover { cursor: pointer; }
+  .cm { cursor: pointer; }
+
+  @media (max-width: 480px) {
+    .wrapper { padding: 28px 14px 60px; }
+    .item { padding: 14px 16px; gap: 12px; }
+    .note { padding: 12px 16px; }
+    .spoiler summary { padding: 12px 16px; }
+    .spoiler__content { padding: 0 16px 14px 28px; }
+    .progress-wrap { padding: 16px 18px; top: 8px; }
+    .cmd-copy { padding:8px 12px; flex-direction:column; align-items:flex-start; }
+    .data-table th,.data-table td { padding:8px 14px; }
+    .prompt-block { margin:10px 12px; }
+    .code-block { margin:10px 12px; font-size:11px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="wrapper">
+  <header class="header">
+    <div class="header__badge">ИИ-ВИЗАЦИЯ · СВЯЗКА 7</div>
+    <h1 class="header__title">ИИ-БИОХАКЕР: дневник тела на&nbsp;<span>голосовых</span></h1>
+    <ul class="header__topics">
+      <li>Говорите боту «съел 180&nbsp;грамм куриной грудки и&nbsp;салат» — он&nbsp;сам разберёт речь</li>
+      <li>Считает КБЖУ и&nbsp;21&nbsp;микронутриент по&nbsp;государственной базе продуктов USDA</li>
+      <li>Фото тарелки: модель определяет блюдо и&nbsp;вес, цифры всё равно берутся из&nbsp;базы</li>
+      <li>Сон, восстановление и&nbsp;нагрузка подтягиваются с&nbsp;фитнес-браслета сами</li>
+      <li>Раз в&nbsp;день объясняет человеческим языком, что происходит с&nbsp;телом</li>
+      <li>Пять агентов OpenClaw с&nbsp;разной глубиной размышления, 822&nbsp;автотеста</li>
+    </ul>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span class="progress-label">Прогресс</span>
+      <span class="progress-count" id="progressCount">0 / 0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div id="sections">
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">01</div><div class="section__title">Зачем это нужно</div></div>
+      <div class="section__card">
+        <div class="note note--info"><span class="note__icon">🎯</span><span>Любой дневник питания умирает на&nbsp;третий день: искать продукт в&nbsp;списке, выбирать граммовку, тыкать в&nbsp;формы — на&nbsp;это никого не&nbsp;хватает. Здесь вы&nbsp;<strong>просто говорите</strong>, как рассказали&nbsp;бы другу, а&nbsp;всё остальное делает бот.</span></div>
+
+        <div class="note"><span class="note__icon">🍽</span><span><strong>Что вы делаете:</strong><br>
+        •&nbsp;Наговариваете голосовое: «на&nbsp;обед был суп и&nbsp;два куска хлеба»<br>
+        •&nbsp;Или кидаете фото тарелки, когда лень описывать словами<br>
+        •&nbsp;Пишете «выпил 500&nbsp;мл» — вода уходит в&nbsp;счётчик дня<br>
+        •&nbsp;Утром получаете разбор: что было вчера и&nbsp;что с&nbsp;этим делать сегодня</span></div>
+
+        <div class="note note--green"><span class="note__icon">🧬</span><span><strong>Это седьмой сотрудник вашего AI-офиса</strong> — и&nbsp;первый, который работает не&nbsp;на&nbsp;бизнес, а&nbsp;на&nbsp;вас лично. Секретарь ведёт календарь, финансист считает деньги, а&nbsp;биохакер следит за&nbsp;тем единственным активом, который нельзя купить заново.</span></div>
+
+        <div class="note note--warn"><span class="note__icon">🧭</span><span><strong>Главный принцип связки, ради которого её&nbsp;стоит собрать:</strong> модель <strong>ничего не&nbsp;считает</strong>. Она отвечает ровно на&nbsp;два вопроса — «что человек сказал» и&nbsp;«как это объяснить». Калории, пороги, содержимое карточек и&nbsp;вся арифметика — обычный код, покрытый тестами. Однажды модель <em>сочинила</em> «Принято: +200&nbsp;мл» и&nbsp;ничего не&nbsp;записала — после этого границу провели жёстко.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">02</div><div class="section__title">Что нужно иметь до старта</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">💡</span><span>Почти всё из&nbsp;этого списка вы&nbsp;уже настраивали на&nbsp;курсе. Новый здесь один пункт — бесплатный ключ USDA, им&nbsp;занимается блок&nbsp;04.</span></div>
+
+        <div class="item" data-key="pre-vpn"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">VPN</div>
+            <div class="item__hint">Нужен для&nbsp;доступа к&nbsp;зарубежным сервисам.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="pre-cc"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Claude Code</div>
+            <div class="item__hint">Установлен и&nbsp;запускается на&nbsp;вашем компьютере.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="pre-vps"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Сервер VPS с Docker</div>
+            <div class="item__hint">Тот&nbsp;же, что и&nbsp;в&nbsp;прошлых связках. На&nbsp;нём поднимутся два контейнера: сам бот и&nbsp;база Postgres. Хватит 2&nbsp;ГБ памяти.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="pre-openclaw"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">OpenClaw с подключённой подпиской</div>
+            <div class="item__hint">Здесь он&nbsp;<strong>обязателен</strong> и&nbsp;работает мозгом связки: бот ходит в&nbsp;модель только через локальный gateway. Проверьте, что он&nbsp;жив, — в&nbsp;блоке&nbsp;05 мы&nbsp;заведём в&nbsp;нём пять агентов.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="pre-usda"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Ключ USDA — им считается еда</div>
+            <div class="item__hint">Единственный новый пункт связки и&nbsp;<strong>полностью бесплатный</strong>. Государственная база продуктов США: именно она знает, сколько в&nbsp;продукте белка, железа и&nbsp;магния. Как получить — <strong>блок&nbsp;04</strong>.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="pre-groq"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Ключ Groq — им распознаётся голос (по желанию)</div>
+            <div class="item__hint">Тот&nbsp;же ключ, что делали на&nbsp;курсе и&nbsp;в&nbsp;Связке&nbsp;5. Без него связка работает — просто голосовые не&nbsp;распознаются, и&nbsp;еду придётся писать текстом. Бесплатного тарифа хватает с&nbsp;запасом.</div>
+            <a href="https://console.groq.com/keys" target="_blank" class="item__link" onclick="event.stopPropagation()">console.groq.com/keys</a>
+          </div>
+        </div>
+
+        <div class="item" data-key="pre-whoop"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Фитнес-браслет WHOOP (по желанию)</div>
+            <div class="item__hint">Даёт сон, восстановление и&nbsp;нагрузку — без него бот считает еду и&nbsp;воду, а&nbsp;разделы про восстановление просто не&nbsp;показываются. Подключение — <strong>блок&nbsp;07</strong>, его&nbsp;спокойно можно отложить на&nbsp;потом.</div>
+          </div>
+        </div>
+
+        <div class="note note--green"><span class="note__icon">✅</span><span><strong>Это настроим дальше по&nbsp;чек-листу, заранее ничего делать не&nbsp;нужно:</strong><br>
+        •&nbsp;<strong>Telegram-бот</strong> — заводим нового, отдельно под&nbsp;биохакера <span style="opacity:.6">(блок&nbsp;03, по&nbsp;промпту)</span><br>
+        •&nbsp;<strong>База Postgres</strong> — поднимется в&nbsp;докере сама <span style="opacity:.6">(блок&nbsp;03, по&nbsp;промпту)</span><br>
+        •&nbsp;<strong>Пять агентов в&nbsp;OpenClaw</strong> — заводятся готовыми скриптами <span style="opacity:.6">(блок&nbsp;05)</span></span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">03</div><div class="section__title">Репозиторий и главный промпт</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">📦</span><span>Весь код, тесты и&nbsp;документация лежат в&nbsp;репозитории. Вы&nbsp;отдаёте ссылку и&nbsp;промпт в&nbsp;Claude&nbsp;Code, он&nbsp;делает всё по&nbsp;инструкции и&nbsp;ведёт вас за&nbsp;руку.</span></div>
+
+        <div class="item" data-key="repo-open"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Открыть репозиторий связки</div>
+            <div class="item__hint">Ссылка понадобится в&nbsp;промпте ниже.</div>
+            <a href="https://github.com/stavzzz/svyazka-7" target="_blank" class="item__link" onclick="event.stopPropagation()">Репозиторий связки 7</a>
+          </div>
+        </div>
+
+        <div class="note note--info"><span class="note__icon">🧠</span><span><strong>Как устроен биохакер внутри.</strong><br><br>Это&nbsp;<strong>самописный код</strong> на&nbsp;вашем сервере: Телеграм-бот на&nbsp;Node&nbsp;22 и&nbsp;база Postgres рядом. Модель зовётся только там, где без неё нельзя: <strong>разобрать речь</strong> («съел 180&nbsp;грамм грудки» → продукт и&nbsp;граммы), <strong>посмотреть на&nbsp;фото</strong> и&nbsp;оценить вес порции, <strong>объяснить словами</strong> утренний разбор.<br><br>Всё остальное считает код: ищет продукт в&nbsp;базе USDA, складывает КБЖУ и&nbsp;микронутриенты за&nbsp;день, ведёт воду и&nbsp;тренировки, решает, что показать в&nbsp;карточке, и&nbsp;рисует её&nbsp;по&nbsp;одному стандарту. Поэтому карточка выглядит одинаково каждый день, а&nbsp;не&nbsp;как модель сегодня придумала.<br><br>Данные тела живут <strong>только в&nbsp;вашей базе на&nbsp;вашем сервере</strong>. В&nbsp;модель уходит текст запроса, а&nbsp;не&nbsp;архив вашего здоровья.</span></div>
+
+        <div class="note note--warn"><span class="note__icon">⚠</span><span>Перед промптом получите ключ USDA (блок&nbsp;04) и&nbsp;убедитесь, что OpenClaw на&nbsp;сервере жив. Без ключа промпт дойдёт до&nbsp;еды и&nbsp;встанет.</span></div>
+
+        <div class="prompt-block">
+          <div class="prompt-block__title">📋 Промпт: собрать ИИ-БИОХАКЕРА (в Claude Code)</div>
+          <div class="prompt-block__text" id="promptMain">Ты разворачиваешь мне личного агента здоровья: Телеграм-бот, который считает еду по голосу и фото, ведёт воду и тренировки и раз в день объясняет, что происходит с телом. Готовый код, тесты и документация лежат здесь: https://github.com/stavzzz/svyazka-7 — с нуля ничего не пиши, работай с этим репозиторием. Веди меня по шагам, после каждого шага показывай результат и жди подтверждения.
+
+Шаг 1. Проверь, что сервер жив, на нём есть Docker и работает OpenClaw. Склонируй репозиторий в /root/bio, прочитай README.md целиком — там архитектура, порядок запуска и объяснение, почему модель ничего не считает. Заодно покажи мне, что лежит в папках bot/src, prompts и openclaw, чтобы я понимал, где что.
+
+Шаг 2. Заведи Telegram-бота: нужен НОВЫЙ бот отдельно под биохакера, даже если у меня уже есть другие. Продиктуй, что нажимать в @BotFather (/newbot, имя, username), забери у меня токен. Затем подскажи написать @userinfobot и забери мой Telegram id — это будет OWNER_CHAT_ID. Задай его явно: тогда писать боту смогу только я, остальных бот молча игнорирует. Данные тела — не та вещь, которую показывают случайным людям.
+
+Шаг 3. Собери .env по образцу bot/.env.example: токен бота, мой id, адрес и токен gateway OpenClaw, ключ USDA, ключ Groq для голосовых, пароль базы. Каждая строка в образце подписана — читай подписи, а не угадывай. Файл .env в git не коммить никогда. Проверь, что значения профиля в образце — это ЗАГЛУШКИ, а не чьи-то настоящие: рост, вес и часовой пояс я задам сам в боте на шаге 7.
+
+Шаг 4. Заведи пять агентов в OpenClaw готовыми скриптами из папки infra: bio-brain (разбор речи и чат), bio-vision (фото еды), bio-coach (разборы дня и недели), bio-eat («что съесть сейчас»), bio-critic (проверяет выводы). Критик должен быть на МОДЕЛИ ДРУГОГО СЕМЕЙСТВА, чем остальные, — в этом весь смысл: проверять текст тем же мозгом, что его написал, значит проверять его же слепые пятна. После каждого скрипта проверь, что агент реально отвечает, а не просто создан.
+
+Шаг 5. Подними базу и бота: docker compose up -d. Миграции бот накатывает сам при старте — отдельно их прогонять не нужно. Убедись, что база поднялась ПУСТОЙ: в ней не должно быть ни одной чужой записи, профиль и замеры я заполню сам. Покажи мне лог старта бота: там должно быть имя моего бота. Контейнер, падающий по кругу, между падениями выглядит работающим — проверяй docker ps и логи, а не «сервис запущен».
+
+Шаг 6. Прогони автотесты из репозитория (cd bot && npm install && npm test) и покажи результат таблицей. Ожидается 822 зелёных за пару секунд, падать не должно ничего. Тесты не ходят в сеть и не трогают базу, так что гонять их можно сколько угодно.
+
+Шаг 7. Проверим живьём. Я пишу боту /start, потом /profile — заполняю пол, рост и дату рождения, потом /mission — пишу свою большую цель. Проведи меня по кругу и объясни, зачем цель: от неё агент меряет каждый совет, и подставлять чужую он не должен. Затем я наговариваю голосовое про еду — проверь, что бот разобрал речь, нашёл продукты и собрал карточку приёма.
+
+Шаг 8. Проверь фото и воду. Я присылаю фото тарелки: бот должен назвать блюдо, оценить вес порции и посчитать КБЖУ по базе, а не «на глаз». Потом пишу «выпил 500 мл» — вода должна попасть в счётчик дня одной записью, без дублей.
+
+Шаг 9. Браслет WHOOP — только если он у меня есть, иначе пропусти и оставь WHOOP_ENABLED=false. Проведи регистрацию приложения, подключи OAuth и проверь, что история подтянулась, а вебхуки приходят. Убедись, что адрес обратного вызова совпадает с портом, на котором реально слушает бот, — это классическое место, где всё встаёт.
+
+Шаг 10. Расскажи мне человеческим языком, что получилось: какие команды есть в меню, что приходит утром само, где лежат данные и как их забрать или удалить целиком. И честно скажи, чего этот агент делать НЕ будет.</div>
+          <button class="btn-copy" onclick="copyBlock('promptMain', this)">📋 Копировать промпт</button>
+        </div>
+
+        <div class="item" data-key="repo-prompt"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Отдать промпт Claude Code и пройти шаги 1–6</div>
+            <div class="item__hint">Дальше он&nbsp;ведёт сам и&nbsp;спрашивает только то, чего не&nbsp;может узнать: токен бота, доступ к&nbsp;серверу, ключи. Шаги&nbsp;7–10 — это&nbsp;блок&nbsp;10 этого чек-листа.</div>
+          </div>
+        </div>
+
+        <div class="note note--green"><span class="note__icon">🧾</span><span><strong>Что стоит утащить себе из&nbsp;этого кода, даже если бот не&nbsp;нужен:</strong> все промпты лежат в&nbsp;одном файле и&nbsp;выгружаются в&nbsp;<code>.md</code> тестом-сторожом — правишь промпт, тест падает, пока не&nbsp;перегенерируешь документацию. Иначе она&nbsp;врёт уже через неделю.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">04</div><div class="section__title">USDA: бесплатный ключ на еду</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">🥗</span><span>FoodData Central — государственная база продуктов США. Именно она знает точные КБЖУ и&nbsp;микронутриенты. <strong>Ключ бесплатный, карта не&nbsp;нужна</strong>, выдаётся мгновенно.</span></div>
+
+        <div class="item" data-key="usda-key"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Получить ключ USDA FoodData Central</div>
+            <div class="item__hint">Форма на&nbsp;одну страницу: имя и&nbsp;почта. Ключ придёт письмом сразу. Положите его&nbsp;в&nbsp;<code>USDA_API_KEY</code> — Claude&nbsp;Code попросит на&nbsp;шаге&nbsp;3.</div>
+            <a href="https://fdc.nal.usda.gov/api-key-signup" target="_blank" class="item__link" onclick="event.stopPropagation()">fdc.nal.usda.gov/api-key-signup</a>
+          </div>
+        </div>
+
+        <div class="note note--warn"><span class="note__icon">🔑</span><span>Без своего ключа код возьмёт <code>DEMO_KEY</code> — он&nbsp;работает, но&nbsp;упирается в&nbsp;жёсткий лимит запросов и&nbsp;начнёт отваливаться на&nbsp;втором десятке продуктов. Пять минут на&nbsp;форму экономят вечер разбирательств.</span></div>
+
+        <details class="spoiler">
+          <summary>Почему еду считает база, а не модель</summary>
+          <div class="spoiler__content">
+            <p><strong>Модель оценивает, база знает.</strong> Спросите у&nbsp;любой языковой модели, сколько калорий в&nbsp;150&nbsp;граммах гречки, — она ответит правдоподобно и&nbsp;каждый раз чуть иначе. Для&nbsp;дневника это&nbsp;яд: цифры не&nbsp;сходятся сами с&nbsp;собой, и&nbsp;динамику за&nbsp;месяц смотреть бессмысленно.</p>
+            <p><strong>Поэтому разделение жёсткое.</strong> Модель говорит «это варёная гречка, 150&nbsp;грамм». Дальше код идёт в&nbsp;USDA и&nbsp;берёт числа оттуда. Одинаковый ответ сегодня, завтра и&nbsp;через год.</p>
+            <p><strong>Сухое против готового.</strong> Самая частая ошибка любого счётчика еды: «71&nbsp;грамм сухой гречки, я&nbsp;её&nbsp;варю» — если взять готовую, цифры уедут втрое. В&nbsp;коде на&nbsp;это стоит отдельное правило и&nbsp;отдельные тесты.</p>
+            <p><strong>Найденное запоминается.</strong> Один раз опознанный продукт кладётся в&nbsp;словарь и&nbsp;в&nbsp;следующий раз находится мгновенно и&nbsp;бесплатно.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">05</div><div class="section__title">Пять агентов в OpenClaw</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">🧩</span><span>Агенты разделены не&nbsp;для&nbsp;красоты. У&nbsp;них <strong>разная глубина размышления</strong>, а&nbsp;она стоит секунд: одному нужно думать про дистанцию в&nbsp;тридцать лет, другому — просто разобрать фразу.</span></div>
+
+        <table class="data-table">
+          <tr><th>Агент</th><th>Что делает</th><th>Размышление</th></tr>
+          <tr><td><code>bio-brain</code></td><td>Разбор речи, перевод названий еды, чат</td><td>обычное</td></tr>
+          <tr><td><code>bio-vision</code></td><td>Фото еды: что на тарелке и сколько грамм</td><td>максимальное</td></tr>
+          <tr><td><code>bio-coach</code></td><td>Разборы утра, дня, недели, тренировки</td><td>максимальное</td></tr>
+          <tr><td><code>bio-eat</code></td><td>«Что съесть сегодня» с учётом остатка дня</td><td>минимальное</td></tr>
+          <tr><td><code>bio-critic</code></td><td>Оспаривает выводы <strong>другой моделью</strong></td><td>обычное</td></tr>
+        </table>
+
+        <div class="item" data-key="agents-create"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Завести всех пятерых готовыми скриптами</div>
+            <div class="item__hint">Скрипты лежат в&nbsp;папке <code>infra/</code>, по&nbsp;одному на&nbsp;агента, — это&nbsp;шаг&nbsp;4 промпта. Каждый скрипт создаёт агента и&nbsp;кладёт ему конституцию (SOUL): кто он, что делает и&nbsp;чего не&nbsp;делает никогда.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="agents-critic"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Поставить критика на модель другого семейства</div>
+            <div class="item__hint">Не&nbsp;поленитесь: если критик и&nbsp;автор — одна модель, проверка превращается в&nbsp;самолюбование. Смысл критика ровно в&nbsp;том, чтобы у&nbsp;него были <strong>другие слепые пятна</strong>. Решение по&nbsp;его&nbsp;вердикту принимает код, а&nbsp;не&nbsp;он&nbsp;сам.</div>
+          </div>
+        </div>
+
+        <details class="spoiler">
+          <summary>Как один замер сэкономил полторы минуты на каждом ответе</summary>
+          <div class="spoiler__content">
+            <p>Сначала «что съесть сегодня» считал тренер — тот&nbsp;самый агент с&nbsp;максимальной глубиной размышления. Ответ приходил через <strong>97&nbsp;секунд</strong>. Логично было решить, что виноват длинный промпт, и&nbsp;пойти его&nbsp;резать.</p>
+            <p><strong>Замер показал другое:</strong> обрезка промпта на&nbsp;время не&nbsp;влияла вообще. Тормозила глубина размышления, а&nbsp;не&nbsp;длина входа. Завели отдельного лёгкого агента — стало <strong>13&nbsp;секунд</strong> на&nbsp;том&nbsp;же промпте.</p>
+            <p><strong>Отсюда правило, которое дороже самой связки:</strong> сначала мерить, потом резать. Интуиция про «что тормозит» ошибается чаще, чем угадывает.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">06</div><div class="section__title">Голос и фото — как с ботом разговаривать</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">🎙</span><span>Смысл связки в&nbsp;том, чтобы <strong>не&nbsp;заполнять формы</strong>. Говорите как есть: «на&nbsp;завтрак овсянка на&nbsp;воде и&nbsp;два яйца», «выпил пол-литра воды», «сходил в&nbsp;зал час».</span></div>
+
+        <div class="item" data-key="voice-groq"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Вписать ключ Groq — чтобы работали голосовые</div>
+            <div class="item__hint">Голос превращается в&nbsp;текст моделью Whisper, дальше текст разбирает <code>bio-brain</code>. Без ключа бот честно скажет, что не&nbsp;умеет слушать, и&nbsp;останется текстовым.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="voice-photo"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Проверить, что модель зрения реально видит картинки</div>
+            <div class="item__hint">Частая ловушка: агенту назначена модель <strong>без зрения</strong>, и&nbsp;он&nbsp;об&nbsp;этом не&nbsp;скажет — просто начнёт фантазировать по&nbsp;подписи к&nbsp;фото. Пришлите тарелку и&nbsp;сверьте: если названо то, чего на&nbsp;снимке нет, дело в&nbsp;модели агента <code>bio-vision</code>.</div>
+          </div>
+        </div>
+
+        <div class="note"><span class="note__icon">📸</span><span><strong>Что бот делает с&nbsp;фото.</strong> Модель называет блюдо и&nbsp;оценивает вес порции — по&nbsp;опорным предметам в&nbsp;кадре: тарелка, вилка, кружка. Дальше вес идёт в&nbsp;базу USDA, и&nbsp;калории берутся оттуда. То&nbsp;есть <strong>глазами работает модель, счётчиком — база</strong>.</span></div>
+
+        <div class="note note--green"><span class="note__icon">🗂</span><span>Прислали альбом из&nbsp;пяти снимков одного обеда — это&nbsp;<strong>один приём пищи</strong>, а&nbsp;не&nbsp;пять. Отдельное окно склейки и&nbsp;отдельные тесты: без этого ужин однажды раздулся вдвое, потому что фото приехали двумя сообщениями.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">07</div><div class="section__title">Браслет WHOOP — по желанию</div></div>
+      <div class="section__card">
+
+        <div class="note note--green"><span class="note__icon">⌚️</span><span><strong>Этот блок можно смело пропустить.</strong> Нет браслета — связка работает: еда, вода, тренировки и&nbsp;разборы на&nbsp;месте, просто разделы про сон и&nbsp;восстановление не&nbsp;показываются. Ничего не&nbsp;ломается и&nbsp;не&nbsp;выдумывается.</span></div>
+
+        <div class="item" data-key="whoop-app"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Зарегистрировать приложение в кабинете разработчика</div>
+            <div class="item__hint">Даёт пару ключей и&nbsp;адрес обратного вызова. После подключения бот <strong>сам вытянет историю</strong> и&nbsp;дальше будет получать новые тренировки и&nbsp;сон вебхуками, без опроса по&nbsp;таймеру.</div>
+            <a href="https://developer.whoop.com/" target="_blank" class="item__link" onclick="event.stopPropagation()">developer.whoop.com</a>
+          </div>
+        </div>
+
+        <div class="item" data-key="whoop-port"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Сверить адрес обратного вызова с портом бота</div>
+            <div class="item__hint">Классическое место, где всё встаёт: в&nbsp;настройках приложения один порт, а&nbsp;бот слушает другой. Авторизация пройдёт, а&nbsp;данные не&nbsp;приедут. Сверьте <code>WHOOP_REDIRECT_URI</code> и&nbsp;<code>HTTP_PORT</code> в&nbsp;<code>.env</code> — они должны совпадать.</div>
+          </div>
+        </div>
+
+        <div class="note note--warn"><span class="note__icon">📊</span><span><strong>Цифра без базы ничего не&nbsp;значит.</strong> «HRV&nbsp;60» — это&nbsp;плохо или хорошо? Непонятно, пока не&nbsp;знаешь, что <em>обычно&nbsp;85</em>. Поэтому бот всегда показывает отклонение от&nbsp;вашей нормы, а&nbsp;не&nbsp;голое число из&nbsp;приложения.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">08</div><div class="section__title">Профиль и миссия: без них агент пустой</div></div>
+      <div class="section__card">
+
+        <div class="note note--alert"><span class="note__icon">🎯</span><span><strong>Не&nbsp;пропускайте этот блок.</strong> Пока не&nbsp;заполнены профиль и&nbsp;цель, агент считает по&nbsp;умолчанию и&nbsp;советует вообще — а&nbsp;смысл связки ровно в&nbsp;обратном.</span></div>
+
+        <div class="item" data-key="prof-profile"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Заполнить профиль: <code>/profile</code></div>
+            <div class="item__hint">Пол, рост, дата рождения, часовой пояс, замеры. Отсюда считаются возраст, ИМТ, отношение талии к&nbsp;росту и&nbsp;цель по&nbsp;воде — <strong>30&nbsp;мл на&nbsp;килограмм</strong>. Чего в&nbsp;профиле нет, того агент не&nbsp;знает и&nbsp;не&nbsp;выдумывает — так и&nbsp;скажет: «этих данных у&nbsp;меня нет».</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="prof-mission"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Написать свою большую цель: <code>/mission</code></div>
+            <div class="item__hint">Своими словами и&nbsp;<strong>на&nbsp;длинной дистанции</strong>: не&nbsp;«минус пять килограмм к&nbsp;лету», а&nbsp;то, ради чего вы&nbsp;вообще всё это затеяли — что вы&nbsp;хотите уметь через двадцать-тридцать лет. От&nbsp;цели агент выводит опоры: какие качества тела надо довезти до&nbsp;неё целыми.</div>
+          </div>
+        </div>
+
+        <div class="note note--info"><span class="note__icon">🧭</span><span><strong>Зачем это технически.</strong> Цель приходит в&nbsp;контекст каждого разбора и&nbsp;работает <strong>критерием</strong>: каждый совет отвечает на&nbsp;вопрос «приближает ли это к&nbsp;ней». Для&nbsp;марафона важны одни качества, для&nbsp;гор другие, для&nbsp;«дожить без болячек» третьи — и&nbsp;приоритеты агент берёт из&nbsp;вашей цели, а&nbsp;не&nbsp;из&nbsp;общего списка «что полезно».</span></div>
+
+        <div class="note note--green"><span class="note__icon">🗃</span><span>Долгосрочные факты — травмы, непереносимости, принципиальные решения — бот пишет <strong>по&nbsp;вашей явной команде</strong>, а&nbsp;не&nbsp;«запоминает» из&nbsp;разговора. Память модели ненадёжна; здесь это&nbsp;строки в&nbsp;вашей базе, которые можно посмотреть и&nbsp;удалить.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">09</div><div class="section__title">Граница: агент не врач — и это в коде</div></div>
+      <div class="section__card">
+
+        <div class="note note--alert"><span class="note__icon">🚑</span><span><strong>Агент не&nbsp;ставит диагнозов, не&nbsp;назначает дозировок и&nbsp;рецептурного.</strong> Не&nbsp;трактует анализы как заключение. Отклонение в&nbsp;цифрах для&nbsp;него — повод понаблюдать или сходить к&nbsp;врачу, а&nbsp;не&nbsp;диагноз. Это&nbsp;не&nbsp;пожелание в&nbsp;инструкции, а&nbsp;правило, которое держат автотесты.</span></div>
+
+        <div class="note"><span class="note__icon">🏷</span><span><strong>Метки доказательности.</strong> Весомый совет несёт пометку: <code>[Д1]</code>&nbsp;доказано, <code>[Д2]</code>&nbsp;вероятно, <code>[Д3]</code>&nbsp;гипотеза, <code>[Д4]</code>&nbsp;фольклор. Смысл простой: <strong>[Д4] никогда не&nbsp;продаётся как [Д1]</strong>. Спорное помечается словами, а&nbsp;не&nbsp;выдаётся за&nbsp;факт.</span></div>
+
+        <div class="note note--green"><span class="note__icon">🫂</span><span><strong>Без языка стыда.</strong> «Переел», «сорвался», «нужна дисциплина» — таких слов в&nbsp;боте нет, и&nbsp;это&nbsp;тоже проверяется тестами. Трекинг — инструмент свободы, а&nbsp;не&nbsp;тюрьма: счётчик, который ругается, бросают через неделю.</span></div>
+
+        <div class="item" data-key="safe-data"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Понять, где лежат ваши данные тела</div>
+            <div class="item__hint">В&nbsp;базе Postgres <strong>на&nbsp;вашем сервере</strong>, и&nbsp;больше нигде. Секреты — в&nbsp;<code>.env</code> там&nbsp;же. Данные тела — особая категория: не&nbsp;выносите их&nbsp;в&nbsp;публичные репозитории и&nbsp;в&nbsp;чужие логи. Если решите показать кому-то свой код — сначала уберите из&nbsp;него всё, что описывает вас.</div>
+          </div>
+        </div>
+
+        <div class="note note--warn"><span class="note__icon">🔒</span><span>Токен бота — это&nbsp;пароль. С&nbsp;ним чужой человек сможет писать от&nbsp;имени вашего бота и&nbsp;читать то, что вы&nbsp;ему присылаете. Не&nbsp;выкладывайте его&nbsp;в&nbsp;общие чаты и&nbsp;репозитории; засветился — в&nbsp;@BotFather командой <code>/revoke</code> выпускаете новый.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">10</div><div class="section__title">Проверьте, что всё работает</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">🧪</span><span>Проверка идёт двумя уровнями: автотесты и&nbsp;живые действия. Автотесты ловят поломки кода, живые — поломки настроек. Ни&nbsp;один не&nbsp;заменяет другой.</span></div>
+
+        <div class="item" data-key="t-tests"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Автотесты зелёные</div>
+            <div class="item__hint"><code>cd bot &amp;&amp; npm test</code> — 822&nbsp;проверки за&nbsp;пару секунд, без сети и&nbsp;без базы. Зелёные тесты при&nbsp;молчащем боте означают одно: дело в&nbsp;настройках, а&nbsp;не&nbsp;в&nbsp;коде.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-start"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Бот отвечает на <code>/start</code> и меню на месте</div>
+            <div class="item__hint">Проверьте заодно, что <strong>посторонним он&nbsp;молчит</strong>: попросите кого-нибудь написать вашему боту — ответа быть не&nbsp;должно.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-voice"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Наговорить приём пищи голосом</div>
+            <div class="item__hint">Скажите живой фразой, с&nbsp;двумя-тремя продуктами и&nbsp;граммовкой хотя&nbsp;бы у&nbsp;одного. Бот должен разобрать речь, найти продукты и&nbsp;собрать карточку приёма с&nbsp;КБЖУ. Это&nbsp;главная проверка связки: работают и&nbsp;Groq, и&nbsp;агент разбора, и&nbsp;база USDA разом.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-photo"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Прислать фото тарелки</div>
+            <div class="item__hint">Проверьте по&nbsp;двум признакам: блюдо названо тем, что реально на&nbsp;снимке, и&nbsp;вес порции похож на&nbsp;правду. Если бот описывает то, чего на&nbsp;фото нет, — у&nbsp;агента зрения модель без зрения.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-water"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Записать воду и убедиться, что она в базе</div>
+            <div class="item__hint">Напишите «выпил 500&nbsp;мл» и&nbsp;откройте карточку дня: счётчик должен вырасти ровно на&nbsp;пол-литра. <strong>Ответ бота — не&nbsp;доказательство записи</strong>: сверяйте по&nbsp;карточке, а&nbsp;не&nbsp;по&nbsp;фразе «принято».</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-day"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Прожить с ботом один полный день</div>
+            <div class="item__hint">Занесите всю еду и&nbsp;воду за&nbsp;день и&nbsp;дождитесь утреннего разбора. Это&nbsp;единственная проверка, которая покажет реальную пользу: разовая карточка красива, а&nbsp;ценность появляется, когда виден день целиком.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="t-repeat"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Открыть вчерашний разбор второй раз</div>
+            <div class="item__hint">Текст должен быть <strong>тем&nbsp;же самым</strong>, а&nbsp;не&nbsp;новым. Разбор считается один раз и&nbsp;кладётся в&nbsp;кэш по&nbsp;отпечатку данных: данные не&nbsp;менялись — модель не&nbsp;дёргается. Открыли через месяц — тот&nbsp;же текст.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">11</div><div class="section__title">Если что-то пошло не так</div></div>
+      <div class="section__card">
+
+        <table class="data-table">
+          <tr><th>Что видите</th><th>Что делать</th></tr>
+          <tr><td>Бот молчит на&nbsp;любое сообщение</td><td>Контейнер упал или не&nbsp;стартовал. Попросите Claude&nbsp;Code показать журнал бота — причина будет в&nbsp;первых строках.</td></tr>
+          <tr><td>Бот молчит только вам, а&nbsp;раньше отвечал</td><td>Сменился числовой id в&nbsp;настройках. Сверьте <code>OWNER_CHAT_ID</code> с&nbsp;тем, что дал @userinfobot.</td></tr>
+          <tr><td>Бот не&nbsp;стартует, в&nbsp;логах «env … не&nbsp;задан»</td><td>В&nbsp;<code>.env</code> нет обязательного ключа. Бот честно падает на&nbsp;старте, а&nbsp;не&nbsp;работает наполовину — сверьте файл с&nbsp;<code>.env.example</code>.</td></tr>
+          <tr><td>Голосовые не&nbsp;распознаются, текст работает</td><td>Не&nbsp;вписан или кончился ключ Groq. Ищите в&nbsp;журнале строки со&nbsp;словом groq.</td></tr>
+          <tr><td>Еда не&nbsp;находится или калории странные</td><td>Скорее всего работает <code>DEMO_KEY</code> и&nbsp;упёрся в&nbsp;лимит. Получите свой ключ USDA — блок&nbsp;04.</td></tr>
+          <tr><td>Фото описано неверно, названо не&nbsp;то&nbsp;блюдо</td><td>У&nbsp;агента <code>bio-vision</code> модель без зрения — она не&nbsp;сообщает об&nbsp;этом, а&nbsp;фантазирует. Смените модель агента.</td></tr>
+          <tr><td>Разборы приходят пустыми или не&nbsp;приходят</td><td>Не&nbsp;отвечает gateway OpenClaw либо не&nbsp;заведён нужный агент. Проверьте, что все пятеро реально отвечают, а&nbsp;не&nbsp;просто созданы.</td></tr>
+          <tr><td>Ответ «что съесть» идёт полторы минуты</td><td>Задача ушла к&nbsp;агенту с&nbsp;максимальной глубиной размышления. Проверьте, что <code>bio-eat</code> заведён и&nbsp;у&nbsp;него минимальная глубина.</td></tr>
+          <tr><td>Кнопки в&nbsp;боте «залипли» и&nbsp;не&nbsp;отвечают</td><td>Идёт долгий разбор. Telegram отдаёт обновления строго по&nbsp;одному — дождитесь конца, это&nbsp;не&nbsp;поломка.</td></tr>
+          <tr><td>Модель написала «записал», а&nbsp;в&nbsp;карточке пусто</td><td>Именно от&nbsp;этого стоит защита в&nbsp;коде. Если поймали такое — покажите Claude&nbsp;Code переписку целиком: запись обязана делать регулярка, а&nbsp;не&nbsp;модель.</td></tr>
+          <tr><td>Бот пишет утренний разбор дважды</td><td>Перезапустили контейнер посреди утреннего окна. Штатно защищено, но&nbsp;при&nbsp;ручных перезапусках бывает — просто игнорируйте второй.</td></tr>
+        </table>
+
+        <div class="note note--info"><span class="note__icon">💬</span><span>Любую ошибку отправляйте в&nbsp;Claude&nbsp;Code целиком, вместе с&nbsp;текстом из&nbsp;терминала. Он&nbsp;разберёт и&nbsp;починит.</span></div>
+
+        <div class="note note--green"><span class="note__icon">🛟</span><span><strong>Терять тут почти нечего.</strong> Все записи лежат в&nbsp;обычной базе Postgres на&nbsp;вашем сервере: даже если бот придётся собрать заново, история еды, воды и&nbsp;тренировок останется на&nbsp;месте.</span></div>
+
+        <div class="note note--green"><span class="note__icon">💡</span><span><strong>На&nbsp;будущее:</strong> это&nbsp;седьмой сотрудник вашего AI-офиса. Секретарь ведёт календарь, менеджер — задачи, финансист — деньги, консультант помнит документы, транскрибатор превращает разговоры в&nbsp;текст, продажник встречает клиента, а&nbsp;биохакер занимается тем единственным, что нельзя купить заново.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer__done" id="doneBlock">
+      <div class="footer__done-emoji">🎉</div>
+      <div class="footer__done-text">Биохакер на связи!</div>
+      <div class="footer__done-sub">Все пункты закрыты. Тело больше не чёрный ящик.</div>
+    </div>
+    <div class="footer__final-part3">
+      <div class="footer__final-emoji">🧬</div>
+      <div class="footer__final-text">Связка 7 собрана!</div>
+      <div class="footer__final-sub">Теперь одна фраза голосом — и&nbsp;еда посчитана по&nbsp;настоящей базе, вода в&nbsp;счётчике, тренировка разобрана, а&nbsp;утром приходит честный разбор: что вчера получилось, что нет и&nbsp;что с&nbsp;этим делать сегодня.</div>
+    </div>
+    <div class="footer__contact">Возникли вопросы? Напишите <a href="https://t.me/stavzzz" target="_blank" class="tg">@stavzzz</a> в&nbsp;Telegram</div>
+    <button class="btn-reset" onclick="resetProgress()">Сбросить прогресс</button>
+  </div>
+
+</div>
+<script>
+// ====== CONFETTI ======
+const C = document.getElementById('confetti-canvas');
+const ctx = C.getContext('2d');
+let particles = [];
+let confettiActive = false;
+function resizeCanvas() { C.width = window.innerWidth; C.height = window.innerHeight; }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+const COLORS = ['#7c5bf5','#9d7cff','#34d399','#6ee7b7','#fbbf24','#f87171','#fb7185','#38bdf8','#facc15','#a78bfa','#f472b6','#4ade80'];
+function rand(a,b){ return Math.random()*(b-a)+a; }
+function createBurst(x, y, count) {
+  for(let i=0;i<count;i++){
+    const angle=rand(0,Math.PI*2),speed=rand(4,14),size=rand(4,10);
+    particles.push({x,y,vx:Math.cos(angle)*speed+rand(-2,2),vy:Math.sin(angle)*speed*-0.8-rand(2,6),size,color:COLORS[Math.floor(Math.random()*COLORS.length)],rotation:rand(0,Math.PI*2),rotSpeed:rand(-0.2,0.2),gravity:rand(0.12,0.25),friction:rand(0.97,0.995),opacity:1,fadeSpeed:rand(0.005,0.015),shape:Math.random()>0.4?'rect':'circle'});
+  }
+}
+function launchConfetti(){
+  if(confettiActive)return;confettiActive=true;particles=[];
+  const W=C.width,H=C.height;
+  [[W*0.5,H*0.3,120],[W*0.15,H*0.2,80],[W*0.85,H*0.2,80],[W*0.5,H*0.1,100],[W*0.3,H*0.5,60],[W*0.7,H*0.5,60],[0,H*0.6,50],[W,H*0.6,50],[W*0.5,H*0.6,80]].forEach(([x,y,c],i)=>{setTimeout(()=>createBurst(x,y,c),i*150)});
+  setTimeout(()=>{createBurst(W*0.2,H*0.15,90);createBurst(W*0.8,H*0.15,90);createBurst(W*0.5,H*0.05,100)},1500);
+  setTimeout(()=>{createBurst(W*0.5,H*0.25,120);createBurst(W*0.1,H*0.4,60);createBurst(W*0.9,H*0.4,60)},2500);
+  animate();setTimeout(()=>{confettiActive=false},8000);
+}
+function animate(){
+  ctx.clearRect(0,0,C.width,C.height);
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i];p.vx*=p.friction;p.vy*=p.friction;p.vy+=p.gravity;p.x+=p.vx;p.y+=p.vy;p.rotation+=p.rotSpeed;p.opacity-=p.fadeSpeed;
+    if(p.opacity<=0){particles.splice(i,1);continue}
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rotation);ctx.globalAlpha=p.opacity;ctx.fillStyle=p.color;
+    if(p.shape==='rect'){ctx.fillRect(-p.size/2,-p.size/4,p.size,p.size/2)}else{ctx.beginPath();ctx.arc(0,0,p.size/2,0,Math.PI*2);ctx.fill()}
+    ctx.restore();
+  }
+  if(particles.length>0||confettiActive){requestAnimationFrame(animate)}else{ctx.clearRect(0,0,C.width,C.height)}
+}
+
+// ====== CHECKLIST ======
+const STORAGE_KEY='iivizaciya_checklist_svyazka7_v1';
+const items=document.querySelectorAll('.item[data-key]');
+const totalCount=items.length;
+let wasComplete=false;
+function loadState(){
+  try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');let c=0;items.forEach(item=>{const cb=item.querySelector('input[type="checkbox"]');if(s[item.dataset.key]){cb.checked=true;item.classList.add('checked');c++}});wasComplete=c===totalCount}catch(e){}
+  updateProgress(false);
+}
+function saveState(){const s={};items.forEach(item=>{s[item.dataset.key]=item.querySelector('input[type="checkbox"]').checked});try{localStorage.setItem(STORAGE_KEY,JSON.stringify(s))}catch(e){}}
+function updateProgress(canCelebrate=true){
+  let c=0;items.forEach(item=>{if(item.querySelector('input[type="checkbox"]').checked)c++});
+  document.getElementById('progressCount').textContent=`${c} / ${totalCount}`;
+  document.getElementById('progressFill').style.width=(totalCount>0?(c/totalCount)*100:0)+'%';
+  const done=document.getElementById('doneBlock');
+  if(c===totalCount){done.classList.add('visible');if(canCelebrate&&!wasComplete){launchConfetti()}wasComplete=true}else{done.classList.remove('visible');wasComplete=false}
+}
+items.forEach(item=>{
+  const cb=item.querySelector('input[type="checkbox"]');
+  item.addEventListener('click',function(e){
+    if(e.target.closest('a'))return;
+    if(e.target!==cb){cb.checked=!cb.checked;cb.dispatchEvent(new Event('change'))}
+  });
+  cb.addEventListener('change',function(){item.classList.toggle('checked',this.checked);saveState();updateProgress(true)});
+});
+function resetProgress(){if(!confirm('Сбросить весь прогресс?'))return;items.forEach(item=>{const cb=item.querySelector('input[type="checkbox"]');cb.checked=false;item.classList.remove('checked')});wasComplete=false;saveState();updateProgress(false)}
+loadState();
+
+// ====== COPY ======
+function copyBlock(id, btn){
+  const text=document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const orig=btn.innerHTML;
+    btn.classList.add('copied');
+    btn.innerHTML='✅ Готово';
+    setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML=orig;},2000);
+  });
+}
+</script>
+
+<script>
+(function() {
+  document.querySelectorAll('.item').forEach(function(item) {
+    var check = item.querySelector('.item__check');
+    if (!check) return;
+    item.addEventListener('click', function(e) {
+      if (e.target.closest('a')) return;
+      if (check.contains(e.target)) return;
+      e.preventDefault();
+      e.stopPropagation();
+    }, true);
+  });
+})();
+</script>
+
+</body>
+</html>
