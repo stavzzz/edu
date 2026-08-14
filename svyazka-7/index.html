@@ -195,7 +195,7 @@
       <li>Фото тарелки: модель определяет блюдо и&nbsp;вес, цифры всё равно берутся из&nbsp;базы</li>
       <li>Сон, восстановление и&nbsp;нагрузка подтягиваются с&nbsp;фитнес-браслета сами</li>
       <li>Раз в&nbsp;день объясняет человеческим языком, что происходит с&nbsp;телом</li>
-      <li>Пять агентов OpenClaw с&nbsp;разной глубиной размышления, 826&nbsp;автотестов</li>
+      <li>Шесть агентов OpenClaw с&nbsp;разной глубиной размышления, 831&nbsp;автотест</li>
     </ul>
   </header>
 
@@ -222,7 +222,7 @@
 
         <div class="note note--green"><span class="note__icon">🧬</span><span><strong>Это седьмой сотрудник вашего AI-офиса</strong> — и&nbsp;первый, который работает не&nbsp;на&nbsp;бизнес, а&nbsp;на&nbsp;вас лично. Секретарь ведёт календарь, финансист считает деньги, а&nbsp;биохакер следит за&nbsp;тем единственным активом, который нельзя купить заново.</span></div>
 
-        <div class="note note--warn"><span class="note__icon">🧭</span><span><strong>Главный принцип связки, ради которого её&nbsp;стоит собрать:</strong> модель <strong>ничего не&nbsp;считает</strong>. Она отвечает ровно на&nbsp;два вопроса — «что человек сказал» и&nbsp;«как это объяснить». Калории, пороги, содержимое карточек и&nbsp;вся арифметика — обычный код, покрытый тестами. Однажды модель <em>сочинила</em> «Принято: +200&nbsp;мл» и&nbsp;ничего не&nbsp;записала — после этого границу провели жёстко.</span></div>
+        <div class="note note--warn"><span class="note__icon">🧭</span><span><strong>Главный принцип связки, ради которого её&nbsp;стоит собрать:</strong> модель <strong>ничего не&nbsp;считает</strong>. Она отвечает ровно на&nbsp;два вопроса — «что человек сказал» и&nbsp;«как это объяснить». Калории, пороги, содержимое карточек и&nbsp;вся арифметика — обычный код, покрытый тестами. Запись воды делает регулярка, а&nbsp;не&nbsp;модель: фраза «выпил 500&nbsp;мл» превращается в&nbsp;строку базы кодом, и&nbsp;карточка показывает то, что реально записано.</span></div>
       </div>
     </div>
 
@@ -263,7 +263,15 @@
         <div class="item" data-key="pre-usda"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Ключ USDA — им считается еда</div>
-            <div class="item__hint">Единственный новый пункт связки и&nbsp;<strong>полностью бесплатный</strong>. Государственная база продуктов США: именно она знает, сколько в&nbsp;продукте белка, железа и&nbsp;магния. Как получить — <strong>блок&nbsp;04</strong>.</div>
+            <div class="item__hint"><strong>Полностью бесплатный</strong>. Государственная база продуктов США: именно она знает, сколько в&nbsp;продукте белка, железа и&nbsp;магния. Как получить — <strong>блок&nbsp;04</strong>.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="pre-openrouter"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Ключ OpenRouter — им работает агент-критик <strong>(платный)</strong></div>
+            <div class="item__hint">Единственный агент, который идёт <strong>не&nbsp;через вашу подписку</strong>: критик специально живёт на&nbsp;модели другого семейства, и&nbsp;за&nbsp;его вызовы платите отдельно. Зовётся он&nbsp;редко — раз в&nbsp;сутки на&nbsp;утреннем прогреве и&nbsp;на&nbsp;спорной записи еды. <strong>Не&nbsp;хотите платить</strong> — поставьте <code>INSIGHT_ENABLED=false</code> и&nbsp;<code>FOOD_CRITIC_ENABLED=false</code>: бот работает полностью, просто без проверки выводов.</div>
+            <a href="https://openrouter.ai/keys" target="_blank" class="item__link" onclick="event.stopPropagation()">openrouter.ai/keys</a>
           </div>
         </div>
 
@@ -298,12 +306,12 @@
         <div class="item" data-key="repo-open"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Открыть репозиторий связки</div>
-            <div class="item__hint">Ссылка понадобится в&nbsp;промпте ниже.</div>
+            <div class="item__hint">Ссылка понадобится в&nbsp;промпте ниже. Если она отвечает 404 — репозиторий ещё не&nbsp;открыт, напишите мне.</div>
             <a href="https://github.com/stavzzz/svyazka-7" target="_blank" class="item__link" onclick="event.stopPropagation()">Репозиторий связки 7</a>
           </div>
         </div>
 
-        <div class="note note--info"><span class="note__icon">🧠</span><span><strong>Как устроен биохакер внутри.</strong><br><br>Это&nbsp;<strong>самописный код</strong> на&nbsp;вашем сервере: Телеграм-бот на&nbsp;Node&nbsp;22 и&nbsp;база Postgres рядом. Модель зовётся только там, где без неё нельзя: <strong>разобрать речь</strong> («съел 180&nbsp;грамм грудки» → продукт и&nbsp;граммы), <strong>посмотреть на&nbsp;фото</strong> и&nbsp;оценить вес порции, <strong>объяснить словами</strong> утренний разбор.<br><br>Всё остальное считает код: ищет продукт в&nbsp;базе USDA, складывает КБЖУ и&nbsp;микронутриенты за&nbsp;день, ведёт воду и&nbsp;тренировки, решает, что показать в&nbsp;карточке, и&nbsp;рисует её&nbsp;по&nbsp;одному стандарту. Поэтому карточка выглядит одинаково каждый день, а&nbsp;не&nbsp;как модель сегодня придумала.<br><br>Данные тела живут <strong>только в&nbsp;вашей базе на&nbsp;вашем сервере</strong>. В&nbsp;модель уходит текст запроса, а&nbsp;не&nbsp;архив вашего здоровья.</span></div>
+        <div class="note note--info"><span class="note__icon">🧠</span><span><strong>Как устроен биохакер внутри.</strong><br><br>Это&nbsp;<strong>самописный код</strong> на&nbsp;вашем сервере: Телеграм-бот на&nbsp;Node&nbsp;22 и&nbsp;база Postgres рядом. Модель зовётся только там, где без неё нельзя: <strong>разобрать речь</strong> («съел 180&nbsp;грамм грудки» → продукт и&nbsp;граммы), <strong>посмотреть на&nbsp;фото</strong> и&nbsp;оценить вес порции, <strong>объяснить словами</strong> утренний разбор.<br><br>Всё остальное считает код: ищет продукт в&nbsp;базе USDA, складывает КБЖУ и&nbsp;микронутриенты за&nbsp;день, ведёт воду и&nbsp;тренировки, решает, что показать в&nbsp;карточке, и&nbsp;рисует её&nbsp;по&nbsp;одному стандарту. Поэтому карточка выглядит одинаково каждый день, а&nbsp;не&nbsp;как модель сегодня придумала.<br><br><strong>Где что оказывается.</strong> Вся история хранится в&nbsp;вашей базе Postgres на&nbsp;вашем сервере. Но&nbsp;часть данных по&nbsp;делу уходит наружу: в&nbsp;модель через OpenClaw — возраст, масса, талия, восстановление, сон, HRV, пульс покоя, история еды и&nbsp;микронутриенты; голосовые — в&nbsp;Groq; фото — модели зрения; названия продуктов — в&nbsp;базу USDA; проверка выводов — в&nbsp;OpenRouter. Отключается флагами <code>INSIGHT_ENABLED=false</code> и&nbsp;<code>FOOD_CRITIC_ENABLED=false</code>; без ключа Groq голос не&nbsp;уходит никуда.</span></div>
 
         <div class="note note--warn"><span class="note__icon">⚠</span><span>Перед промптом получите ключ USDA (блок&nbsp;04) и&nbsp;убедитесь, что OpenClaw на&nbsp;сервере жив. Без ключа промпт дойдёт до&nbsp;еды и&nbsp;встанет.</span></div>
 
@@ -311,17 +319,17 @@
           <div class="prompt-block__title">📋 Промпт: собрать ИИ-БИОХАКЕРА (в Claude Code)</div>
           <div class="prompt-block__text" id="promptMain">Ты разворачиваешь мне личного агента здоровья: Телеграм-бот, который считает еду по голосу и фото, ведёт воду и тренировки и раз в день объясняет, что происходит с телом. Готовый код, тесты и документация лежат здесь: https://github.com/stavzzz/svyazka-7 — с нуля ничего не пиши, работай с этим репозиторием. Веди меня по шагам, после каждого шага показывай результат и жди подтверждения.
 
-Шаг 1. Проверь, что сервер жив, на нём есть Docker и работает OpenClaw. Склонируй репозиторий в /root/bio, прочитай README.md целиком — там архитектура, порядок запуска и объяснение, почему модель ничего не считает. Заодно покажи мне, что лежит в папках bot/src, prompts и openclaw, чтобы я понимал, где что.
+Шаг 1. Проверь, что сервер жив, на нём есть Docker и работает OpenClaw. Склонируй репозиторий в /root/bio. Учти: код лежит НЕ в корне репозитория, а в папке ai-biohacker/ — все дальнейшие команды выполняй из неё. Прочитай README.md целиком — там архитектура, порядок запуска и объяснение, почему модель ничего не считает. Заодно покажи мне, что лежит в папках bot/src, prompts и openclaw, чтобы я понимал, где что.
 
-Шаг 2. Заведи Telegram-бота: нужен НОВЫЙ бот отдельно под биохакера, даже если у меня уже есть другие. Продиктуй, что нажимать в @BotFather (/newbot, имя, username), забери у меня токен. Затем подскажи написать @userinfobot и забери мой Telegram id — это будет OWNER_CHAT_ID. Задай его явно: тогда писать боту смогу только я, остальных бот молча игнорирует. Данные тела — не та вещь, которую показывают случайным людям.
+Шаг 2. Заведи Telegram-бота: нужен НОВЫЙ бот отдельно под биохакера, даже если у меня уже есть другие. Продиктуй, что нажимать в @BotFather (/newbot, имя, username), забери у меня токен. Затем подскажи написать @userinfobot и забери мой Telegram id — это будет OWNER_CHAT_ID. Задай его явно: тогда работать с&nbsp;ботом смогу только я. Постороннему он&nbsp;отвечает одной строкой «Это персональный бот» и&nbsp;больше ничего не&nbsp;делает — ни&nbsp;записей, ни&nbsp;разборов. Данные тела не&nbsp;показывают случайным людям.
 
-Шаг 3. Собери .env по образцу bot/.env.example: токен бота, мой id, адрес и токен gateway OpenClaw, ключ USDA, ключ Groq для голосовых, пароль базы. Каждая строка в образце подписана — читай подписи, а не угадывай. Файл .env в git не коммить никогда. Проверь, что значения профиля в образце — это ЗАГЛУШКИ, а не чьи-то настоящие: рост, вес и часовой пояс я задам сам в боте на шаге 7.
+Шаг 3. Собери .env по образцу ai-biohacker/bot/.env.example: токен бота, мой id, адрес и токен gateway OpenClaw, ключ USDA, ключ Groq для голосовых, пароль базы. Каждая строка в образце подписана — читай подписи, а не угадывай. Файл .env в git не коммить никогда. Проверь, что значения профиля в образце — это ЗАГЛУШКИ, а не чьи-то настоящие: рост, вес и часовой пояс я задам сам в боте на шаге 7.
 
-Шаг 4. Заведи пять агентов в OpenClaw готовыми скриптами из папки infra: bio-brain (разбор речи и чат), bio-vision (фото еды), bio-coach (разборы дня и недели), bio-eat («что съесть сейчас»), bio-critic (проверяет выводы). Критик должен быть на МОДЕЛИ ДРУГОГО СЕМЕЙСТВА, чем остальные, — в этом весь смысл: проверять текст тем же мозгом, что его написал, значит проверять его же слепые пятна. После каждого скрипта проверь, что агент реально отвечает, а не просто создан.
+Шаг 4. Заведи агентов в OpenClaw скриптами из папки ai-biohacker/infra: bio-brain (разбор речи и чат), bio-vision (фото еды), bio-coach (разборы дня и недели), bio-eat («что съесть сейчас»), bio-critic (проверяет выводы, идёт через платный OpenRouter). Шестого агента bio-analyst (подробный анализ приёма и дня) код зовёт, но скрипта для него в infra/ нет — заведи его по образцу соседнего скрипта, иначе кнопка «Подробный анализ» упадёт. Критик должен быть на МОДЕЛИ ДРУГОГО СЕМЕЙСТВА, чем остальные, — в этом весь смысл: проверять текст тем же мозгом, что его написал, значит проверять его же слепые пятна. После каждого скрипта проверь, что агент реально отвечает, а не просто создан.
 
 Шаг 5. Подними базу и бота: docker compose up -d. Миграции бот накатывает сам при старте — отдельно их прогонять не нужно. Убедись, что база поднялась ПУСТОЙ: в ней не должно быть ни одной чужой записи, профиль и замеры я заполню сам. Покажи мне лог старта бота: там должно быть имя моего бота. Контейнер, падающий по кругу, между падениями выглядит работающим — проверяй docker ps и логи, а не «сервис запущен».
 
-Шаг 6. Прогони автотесты из репозитория (cd bot && npm install && npm test) и покажи результат таблицей. Ожидается 826 зелёных за пару секунд, падать не должно ничего. Тесты не ходят в сеть и не трогают базу, так что гонять их можно сколько угодно.
+Шаг 6. Прогони автотесты из репозитория (cd bot && npm install && npm test) и покажи результат таблицей. Ожидается ноль упавших за пару секунд, падать не должно ничего. Тесты не ходят в сеть и не трогают базу, так что гонять их можно сколько угодно.
 
 Шаг 7. Проверим живьём. Я пишу боту /start, потом /profile — заполняю пол, рост и дату рождения, потом /mission — пишу свою большую цель. Проведи меня по кругу и объясни, зачем цель: от неё агент меряет каждый совет, и подставлять чужую он не должен. Затем я наговариваю голосовое про еду — проверь, что бот разобрал речь, нашёл продукты и собрал карточку приёма.
 
@@ -340,7 +348,7 @@
           </div>
         </div>
 
-        <div class="note note--green"><span class="note__icon">🧾</span><span><strong>Что стоит утащить себе из&nbsp;этого кода, даже если бот не&nbsp;нужен:</strong> все промпты лежат в&nbsp;одном файле и&nbsp;выгружаются в&nbsp;<code>.md</code> тестом-сторожом — правишь промпт, тест падает, пока не&nbsp;перегенерируешь документацию. Иначе она&nbsp;врёт уже через неделю.</span></div>
+        <div class="note note--green"><span class="note__icon">🧾</span><span><strong>Что стоит утащить себе из&nbsp;этого кода, даже если бот не&nbsp;нужен:</strong> все промпты лежат в&nbsp;одном файле и&nbsp;выгружаются в&nbsp;<code>.md</code> тестом-сторожом. Сторож сверяет файлы с&nbsp;кодом и&nbsp;падает при&nbsp;любом расхождении, поэтому документация промптов всегда совпадает с&nbsp;тем, что реально уходит в&nbsp;модель.</span></div>
       </div>
     </div>
 
@@ -373,7 +381,7 @@
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">05</div><div class="section__title">Пять агентов в OpenClaw</div></div>
+      <div class="section__header"><div class="section__num">05</div><div class="section__title">Шесть агентов в OpenClaw</div></div>
       <div class="section__card">
 
         <div class="note note--info"><span class="note__icon">🧩</span><span>Агенты разделены не&nbsp;для&nbsp;красоты. У&nbsp;них <strong>разная глубина размышления</strong>, а&nbsp;она стоит секунд: одному нужно думать про дистанцию в&nbsp;тридцать лет, другому — просто разобрать фразу.</span></div>
@@ -384,8 +392,11 @@
           <tr><td><code>bio-vision</code></td><td>Фото еды: что на тарелке и сколько грамм</td><td>максимальное</td></tr>
           <tr><td><code>bio-coach</code></td><td>Разборы утра, дня, недели, тренировки</td><td>максимальное</td></tr>
           <tr><td><code>bio-eat</code></td><td>«Что съесть сегодня» с учётом остатка дня</td><td>минимальное</td></tr>
-          <tr><td><code>bio-critic</code></td><td>Оспаривает выводы <strong>другой моделью</strong></td><td>обычное</td></tr>
+          <tr><td><code>bio-critic</code></td><td>Оспаривает выводы <strong>другой моделью</strong>, через OpenRouter</td><td>обычное</td></tr>
+          <tr><td><code>bio-analyst</code></td><td>Подробный разбор приёма пищи и дня</td><td>минимальное</td></tr>
         </table>
+
+        <div class="note note--warn"><span class="note__icon">🧾</span><span><strong>Скрипта для&nbsp;<code>bio-analyst</code> в&nbsp;папке <code>infra/</code> пока нет</strong> — заведите шестого агента по&nbsp;образцу соседнего скрипта, иначе кнопка «Подробный анализ» будет падать. Код его&nbsp;уже зовёт: см. <code>LLM_MODEL_ANALYST</code> в&nbsp;<code>config.js</code>.</span></div>
 
         <div class="item" data-key="agents-create"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
@@ -401,14 +412,7 @@
           </div>
         </div>
 
-        <details class="spoiler">
-          <summary>Как один замер сэкономил полторы минуты на каждом ответе</summary>
-          <div class="spoiler__content">
-            <p>Сначала «что съесть сегодня» считал тренер — тот&nbsp;самый агент с&nbsp;максимальной глубиной размышления. Ответ приходил через <strong>97&nbsp;секунд</strong>. Логично было решить, что виноват длинный промпт, и&nbsp;пойти его&nbsp;резать.</p>
-            <p><strong>Замер показал другое:</strong> обрезка промпта на&nbsp;время не&nbsp;влияла вообще. Тормозила глубина размышления, а&nbsp;не&nbsp;длина входа. Завели отдельного лёгкого агента — стало <strong>13&nbsp;секунд</strong> на&nbsp;том&nbsp;же промпте.</p>
-            <p><strong>Отсюда правило, которое дороже самой связки:</strong> сначала мерить, потом резать. Интуиция про «что тормозит» ошибается чаще, чем угадывает.</p>
-          </div>
-        </details>
+        <div class="note note--green"><span class="note__icon">⚡</span><span><strong>Почему у&nbsp;агентов разная глубина размышления.</strong> Глубина стоит секунд: «что съесть сейчас» должно приходить за&nbsp;десяток секунд, а&nbsp;недельный разбор может думать. Поэтому лёгкие задачи идут к&nbsp;<code>bio-eat</code> с&nbsp;минимальной глубиной, а&nbsp;разборы — к&nbsp;<code>bio-coach</code> с&nbsp;максимальной. Прежде чем резать промпт, померьте, что именно тормозит: обычно это&nbsp;глубина, а&nbsp;не&nbsp;длина входа.</span></div>
       </div>
     </div>
 
@@ -434,7 +438,7 @@
 
         <div class="note"><span class="note__icon">📸</span><span><strong>Что бот делает с&nbsp;фото.</strong> Модель называет блюдо и&nbsp;оценивает вес порции — по&nbsp;опорным предметам в&nbsp;кадре: тарелка, вилка, кружка. Дальше вес идёт в&nbsp;базу USDA, и&nbsp;калории берутся оттуда. То&nbsp;есть <strong>глазами работает модель, счётчиком — база</strong>.</span></div>
 
-        <div class="note note--green"><span class="note__icon">🗂</span><span>Прислали альбом из&nbsp;пяти снимков одного обеда — это&nbsp;<strong>один приём пищи</strong>, а&nbsp;не&nbsp;пять. Отдельное окно склейки и&nbsp;отдельные тесты: без этого ужин однажды раздулся вдвое, потому что фото приехали двумя сообщениями.</span></div>
+        <div class="note note--green"><span class="note__icon">🗂</span><span>Прислали альбом из&nbsp;пяти снимков одного обеда — это&nbsp;<strong>один приём пищи</strong>, а&nbsp;не&nbsp;пять. Отдельное окно склейки и&nbsp;отдельные тесты: снимки, приехавшие разными сообщениями, попадают в&nbsp;один приём, а&nbsp;не&nbsp;задваивают его.</span></div>
       </div>
     </div>
 
@@ -447,17 +451,19 @@
         <div class="item" data-key="whoop-app"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Зарегистрировать приложение в кабинете разработчика</div>
-            <div class="item__hint">Даёт пару ключей и&nbsp;адрес обратного вызова. После подключения бот <strong>сам вытянет историю</strong> и&nbsp;дальше будет получать новые тренировки и&nbsp;сон вебхуками, без опроса по&nbsp;таймеру.</div>
+            <div class="item__hint">Даёт пару ключей и&nbsp;адрес обратного вызова. После подключения бот <strong>сам вытянет историю</strong>. Дальше новые тренировки и&nbsp;сон приходят вебхуками, а&nbsp;<strong>раз в&nbsp;15&nbsp;минут бот дополнительно сам опрашивает WHOOP</strong> — страховка на&nbsp;случай, если вебхук не&nbsp;дошёл.</div>
             <a href="https://developer.whoop.com/" target="_blank" class="item__link" onclick="event.stopPropagation()">developer.whoop.com</a>
           </div>
         </div>
 
         <div class="item" data-key="whoop-port"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Сверить адрес обратного вызова с портом бота</div>
-            <div class="item__hint">Классическое место, где всё встаёт: в&nbsp;настройках приложения один порт, а&nbsp;бот слушает другой. Авторизация пройдёт, а&nbsp;данные не&nbsp;приедут. Сверьте <code>WHOOP_REDIRECT_URI</code> и&nbsp;<code>HTTP_PORT</code> в&nbsp;<code>.env</code> — они должны совпадать.</div>
+            <div class="item__text">Сделать публичный HTTPS-адрес обратного вызова</div>
+            <div class="item__hint">Бот слушает <strong>только localhost</strong>, поэтому <code>localhost</code> из&nbsp;примера <code>.env</code> в&nbsp;качестве callback не&nbsp;годится: WHOOP должен достучаться снаружи. Нужен домен и&nbsp;reverse proxy (Caddy или nginx) на&nbsp;порт бота. И&nbsp;сверьте порты: в&nbsp;образце <code>WHOOP_REDIRECT_URI</code> стоит <strong>8080</strong>, а&nbsp;<code>HTTP_PORT</code> — <strong>8091</strong>; они обязаны совпадать.</div>
           </div>
         </div>
+
+        <div class="note note--alert"><span class="note__icon">🔐</span><span><strong>Прежде чем подключать WHOOP, посмотрите на&nbsp;<code>whoop.js</code>.</strong> В&nbsp;текущем коде параметр <code>state</code> у&nbsp;OAuth <strong>фиксированный и&nbsp;не&nbsp;проверяется</strong> при&nbsp;возврате. Это&nbsp;штатная защита от&nbsp;подмены привязки, и&nbsp;её&nbsp;нужно доделать: одноразовый случайный <code>state</code> со&nbsp;сроком жизни, который сверяется в&nbsp;обработчике callback. Пока не&nbsp;сделано — не&nbsp;выставляйте callback в&nbsp;интернет.</span></div>
 
         <div class="note note--warn"><span class="note__icon">📊</span><span><strong>Цифра без базы ничего не&nbsp;значит.</strong> «HRV&nbsp;60» — это&nbsp;плохо или хорошо? Непонятно, пока не&nbsp;знаешь, что <em>обычно&nbsp;85</em>. Поэтому бот всегда показывает отклонение от&nbsp;вашей нормы, а&nbsp;не&nbsp;голое число из&nbsp;приложения.</span></div>
       </div>
@@ -467,7 +473,7 @@
       <div class="section__header"><div class="section__num">08</div><div class="section__title">Профиль и миссия: без них агент пустой</div></div>
       <div class="section__card">
 
-        <div class="note note--alert"><span class="note__icon">🎯</span><span><strong>Не&nbsp;пропускайте этот блок.</strong> Пока не&nbsp;заполнены профиль и&nbsp;цель, агент считает по&nbsp;умолчанию и&nbsp;советует вообще — а&nbsp;смысл связки ровно в&nbsp;обратном.</span></div>
+        <div class="note note--alert"><span class="note__icon">🎯</span><span><strong>Не&nbsp;пропускайте этот блок.</strong> Пока профиль пуст, код берёт технические значения из&nbsp;<code>.env</code> (масса, калораж, часовой пояс) — они нужны, чтобы карточки вообще считались, но&nbsp;это&nbsp;не&nbsp;ваши цифры. Своей цели у&nbsp;агента при&nbsp;этом нет вовсе: пока вы&nbsp;её&nbsp;не&nbsp;напишете, блок миссии остаётся пустым, и&nbsp;чужую он&nbsp;не&nbsp;подставляет.</span></div>
 
         <div class="item" data-key="prof-profile"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
@@ -510,8 +516,97 @@
       </div>
     </div>
 
+
     <div class="section">
-      <div class="section__header"><div class="section__num">10</div><div class="section__title">Проверьте, что всё работает</div></div>
+      <div class="section__header"><div class="section__num">10</div><div class="section__title">Что бот умеет: команды и голосовые правки</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">⌨️</span><span>Всё меню бота — одиннадцать команд.
+        Ничего запоминать не&nbsp;нужно: они лежат в&nbsp;кнопке «Меню» рядом с&nbsp;полем ввода.</span></div>
+
+        <table class="data-table">
+          <tr><th>Команда</th><th>Что показывает</th></tr>
+          <tr><td><code>/day</code></td><td>КБЖУ за день: калории, белки, жиры, углеводы, клетчатка и остаток до целей</td></tr>
+          <tr><td><code>/week</code></td><td>Неделя целиком и баланс съеденного против потраченного</td></tr>
+          <tr><td><code>/micro</code></td><td>21 микронутриент: что закрыто, а где дефицит</td></tr>
+          <tr><td><code>/water</code></td><td>Вода и напитки за день</td></tr>
+          <tr><td><code>/whoop</code></td><td>Восстановление, сон и нагрузка с браслета</td></tr>
+          <tr><td><code>/workouts</code></td><td>Тренировки и активности по дням недели</td></tr>
+          <tr><td><code>/plan</code></td><td>План недели по видам спорта и что из него сделано</td></tr>
+          <tr><td><code>/mission</code></td><td>Миссия, режим питания, цели по калориям и воде, счётчики трезвости</td></tr>
+          <tr><td><code>/profile</code></td><td>Пол, рост, дата рождения, замеры и их история</td></tr>
+          <tr><td><code>/dict</code></td><td>Личный словарь продуктов: что бот запомнил под вашими названиями</td></tr>
+          <tr><td><code>/help</code></td><td>Короткая справка по всему перечисленному</td></tr>
+        </table>
+
+        <div class="item" data-key="use-fix"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Поправить запись голосом, не&nbsp;открывая ничего</div>
+            <div class="item__hint">Ошиблись — скажите словами: «переименуй в&nbsp;творог», «поставь 200&nbsp;грамм»,
+            «это напиток», «удали последнее». Бот покажет, что собирается сделать, и&nbsp;<strong>дождётся
+            подтверждения</strong>. Отменить последнее действие можно тут&nbsp;же.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="use-water"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Понять разницу между водой и&nbsp;напитками</div>
+            <div class="item__hint">Это&nbsp;две разные сущности, и&nbsp;путать их&nbsp;дорого. <strong>Чай, кофе, сок и&nbsp;айран
+            идут в&nbsp;КБЖУ</strong> — со&nbsp;своими калориями. Но&nbsp;<strong>норму чистой воды они не&nbsp;закрывают</strong>:
+            в&nbsp;<code>/water</code> у&nbsp;них отдельная строка. Иначе литр сока выглядел&nbsp;бы как выполненная норма.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="use-ask"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Спросить бота про прошлое обычной фразой</div>
+            <div class="item__hint">«Что я&nbsp;ел вчера», «сколько белка было на&nbsp;той неделе», «покажи месяц» —
+            бот достаёт это&nbsp;из&nbsp;базы и&nbsp;отвечает текстом, а&nbsp;не&nbsp;карточкой. Данные берутся из&nbsp;вашей истории,
+            поэтому чем дольше ведёте, тем полезнее ответы.</div>
+          </div>
+        </div>
+
+        <div class="note note--green"><span class="note__icon">🤖</span><span><strong>Что приходит само, без команд:</strong>
+        утренний разбор вчерашнего дня, карточка после каждой тренировки, напоминание про воду, если день идёт
+        к&nbsp;концу&nbsp;с&nbsp;недобором, и&nbsp;план на&nbsp;новую неделю в&nbsp;воскресенье.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">11</div><div class="section__title">Забрать и удалить свои данные</div></div>
+      <div class="section__card">
+
+        <div class="note note--info"><span class="note__icon">🗄</span><span>Это&nbsp;данные о&nbsp;вашем теле, поэтому вы&nbsp;должны
+        уметь их&nbsp;<strong>вынуть и&nbsp;стереть</strong> в&nbsp;любой момент, не&nbsp;спрашивая никого. Всё лежит в&nbsp;одной
+        базе Postgres на&nbsp;вашем сервере.</span></div>
+
+        <div class="item" data-key="data-dump"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Сделать дамп базы и&nbsp;проверить восстановление</div>
+            <div class="item__hint">Забрать всё одной командой:
+            <code>docker exec bio-postgres pg_dump -U bio bio &gt; bio-$(date +%F).sql</code>.
+            <strong>Дамп без проверенного восстановления — не&nbsp;бэкап:</strong> хотя&nbsp;бы раз залейте его
+            в&nbsp;<em>отдельную пустую</em> базу и&nbsp;убедитесь, что данные на&nbsp;месте.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="data-drop"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Знать, как стереть всё насовсем</div>
+            <div class="item__hint">Остановить бота, удалить контейнеры вместе с&nbsp;томом
+            (<code>docker compose down -v</code>) и&nbsp;снести каталог с&nbsp;данными на&nbsp;сервере.
+            ⚠️ Это&nbsp;необратимо и&nbsp;уносит всю историю: сначала дамп, потом удаление.</div>
+          </div>
+        </div>
+
+        <div class="note note--warn"><span class="note__icon">📆</span><span>Поставьте дамп на&nbsp;расписание
+        и&nbsp;решите, сколько копий храните. База на&nbsp;томе переживает пересборку контейнера, но&nbsp;не&nbsp;переживает
+        потерю сервера — это&nbsp;разные вещи.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section__header"><div class="section__num">12</div><div class="section__title">Проверьте, что всё работает</div></div>
       <div class="section__card">
 
         <div class="note note--info"><span class="note__icon">🧪</span><span>Проверка идёт двумя уровнями: автотесты и&nbsp;живые действия. Автотесты ловят поломки кода, живые — поломки настроек. Ни&nbsp;один не&nbsp;заменяет другой.</span></div>
@@ -519,14 +614,14 @@
         <div class="item" data-key="t-tests"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Автотесты зелёные</div>
-            <div class="item__hint"><code>cd bot &amp;&amp; npm test</code> — 826&nbsp;проверок за&nbsp;пару секунд, без сети и&nbsp;без базы. Зелёные тесты при&nbsp;молчащем боте означают одно: дело в&nbsp;настройках, а&nbsp;не&nbsp;в&nbsp;коде.</div>
+            <div class="item__hint"><code>cd ai-biohacker/bot &amp;&amp; npm test</code> — 831&nbsp;проверка за&nbsp;пару секунд, без сети и&nbsp;без базы. Зелёные тесты при&nbsp;молчащем боте означают одно: дело в&nbsp;настройках, а&nbsp;не&nbsp;в&nbsp;коде.</div>
           </div>
         </div>
 
         <div class="item" data-key="t-start"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Бот отвечает на <code>/start</code> и меню на месте</div>
-            <div class="item__hint">Проверьте заодно, что <strong>посторонним он&nbsp;молчит</strong>: попросите кого-нибудь написать вашему боту — ответа быть не&nbsp;должно.</div>
+            <div class="item__hint">Проверьте заодно чужой доступ: попросите кого-нибудь написать вашему боту. В&nbsp;ответ должна прийти ровно одна строка «Это персональный бот» — и&nbsp;ничего больше: ни&nbsp;карточек, ни&nbsp;записи съеденного.</div>
           </div>
         </div>
 
@@ -568,7 +663,7 @@
     </div>
 
     <div class="section">
-      <div class="section__header"><div class="section__num">11</div><div class="section__title">Если что-то пошло не так</div></div>
+      <div class="section__header"><div class="section__num">13</div><div class="section__title">Если что-то пошло не так</div></div>
       <div class="section__card">
 
         <table class="data-table">
@@ -588,7 +683,7 @@
 
         <div class="note note--info"><span class="note__icon">💬</span><span>Любую ошибку отправляйте в&nbsp;Claude&nbsp;Code целиком, вместе с&nbsp;текстом из&nbsp;терминала. Он&nbsp;разберёт и&nbsp;починит.</span></div>
 
-        <div class="note note--green"><span class="note__icon">🛟</span><span><strong>Терять тут почти нечего.</strong> Все записи лежат в&nbsp;обычной базе Postgres на&nbsp;вашем сервере: даже если бот придётся собрать заново, история еды, воды и&nbsp;тренировок останется на&nbsp;месте.</span></div>
+        <div class="note note--green"><span class="note__icon">🛟</span><span><strong>Про сохранность честно.</strong> База лежит на&nbsp;диске сервера отдельным томом, поэтому пересборку контейнера история переживает. Но&nbsp;это&nbsp;<strong>не&nbsp;резервная копия</strong>: потеря сервера или диска уносит всё. Настройте <code>pg_dump</code> по&nbsp;расписанию и&nbsp;хотя&nbsp;бы раз проверьте восстановление из&nbsp;дампа — на&nbsp;пустой базе, а&nbsp;не&nbsp;на&nbsp;боевой.</span></div>
 
         <div class="note note--green"><span class="note__icon">💡</span><span><strong>На&nbsp;будущее:</strong> это&nbsp;седьмой сотрудник вашего AI-офиса. Секретарь ведёт календарь, менеджер — задачи, финансист — деньги, консультант помнит документы, транскрибатор превращает разговоры в&nbsp;текст, продажник встречает клиента, а&nbsp;биохакер занимается тем единственным, что нельзя купить заново.</span></div>
       </div>
