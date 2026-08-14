@@ -195,7 +195,7 @@
       <li>Фото тарелки: модель определяет блюдо и&nbsp;вес, цифры всё равно берутся из&nbsp;базы</li>
       <li>Сон, восстановление и&nbsp;нагрузка подтягиваются с&nbsp;фитнес-браслета сами</li>
       <li>Раз в&nbsp;день объясняет человеческим языком, что происходит с&nbsp;телом</li>
-      <li>Шесть агентов OpenClaw с&nbsp;разной глубиной размышления, 831&nbsp;автотест</li>
+      <li>Шесть агентов OpenClaw с&nbsp;разной глубиной размышления, 893&nbsp;автотеста</li>
     </ul>
   </header>
 
@@ -256,7 +256,7 @@
         <div class="item" data-key="pre-openclaw"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">OpenClaw с подключённой подпиской</div>
-            <div class="item__hint">Здесь он&nbsp;<strong>обязателен</strong> и&nbsp;работает мозгом связки: бот ходит в&nbsp;модель только через локальный gateway. Проверьте, что он&nbsp;жив, — в&nbsp;блоке&nbsp;05 мы&nbsp;заведём в&nbsp;нём пять агентов.</div>
+            <div class="item__hint">Здесь он&nbsp;<strong>обязателен</strong> и&nbsp;работает мозгом связки: бот ходит в&nbsp;модель только через локальный gateway. Проверьте, что он&nbsp;жив, — в&nbsp;блоке&nbsp;05 мы&nbsp;заведём в&nbsp;нём шесть агентов.</div>
           </div>
         </div>
 
@@ -293,7 +293,7 @@
         <div class="note note--green"><span class="note__icon">✅</span><span><strong>Это настроим дальше по&nbsp;чек-листу, заранее ничего делать не&nbsp;нужно:</strong><br>
         •&nbsp;<strong>Telegram-бот</strong> — заводим нового, отдельно под&nbsp;биохакера <span style="opacity:.6">(блок&nbsp;03, по&nbsp;промпту)</span><br>
         •&nbsp;<strong>База Postgres</strong> — поднимется в&nbsp;докере сама <span style="opacity:.6">(блок&nbsp;03, по&nbsp;промпту)</span><br>
-        •&nbsp;<strong>Пять агентов в&nbsp;OpenClaw</strong> — заводятся готовыми скриптами <span style="opacity:.6">(блок&nbsp;05)</span></span></div>
+        •&nbsp;<strong>Шесть агентов в&nbsp;OpenClaw</strong> — заводятся готовыми скриптами <span style="opacity:.6">(блок&nbsp;05)</span></span></div>
       </div>
     </div>
 
@@ -323,9 +323,9 @@
 
 Шаг 2. Заведи Telegram-бота: нужен НОВЫЙ бот отдельно под биохакера, даже если у меня уже есть другие. Продиктуй, что нажимать в @BotFather (/newbot, имя, username), забери у меня токен. Затем подскажи написать @userinfobot и забери мой Telegram id — это будет OWNER_CHAT_ID. Задай его явно: тогда работать с&nbsp;ботом смогу только я. Постороннему он&nbsp;отвечает одной строкой «Это персональный бот» и&nbsp;больше ничего не&nbsp;делает — ни&nbsp;записей, ни&nbsp;разборов. Данные тела не&nbsp;показывают случайным людям.
 
-Шаг 3. Собери .env по образцу ai-biohacker/bot/.env.example: токен бота, мой id, адрес и токен gateway OpenClaw, ключ USDA, ключ Groq для голосовых, пароль базы. Каждая строка в образце подписана — читай подписи, а не угадывай. Файл .env в git не коммить никогда. Проверь, что значения профиля в образце — это ЗАГЛУШКИ, а не чьи-то настоящие: рост, вес и часовой пояс я задам сам в боте на шаге 7.
+Шаг 3. Собери .env по образцу ai-biohacker/bot/.env.example: токен бота, мой id, адрес и токен gateway OpenClaw, ключ USDA, ключ Groq для голосовых, пароль базы. Каждая строка в образце подписана — читай подписи, а не угадывай. Файл .env в git не коммить никогда. Значения массы, калоража, воды и часового пояса в образце — это ЗАПАСНЫЕ ориентиры на случай пустого профиля, а не чьи-то настоящие настройки: как только я задам своё в боте на шаге 7, считаться будет от моих данных.
 
-Шаг 4. Заведи агентов в OpenClaw скриптами из папки ai-biohacker/infra: bio-brain (разбор речи и чат), bio-vision (фото еды), bio-coach (разборы дня и недели), bio-eat («что съесть сейчас»), bio-critic (проверяет выводы, идёт через платный OpenRouter). Шестого агента bio-analyst (подробный анализ приёма и дня) код зовёт, но скрипта для него в infra/ нет — заведи его по образцу соседнего скрипта, иначе кнопка «Подробный анализ» упадёт. Критик должен быть на МОДЕЛИ ДРУГОГО СЕМЕЙСТВА, чем остальные, — в этом весь смысл: проверять текст тем же мозгом, что его написал, значит проверять его же слепые пятна. После каждого скрипта проверь, что агент реально отвечает, а не просто создан.
+Шаг 4. Заведи агентов в OpenClaw скриптами из папки ai-biohacker/infra: bio-brain (разбор речи и чат), bio-vision (фото еды), bio-coach (разборы дня и недели), bio-eat («что съесть сейчас»), bio-critic (проверяет выводы, идёт через платный OpenRouter). Шестого агента bio-analyst (подробный анализ приёма и дня) заводит свой скрипт openclaw-add-analyst-agent.sh — он лежит там же. Критик должен быть на МОДЕЛИ ДРУГОГО СЕМЕЙСТВА, чем остальные, — в этом весь смысл: проверять текст тем же мозгом, что его написал, значит проверять его же слепые пятна. После каждого скрипта проверь, что агент реально отвечает, а не просто создан.
 
 Шаг 5. Подними базу и бота: docker compose up -d. Миграции бот накатывает сам при старте — отдельно их прогонять не нужно. Убедись, что база поднялась ПУСТОЙ: в ней не должно быть ни одной чужой записи, профиль и замеры я заполню сам. Покажи мне лог старта бота: там должно быть имя моего бота. Контейнер, падающий по кругу, между падениями выглядит работающим — проверяй docker ps и логи, а не «сервис запущен».
 
@@ -390,13 +390,15 @@
           <tr><th>Агент</th><th>Что делает</th><th>Размышление</th></tr>
           <tr><td><code>bio-brain</code></td><td>Разбор речи, перевод названий еды, чат</td><td>обычное</td></tr>
           <tr><td><code>bio-vision</code></td><td>Фото еды: что на тарелке и сколько грамм</td><td>максимальное</td></tr>
-          <tr><td><code>bio-coach</code></td><td>Разборы утра, дня, недели, тренировки</td><td>максимальное</td></tr>
+          <tr><td><code>bio-coach</code></td><td>Разборы утра, дня, недели, тренировки</td><td>низкое</td></tr>
           <tr><td><code>bio-eat</code></td><td>«Что съесть сегодня» с учётом остатка дня</td><td>минимальное</td></tr>
           <tr><td><code>bio-critic</code></td><td>Оспаривает выводы <strong>другой моделью</strong>, через OpenRouter</td><td>обычное</td></tr>
           <tr><td><code>bio-analyst</code></td><td>Подробный разбор приёма пищи и дня</td><td>минимальное</td></tr>
         </table>
 
-        <div class="note note--warn"><span class="note__icon">🧾</span><span><strong>Скрипта для&nbsp;<code>bio-analyst</code> в&nbsp;папке <code>infra/</code> пока нет</strong> — заведите шестого агента по&nbsp;образцу соседнего скрипта, иначе кнопка «Подробный анализ» будет падать. Код его&nbsp;уже зовёт: см. <code>LLM_MODEL_ANALYST</code> в&nbsp;<code>config.js</code>.</span></div>
+        <div class="note note--info"><span class="note__icon">🆕</span><span><strong>База приезжает ПУСТОЙ.</strong> Миграции создают только схему: ни профиля, ни замеров, ни целей, ни плана — ничьих данных в&nbsp;коде нет. Свои вы&nbsp;вводите прямо в&nbsp;боте: <code>/profile</code> — дата рождения, пол, рост, таймзона, масса и&nbsp;талия; <code>/mission</code> — своя большая цель, режим по&nbsp;массе, калораж, вода и&nbsp;трезвость; <code>/plan</code> — план недели. Пока поле пустое, бот его&nbsp;не&nbsp;выдумывает: горизонт цели он&nbsp;берёт из&nbsp;вашей&nbsp;же формулировки («в&nbsp;60&nbsp;лет пробежать марафон» → считает до&nbsp;60), а&nbsp;без возраста честно говорит «на&nbsp;долгой дистанции».</span></div>
+
+        <div class="note note--green"><span class="note__icon">🧾</span><span>Скрипты есть на&nbsp;<strong>всех шестерых</strong>, включая <code>bio-analyst</code>: <code>infra/openclaw-add-analyst-agent.sh</code>. Руками агентов заводить не&nbsp;нужно.</span></div>
 
         <div class="item" data-key="agents-create"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
@@ -412,7 +414,7 @@
           </div>
         </div>
 
-        <div class="note note--green"><span class="note__icon">⚡</span><span><strong>Почему у&nbsp;агентов разная глубина размышления.</strong> Глубина стоит секунд: «что съесть сейчас» должно приходить за&nbsp;десяток секунд, а&nbsp;недельный разбор может думать. Поэтому лёгкие задачи идут к&nbsp;<code>bio-eat</code> с&nbsp;минимальной глубиной, а&nbsp;разборы — к&nbsp;<code>bio-coach</code> с&nbsp;максимальной. Прежде чем резать промпт, померьте, что именно тормозит: обычно это&nbsp;глубина, а&nbsp;не&nbsp;длина входа.</span></div>
+        <div class="note note--green"><span class="note__icon">⚡</span><span><strong>Почему у&nbsp;агентов разная глубина размышления.</strong> Глубина стоит секунд: «что съесть сейчас» должно приходить за&nbsp;десяток секунд, а&nbsp;недельный разбор может думать. Поэтому лёгкие задачи идут к&nbsp;<code>bio-eat</code> и&nbsp;<code>bio-analyst</code> с&nbsp;минимальной глубиной, а&nbsp;<code>bio-vision</code> оценивает вес порции с&nbsp;максимальной — там глубина реально меняет цифру. У&nbsp;<code>bio-coach</code> стоит <strong>низкая</strong>, и&nbsp;это&nbsp;результат замера, а&nbsp;не&nbsp;вкуса: на&nbsp;одном и&nbsp;том&nbsp;же разборе недели максимальная глубина дала 45&nbsp;и&nbsp;111&nbsp;секунд, низкая — 41&nbsp;и&nbsp;42, при&nbsp;этом качество не&nbsp;просело. Прежде чем резать промпт, померьте, что именно тормозит: обычно это&nbsp;глубина, а&nbsp;не&nbsp;длина входа — и&nbsp;сравнивайте один и&nbsp;тот&nbsp;же промпт на&nbsp;разных уровнях, а&nbsp;не&nbsp;разные промпты.</span></div>
       </div>
     </div>
 
@@ -463,7 +465,7 @@
           </div>
         </div>
 
-        <div class="note note--alert"><span class="note__icon">🔐</span><span><strong>Прежде чем подключать WHOOP, посмотрите на&nbsp;<code>whoop.js</code>.</strong> В&nbsp;текущем коде параметр <code>state</code> у&nbsp;OAuth <strong>фиксированный и&nbsp;не&nbsp;проверяется</strong> при&nbsp;возврате. Это&nbsp;штатная защита от&nbsp;подмены привязки, и&nbsp;её&nbsp;нужно доделать: одноразовый случайный <code>state</code> со&nbsp;сроком жизни, который сверяется в&nbsp;обработчике callback. Пока не&nbsp;сделано — не&nbsp;выставляйте callback в&nbsp;интернет.</span></div>
+        <div class="note note--green"><span class="note__icon">🔐</span><span><strong>OAuth WHOOP защищён от&nbsp;подмены привязки.</strong> Параметр <code>state</code> — случайный и&nbsp;одноразовый, живёт 10&nbsp;минут и&nbsp;гасится при&nbsp;первом использовании, а&nbsp;обработчик callback обязательно его&nbsp;сверяет: не&nbsp;совпало или просрочено — код на&nbsp;токен не&nbsp;меняется. Без этого чужой мог&nbsp;бы прислать свой&nbsp;<code>code</code> на&nbsp;ваш адрес и&nbsp;привязать <strong>свой</strong> аккаунт WHOOP к&nbsp;вашему боту.</span></div>
 
         <div class="note note--warn"><span class="note__icon">📊</span><span><strong>Цифра без базы ничего не&nbsp;значит.</strong> «HRV&nbsp;60» — это&nbsp;плохо или хорошо? Непонятно, пока не&nbsp;знаешь, что <em>обычно&nbsp;85</em>. Поэтому бот всегда показывает отклонение от&nbsp;вашей нормы, а&nbsp;не&nbsp;голое число из&nbsp;приложения.</span></div>
       </div>
@@ -508,7 +510,7 @@
         <div class="item" data-key="safe-data"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Понять, где лежат ваши данные тела</div>
-            <div class="item__hint">В&nbsp;базе Postgres <strong>на&nbsp;вашем сервере</strong>, и&nbsp;больше нигде. Секреты — в&nbsp;<code>.env</code> там&nbsp;же. Данные тела — особая категория: не&nbsp;выносите их&nbsp;в&nbsp;публичные репозитории и&nbsp;в&nbsp;чужие логи. Если решите показать кому-то свой код — сначала уберите из&nbsp;него всё, что описывает вас.</div>
+            <div class="item__hint">История — в&nbsp;базе Postgres <strong>на&nbsp;вашем сервере</strong>. Но&nbsp;«и&nbsp;больше нигде» было&nbsp;бы неправдой: по&nbsp;функции наружу уходят голос (Groq), фото (модель зрения), названия продуктов (USDA), контекст разборов (модель через OpenClaw) и&nbsp;проверка выводов (OpenRouter). Полный список — в&nbsp;блоке&nbsp;04. Секреты — в&nbsp;<code>.env</code> на&nbsp;сервере. Данные тела — особая категория: не&nbsp;выносите их&nbsp;в&nbsp;публичные репозитории и&nbsp;в&nbsp;чужие логи. Если решите показать кому-то свой код — сначала уберите из&nbsp;него всё, что описывает вас.</div>
           </div>
         </div>
 
@@ -614,7 +616,7 @@
         <div class="item" data-key="t-tests"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Автотесты зелёные</div>
-            <div class="item__hint"><code>cd ai-biohacker/bot &amp;&amp; npm test</code> — 831&nbsp;проверка за&nbsp;пару секунд, без сети и&nbsp;без базы. Зелёные тесты при&nbsp;молчащем боте означают одно: дело в&nbsp;настройках, а&nbsp;не&nbsp;в&nbsp;коде.</div>
+            <div class="item__hint"><code>cd ai-biohacker/bot &amp;&amp; npm test</code> — 893&nbsp;проверки за&nbsp;пару секунд, без сети и&nbsp;без базы. Зелёные тесты при&nbsp;молчащем боте означают одно: дело в&nbsp;настройках, а&nbsp;не&nbsp;в&nbsp;коде.</div>
           </div>
         </div>
 
@@ -656,7 +658,7 @@
         <div class="item" data-key="t-repeat"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Открыть вчерашний разбор второй раз</div>
-            <div class="item__hint">Текст должен быть <strong>тем&nbsp;же самым</strong>, а&nbsp;не&nbsp;новым. Разбор считается один раз и&nbsp;кладётся в&nbsp;кэш по&nbsp;отпечатку данных: данные не&nbsp;менялись — модель не&nbsp;дёргается. Открыли через месяц — тот&nbsp;же текст.</div>
+            <div class="item__hint">Текст должен быть <strong>тем&nbsp;же самым</strong>, а&nbsp;не&nbsp;новым. Разбор считается один раз и&nbsp;кладётся в&nbsp;кэш по&nbsp;отпечатку <strong>тех самых фактов</strong>, которые ушли в&nbsp;модель: ничего не&nbsp;менялось — модель не&nbsp;дёргается, открыли через месяц и&nbsp;получили тот&nbsp;же текст. А&nbsp;вот если изменились важные входы — миссия, ограничения, тело, цели, еда дня или восстановление — сохранённый разбор считается устаревшим и&nbsp;пересчитывается. Отдельно можно попросить обновление кнопкой. Смысл в&nbsp;том, чтобы не&nbsp;жечь токены на&nbsp;одном и&nbsp;том&nbsp;же и&nbsp;при&nbsp;этом никогда не&nbsp;показывать разбор, посчитанный для&nbsp;других данных.</div>
           </div>
         </div>
       </div>
