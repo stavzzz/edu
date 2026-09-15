@@ -304,14 +304,14 @@
         </div>
         <div class="item" data-key="pre-vps"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Сервер VPS (для варианта Codex — с установленным OpenClaw)</div>
-            <div class="item__hint">OpenClaw обязателен только если модель — подписка ChatGPT (Codex). Для&nbsp;варианта MiniMax достаточно VPS с&nbsp;Docker, OpenClaw не&nbsp;нужен.</div>
+            <div class="item__text">Сервер VPS с&nbsp;установленным OpenClaw</div>
+            <div class="item__hint">OpenClaw обязателен: через него бот подключается к&nbsp;вашей подписке ChatGPT.</div>
           </div>
         </div>
         <div class="item" data-key="pre-gpt"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Модель на выбор: подписка ChatGPT ИЛИ ключ MiniMax</div>
-            <div class="item__hint">Вариант&nbsp;1 — подписка ChatGPT (Codex) через OpenClaw: отдельно за&nbsp;токены не&nbsp;платите. Вариант&nbsp;2 — API-ключ MiniMax: работает напрямую, без&nbsp;OpenClaw.</div>
+            <div class="item__text">Подписка ChatGPT</div>
+            <div class="item__hint">Подключается к&nbsp;боту через OpenClaw, отдельно за&nbsp;токены не&nbsp;платите.</div>
           </div>
         </div>
         <div class="item" data-key="pre-voice"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
@@ -341,7 +341,7 @@
           </div>
         </div>
 
-        <div class="note note--info"><span class="note__icon">🧠</span><span><strong>Как устроен секретарь внутри.</strong><br><br>Сам агент — <strong>самописный код</strong> в&nbsp;докер-контейнере на&nbsp;вашем VPS. Модель (LLM) нужна, чтобы понять вашу фразу и&nbsp;превратить её&nbsp;в&nbsp;команду. Если фраза не&nbsp;про календарь, бот отдаёт её&nbsp;модели и&nbsp;присылает свободный ответ — эти ответы каждый раз свои. А&nbsp;вот все календарные сценарии считает код: там одна и&nbsp;та&nbsp;же фраза даёт побайтово одинаковый ответ.<br><br>Всё остальное делает программный код: считает часовые пояса, проверяет накладки, собирает ответы по&nbsp;готовым шаблонам. Поэтому секретарь отвечает всегда одинаково и&nbsp;не&nbsp;фантазирует.<br><br><strong>Модель подключается на&nbsp;выбор:</strong><br>•&nbsp;<strong>Подписка ChatGPT (Codex) через OpenClaw</strong> — у&nbsp;подписки нет своего API, поэтому мостом работает OpenClaw: он&nbsp;авторизуется в&nbsp;вашу подписку и&nbsp;выдаёт боту обычный API-эндпоинт. OpenClaw на&nbsp;сервере обязателен, зато за&nbsp;токены отдельно платить не&nbsp;нужно.<br>•&nbsp;<strong>MiniMax по&nbsp;API-ключу</strong> — бот ходит в&nbsp;API напрямую, OpenClaw не&nbsp;нужен вообще. Классификация стоит копейки.</span></div>
+        <div class="note note--info"><span class="note__icon">🧠</span><span><strong>Как устроен секретарь внутри.</strong><br><br>Сам агент — <strong>самописный код</strong> в&nbsp;докер-контейнере на&nbsp;вашем VPS. Модель (LLM) нужна, чтобы понять вашу фразу и&nbsp;превратить её&nbsp;в&nbsp;команду. Если фраза не&nbsp;про календарь, бот отдаёт её&nbsp;модели и&nbsp;присылает свободный ответ — эти ответы каждый раз свои. А&nbsp;вот все календарные сценарии считает код: там одна и&nbsp;та&nbsp;же фраза даёт побайтово одинаковый ответ.<br><br>Всё остальное делает программный код: считает часовые пояса, проверяет накладки, собирает ответы по&nbsp;готовым шаблонам. Поэтому секретарь отвечает всегда одинаково и&nbsp;не&nbsp;фантазирует.<br><br><strong>Модель — подписка ChatGPT (Codex) через OpenClaw.</strong> У&nbsp;подписки нет своего API, поэтому мостом работает OpenClaw: он&nbsp;авторизуется в&nbsp;вашу подписку и&nbsp;выдаёт боту обычный API-эндпоинт. OpenClaw на&nbsp;сервере обязателен, зато за&nbsp;токены отдельно платить не&nbsp;нужно.</span></div>
 
         <div class="note note--warn"><span class="note__icon">⚠</span><span>Сначала пройдите блок&nbsp;04 и&nbsp;настройте доступ к&nbsp;Google. Без этого промпт остановится на&nbsp;втором шаге.</span></div>
 
@@ -355,15 +355,11 @@
 
 Веди меня по шагам. После каждого шага показывай результат и жди моего «дальше».
 
-Шаг 1. САМЫЙ ПЕРВЫЙ ВОПРОС: спроси меня, какую модель-классификатор я хочу использовать, и дальше веди по выбранной ветке:
-— Вариант 1: подписка ChatGPT (Codex) через OpenClaw. Для этого варианта OpenClaw на сервере ОБЯЗАТЕЛЕН (он — мост к подписке, отдельно за токены платить не нужно).
-— Вариант 2: MiniMax по API-ключу. OpenClaw для этого варианта НЕ НУЖЕН вообще — бот ходит в API напрямую.
+Шаг 1. Модель-классификатор — подписка ChatGPT (Codex) через OpenClaw. OpenClaw на сервере ОБЯЗАТЕЛЕН (он — мост к подписке, отдельно за токены платить не нужно). Проверь, что OpenClaw на сервере установлен и gateway работает.
 
 Шаг 2. Проверь, что сервер жив и Docker установлен. Склонируй репозиторий, поставь зависимости и прогони тесты: npm install и npm test. Все 191 тест должны быть зелёными.
 
-Шаг 3. Настрой выбранную модель (образец — .env.example, подробности — README репозитория, раздел «Модель-классификатор»):
-— Вариант 1 (Codex через OpenClaw): (а) подключи мою подписку командой openclaw models auth login --provider openai — я залогинюсь в браузере; (б) в ~/.openclaw/openclaw.json включи gateway.http.endpoints.chatCompletions.enabled: true и добавь лёгкого агента-классификатора secretary-clf по готовому образцу из README; (в) скопируй docs/SOUL-classifier.md из репозитория в воркспейс этого агента как SOUL.md; (г) перезапусти gateway: openclaw gateway restart; (д) в .env: MODEL_FORMAT=openai, MODEL_BASE_URL=http://127.0.0.1:18789/v1 (контейнер работает в host-сети, это уже настроено в docker-compose.yml), MODEL_API_KEY=gateway-токен (gateway.auth.token из ~/.openclaw/openclaw.json), MODEL_NAME=openclaw/secretary-clf. Проверь мост тестовым запросом: в ответ должен прийти строгий JSON.
-— Вариант 2 (MiniMax): в .env MODEL_FORMAT=minimax плюс мой API-ключ. OpenClaw не трогай.
+Шаг 3. Настрой модель через OpenClaw (образец — .env.example, подробности — README репозитория, раздел «Модель-классификатор»): (а) подключи мою подписку командой openclaw models auth login --provider openai — я залогинюсь в браузере; (б) в ~/.openclaw/openclaw.json включи gateway.http.endpoints.chatCompletions.enabled: true и добавь лёгкого агента-классификатора secretary-clf по готовому образцу из README; (в) скопируй docs/SOUL-classifier.md из репозитория в воркспейс этого агента как SOUL.md; (г) перезапусти gateway: openclaw gateway restart; (д) в .env: MODEL_FORMAT=openai, MODEL_BASE_URL=http://127.0.0.1:18789/v1 (контейнер работает в host-сети, это уже настроено в docker-compose.yml), MODEL_API_KEY=gateway-токен (gateway.auth.token из ~/.openclaw/openclaw.json), MODEL_NAME=openclaw/secretary-clf. Проверь мост тестовым запросом: в ответ должен прийти строгий JSON.
 
 Шаг 4. Заведи Telegram-бота и распознавание голоса, веди меня по шагам:
 — Бот: нужен НОВЫЙ бот отдельно под секретаря, даже если у меня уже есть другие боты. Продиктуй, что нажимать в @BotFather (/newbot, имя, username). Токен в чат не проси — скажи, в какую строку .env его вписать, я сделаю это сам.
