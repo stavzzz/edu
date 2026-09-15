@@ -517,38 +517,69 @@
         <div class="note note--warn"><span class="note__icon">💰</span><span><strong>Бесплатного тарифа Zoom хватает для&nbsp;этой связки.</strong> Приложение создаётся бесплатно, агент создаёт встречи и&nbsp;получает ссылку, ссылка вшивается в&nbsp;календарь.<br><br>Деньги нужны не&nbsp;за&nbsp;доступ к&nbsp;API, а&nbsp;за&nbsp;саму встречу: на&nbsp;бесплатном тарифе групповой созвон выключается на&nbsp;40-й&nbsp;минуте, и&nbsp;одновременно вести две встречи нельзя.</span></div>
 
         <div class="note note--info"><span class="note__icon">⏱</span><span>У&nbsp;Google&nbsp;Meet на&nbsp;бесплатном личном аккаунте свои лимиты: встреча один на&nbsp;один держится до&nbsp;24&nbsp;часов, а&nbsp;встреча с&nbsp;тремя и&nbsp;более участниками обрывается через час.</span></div>
+        <div class="note note--info"><span class="note__icon">👤</span><span><strong>Входите владельцем аккаунта Zoom.</strong> Создать такое приложение может только пользователь с&nbsp;правами на&nbsp;приложения Server-to-Server&nbsp;OAuth. На&nbsp;личном аккаунте это вы&nbsp;сами. Если вы&nbsp;участник чужого рабочего аккаунта, права выдаёт его администратор.</span></div>
+
         <div class="item" data-key="zoom-app"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Создать приложение в Zoom</div>
-            <div class="item__hint">Откройте marketplace.zoom.us, войдите под своим аккаунтом, раздел Develop, пункт Build&nbsp;App. Тип приложения: Server-to-Server&nbsp;OAuth. Такой тип работает без окна входа, это нужно для агента.</div>
+            <div class="item__text">Создать приложение в&nbsp;Zoom</div>
+            <div class="item__hint">1. Откройте Zoom App Marketplace и&nbsp;войдите своим аккаунтом Zoom.<br>2. Откройте раздел для разработчиков, нажмите <strong>Develop</strong> и&nbsp;выберите <strong>Build App</strong>.<br>3. Выберите <strong>Server-to-Server OAuth App</strong> и&nbsp;нажмите <strong>Create</strong>.<br>4. Введите название, например «Секретарь». Его видите только вы.<br><br>Этот тип приложения работает без окна входа: бот сам получает доступ по&nbsp;ключам, вам не&nbsp;нужно ничего подтверждать.</div>
+            <a href="https://marketplace.zoom.us/" target="_blank" class="item__link" onclick="event.stopPropagation()">Zoom App Marketplace</a>
+            <a href="https://developers.zoom.us/docs/internal-apps/create/" target="_blank" class="item__link" onclick="event.stopPropagation()">Официальная инструкция Zoom по&nbsp;созданию приложения</a>
+          </div>
+        </div>
+        <div class="item" data-key="zoom-info"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Заполнить вкладку Information</div>
+            <div class="item__hint">Впишите название компании, своё имя и&nbsp;почту в&nbsp;разделе с&nbsp;контактами разработчика. Без имени и&nbsp;почты Zoom не&nbsp;даст активировать приложение. Описание можно оставить коротким.</div>
           </div>
         </div>
         <div class="item" data-key="zoom-scopes"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Выдать права на создание встреч</div>
-            <div class="item__hint">В&nbsp;разделе Scopes добавьте права на&nbsp;встречи: чтение и&nbsp;запись. Без них Zoom не&nbsp;даст создавать конференции.</div>
-          </div>
-        </div>
-        <div class="item" data-key="zoom-keys"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-          <div class="item__body">
-            <div class="item__text">Скопировать три ключа</div>
-            <div class="item__hint">На&nbsp;вкладке App&nbsp;Credentials лежат Account&nbsp;ID, Client&nbsp;ID и&nbsp;Client&nbsp;Secret. Скопируйте все три.</div>
+            <div class="item__text">Выдать право на&nbsp;создание встреч</div>
+            <div class="item__hint">Вкладка <strong>Scopes</strong> → <strong>Add Scopes</strong>. В&nbsp;поиске наберите <strong>meeting:write</strong> и&nbsp;отметьте право <strong>meeting:write:meeting:admin</strong> и&nbsp;сохраните.<br><br>Боту нужно только это право: он&nbsp;создаёт встречу и&nbsp;забирает ссылку на&nbsp;неё. Лишних прав не&nbsp;добавляйте.</div>
           </div>
         </div>
         <div class="item" data-key="zoom-activate"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
             <div class="item__text">Активировать приложение</div>
-            <div class="item__hint">Вкладка Activation, нажмите Activate. Пока приложение не&nbsp;активировано, ключи не&nbsp;работают.</div>
+            <div class="item__hint">Вкладка <strong>Activation</strong>, нажмите кнопку активации. Пока приложение не&nbsp;активировано, ключи не&nbsp;работают и&nbsp;бот получит отказ.<br>Если кнопка неактивна, Zoom покажет, какое поле ещё не&nbsp;заполнено. Чаще всего это имя или почта на&nbsp;вкладке Information.</div>
           </div>
         </div>
-        <div class="item" data-key="zoom-connect"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="item" data-key="zoom-keys"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Передать ключи Claude Code</div>
-            <div class="item__hint">Отправьте три ключа в&nbsp;чат с&nbsp;Claude&nbsp;Code, он&nbsp;пропишет их&nbsp;в&nbsp;настройки секретаря сам.</div>
+            <div class="item__text">Скопировать три ключа</div>
+            <div class="item__hint">Вкладка <strong>App Credentials</strong>. Там лежат <strong>Account&nbsp;ID</strong>, <strong>Client&nbsp;ID</strong> и&nbsp;<strong>Client&nbsp;Secret</strong>. Сохраните все три в&nbsp;менеджер паролей.</div>
           </div>
         </div>
 
-        <div class="note note--warn"><span class="note__icon">⚠</span><span>Client&nbsp;Secret это пароль от&nbsp;вашего Zoom. Не&nbsp;выкладывайте его в&nbsp;открытый репозиторий и&nbsp;не&nbsp;пересылайте в&nbsp;общие чаты.</span></div>
+        <div class="note note--warn"><span class="note__icon">⚠</span><span><strong>Client&nbsp;Secret работает как пароль от&nbsp;вашего Zoom.</strong> Не&nbsp;вставляйте ключи в&nbsp;чат, не&nbsp;выкладывайте в&nbsp;репозиторий и&nbsp;не&nbsp;пересылайте в&nbsp;общие чаты. Вписывайте их&nbsp;в&nbsp;файл настроек сами.</span></div>
+
+        <div class="prompt-block">
+          <div class="prompt-block__title">📋 Промпт: подключить Zoom к&nbsp;секретарю (в&nbsp;Claude Code)</div>
+          <div class="prompt-block__text" id="promptZoom">Подключи Zoom к моему ИИ-секретарю из связки 1. Сервер: ssh my-server.
+
+1. Ключи Zoom в чат не проси. Открой .env секретаря и скажи, в какие строки я впишу их сам: ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET.
+2. Когда я напишу «вписал», перезапусти контейнер секретаря.
+3. Попроси меня поставить в боте тестовую встречу. После этого проверь логи секретаря: строки «zoom create failed» быть не должно.
+4. Если строка есть, объясни простыми словами, что не так: приложение не активировано, не хватает права meeting:write:meeting:admin или неверный ключ.
+
+Ключи никуда не выводи.</div>
+          <button class="btn-copy" onclick="copyBlock('promptZoom', this)">📋 Скопировать промпт</button>
+        </div>
+
+        <div class="item" data-key="zoom-connect"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Подключить Zoom к&nbsp;секретарю</div>
+            <div class="item__hint">Отправьте промпт выше в&nbsp;Claude&nbsp;Code. Он&nbsp;покажет, куда вписать ключи, перезапустит бота и&nbsp;после тестовой встречи проверит, что Zoom не&nbsp;вернул ошибку.</div>
+          </div>
+        </div>
+
+        <div class="item" data-key="zoom-check"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="item__body">
+            <div class="item__text">Проверить ссылку на&nbsp;Zoom во&nbsp;встрече</div>
+            <div class="item__hint">Попросите бота: «Поставь встречу завтра в&nbsp;15:00». Когда Zoom настроен, бот сам добавляет ссылку на&nbsp;встречу в&nbsp;Zoom. Проверьте, что она есть в&nbsp;карточке встречи и&nbsp;в&nbsp;Google Календаре.</div>
+          </div>
+        </div>
       </div>
     </div>
 
