@@ -277,8 +277,8 @@
         </div>
         <div class="item" data-key="pre-model"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           <div class="item__body">
-            <div class="item__text">Модель на выбор: подписка ChatGPT ИЛИ ключ MiniMax</div>
-            <div class="item__hint">Подключается к&nbsp;OpenClaw так&nbsp;же, как в&nbsp;связке&nbsp;1. <strong>Совет:</strong> здесь модель разбирает имена и&nbsp;падежи («Ивану», «Анне»), поэтому ChatGPT справляется заметно точнее.</div>
+            <div class="item__text">Подписка ChatGPT</div>
+            <div class="item__hint">Подключается к&nbsp;OpenClaw так&nbsp;же, как в&nbsp;связке&nbsp;1. Здесь модель разбирает имена и&nbsp;падежи («Ивану», «Анне»).</div>
           </div>
         </div>
         <div class="item" data-key="pre-groq"><div class="item__check"><input type="checkbox"><span class="cm"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.5 9L10 3" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
@@ -324,10 +324,7 @@
 
 Шаг 4. Заполни .env по образцу .env.example: токен бота, мой id, ключ и токен Trello, идентификатор доски, ключ Groq для голосовых (спроси у меня). Файл .env в git не коммить.
 
-Шаг 5. Подключи модель-классификатор в OpenClaw — это мозг, который разбирает мою речь:
-— Вариант 1: подписка ChatGPT через OpenClaw. Заведи отдельного лёгкого агента без лишних инструментов, скопируй ему инструкцию из docs/AGENTS-instrukcija-agenta.md, поставь уровень рассуждений high — здесь важно правильно разбирать имена и падежи («Ивану», «Анне»).
-— Вариант 2: MiniMax по API-ключу.
-Спроси меня, какой вариант выбираю, и настрой его.
+Шаг 5. Подключи модель-классификатор в OpenClaw — это мозг, который разбирает мою речь. Модель — подписка ChatGPT через OpenClaw. Заведи отдельного лёгкого агента без лишних инструментов, скопируй ему инструкцию из docs/AGENTS-instrukcija-agenta.md, поставь уровень рассуждений high — здесь важно правильно разбирать имена и падежи («Ивану», «Анне»).
 
 Шаг 6. Подними бота в докере: docker compose up -d --build. Это два контейнера — привратник и движок Trello. Покажи мне docker compose ps: оба должны быть healthy. Проверяй именно порты 8003 и 8002 (ss -ltnp), а не «сервис запущен»: контейнер, падающий по кругу, между падениями выглядит работающим.
 
