@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ИИ-финансист семьи</title>
 <meta name="description" content="ИИ-ВИЗАЦИЯ для Finance1: учёт голосом, анализ расходов с ИИ и скрытые точки экономии.">
 <meta name="theme-color" content="#21AA4D">
@@ -244,14 +244,22 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 #nav:hover,#nav:focus-within{opacity:1}
 #nav button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:20px;cursor:pointer}
 #nav button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#ncnt{display:none}
 
-/* лента: смартфон и планшет вертикально — слайды идут друг под другом */
+/* смартфон и планшет вертикально: один слайд на экран, панель листания внизу */
 @media (max-width:1023px), (orientation:portrait){
   html,body{height:auto}
   body{overflow:auto;background:var(--bg)}
   #stage{position:static;width:auto;height:auto;transform:none!important;box-shadow:none;overflow:visible}
-  #chrome,#progress,#nav{display:none}
-  .slide{position:relative;inset:auto;opacity:1;visibility:visible;transition:none;padding:72px 40px;overflow:hidden}
+  #chrome,#full{display:none}
+  #progress{position:fixed;top:0;bottom:auto;height:4px;z-index:11}
+  #nav{left:0;right:0;bottom:0;justify-content:space-between;align-items:center;gap:0;opacity:1;padding:10px 16px max(10px,env(safe-area-inset-bottom));background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-top:1px solid var(--line)}
+  #nav button{width:56px;height:48px;border-radius:14px;font-size:22px;background:var(--bg);-webkit-tap-highlight-color:transparent}
+  #nav button:disabled{opacity:.3}
+  #next{background:var(--accent);border-color:var(--accent);color:#fff}
+  #ncnt{display:block;font-family:var(--mono);font-size:16px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+  .slide{display:none;position:relative;inset:auto;opacity:1;visibility:visible;transition:none;padding:56px 40px 110px;overflow:hidden}
+  .slide.active{display:flex;min-height:100vh;min-height:100svh}
   .slide.dark::before{width:520px;height:520px;right:-200px;top:-200px}
   .slide.glow::after{width:560px;height:560px;right:-220px;top:-220px}
   .mt{margin-top:32px}
@@ -372,7 +380,7 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
   .brand{font-size:22px}
 }
 @media (max-width:600px){
-  .slide{padding:56px 16px}
+  .slide{padding:44px 16px 100px}
   .slide.dark::before,.slide.glow::after{width:360px;height:360px;right:-160px;top:-160px}
   .budget th:nth-child(n+5),.budget td:nth-child(n+5){display:none}
   .budget td{font-size:15px;padding:12px 8px}
@@ -837,13 +845,14 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
   <div id="progress"></div>
 </div>
 
-<div id="nav"><button id="prev" type="button" aria-label="Предыдущий слайд">←</button><button id="full" type="button" aria-label="Полный экран">⛶</button><button id="next" type="button" aria-label="Следующий слайд">→</button></div>
+<div id="nav"><button id="prev" type="button" aria-label="Предыдущий слайд">←</button><span id="ncnt" aria-live="polite"></span><button id="full" type="button" aria-label="Полный экран">⛶</button><button id="next" type="button" aria-label="Следующий слайд">→</button></div>
 
 <script>
 (function(){
   var stage=document.getElementById('stage');
   var slides=[].slice.call(document.querySelectorAll('.slide'));
   var cnt=document.getElementById('cnt'), bar=document.getElementById('progress');
+  var ncnt=document.getElementById('ncnt'), prevBtn=document.getElementById('prev'), nextBtn=document.getElementById('next');
   var i=0, total=slides.length;
   var flow=window.matchMedia('(max-width:1023px), (orientation:portrait)');
 
@@ -871,7 +880,9 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
     slides.forEach(function(el,j){el.classList.toggle('active',j===i);});
     stage.classList.toggle('on-dark',slides[i].classList.contains('dark'));
     var p=function(x){return (x<10?'0':'')+x;};
-    cnt.textContent=p(i+1)+' / '+p(total);
+    cnt.textContent=ncnt.textContent=p(i+1)+' / '+p(total);
+    prevBtn.disabled=i===0; nextBtn.disabled=i===total-1;
+    if(flow.matches) window.scrollTo(0,0);
     bar.style.width=((i+1)/total*100)+'%';
     try{history.replaceState(null,'','#'+(i+1));}catch(e){}
   }
@@ -882,7 +893,7 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
   }
 
   document.addEventListener('keydown',function(e){
-    if(flow.matches||e.metaKey||e.ctrlKey||e.altKey) return;
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
     var k=e.key;
     if(k==='ArrowRight'||k==='PageDown'||k===' '||k==='Enter'){e.preventDefault();go(1);}
     else if(k==='ArrowLeft'||k==='PageUp'||k==='Backspace'){e.preventDefault();go(-1);}
@@ -898,10 +909,14 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
     go(e.clientX < r.left + r.width*0.3 ? -1 : 1);
   });
   var x0=null;
-  document.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;},{passive:true});
+  var y0=null;
+  document.addEventListener('touchstart',function(e){
+    if(e.target.closest('.ledger-wrap,.code,#nav')){x0=null;return;}
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY;
+  },{passive:true});
   document.addEventListener('touchend',function(e){
-    if(x0===null||flow.matches) return; var dx=e.changedTouches[0].clientX-x0;
-    if(Math.abs(dx)>40) go(dx<0?1:-1); x0=null;
+    if(x0===null) return; var dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0;
+    if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*1.5) go(dx<0?1:-1); x0=null;
   });
   window.addEventListener('resize',fit);
 
