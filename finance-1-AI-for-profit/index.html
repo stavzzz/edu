@@ -5,308 +5,323 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ИИ-финансист семьи</title>
 <meta name="description" content="Finance 1: учёт голосом, анализ расходов с ИИ и скрытые точки экономии.">
-<meta name="theme-color" content="#21AA4D">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+<meta name="theme-color" content="#E6EFE1">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📒</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <style>
+/* Бухгалтерская книга: мятная разлинованная бумага, синие чернила, красные поля, жёлтый маркер */
 :root{
-  --accent:#21AA4D; --accent-dark:#188A3D; --accent-soft:rgba(33,170,77,.10);
-  --bg:#FFFFFF; --bg2:#F2F2F2; --ink:#303030; --gray:#6F6F6F; --line:#E3E3E3;
-  --dark-text:#E9E9E9; --dark-muted:#A3A3A3; --dark-line:rgba(255,255,255,.12);
-  --amber:#D99A1C; --amber-soft:#FBF0D7; --red:#D14B42; --red-soft:#FBE3E1;
-  --letterbox:#DADADA;
-  --display:'DrukCyr','Oswald','Arial Narrow',sans-serif;
-  --text:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --paper:#E6EFE1; --paper2:#D9E6D2; --sheet:rgba(255,255,255,.64);
+  --ink:#15205A; --ink-soft:#46507F; --line:rgba(21,32,90,.16);
+  --red:#CC3B2C; --plus:#1B7543;
+  --marker:#FFE14A; --marker-soft:#FFF2A8;
+  --on-ink:#E6EFE1; --on-ink-soft:#A9B2D8; --on-ink-line:rgba(230,239,225,.16);
+  --display:'Dela Gothic One','Arial Black',sans-serif;
+  --text:'Golos Text',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
-body{background:var(--letterbox);color:var(--ink);font-family:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased}
-::selection{background:rgba(33,170,77,.25)}
+body{background:#C9D6C2;color:var(--ink);font-family:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:var(--marker)}
 
 /* сцена 1920×1080, масштабируется под окно */
-#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0;background:var(--bg);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.18)}
-.slide{position:absolute;inset:0;padding:96px 132px 120px;display:flex;flex-direction:column;background:var(--bg);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0;background:var(--paper);overflow:hidden;box-shadow:0 20px 60px rgba(21,32,90,.2)}
+.slide{--grid:rgba(27,117,67,.17);position:absolute;inset:0;padding:96px 132px 120px 180px;display:flex;flex-direction:column;
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(90deg,transparent 108px,var(--red) 108px 110px,transparent 110px 116px,var(--red) 116px 118px,transparent 118px),
+    repeating-linear-gradient(180deg,transparent 0 53px,var(--grid) 53px 54px);
+  opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s}
 .slide.active{opacity:1;visibility:visible}
-.slide.alt{background:var(--bg2)}
-.slide.dark{background:var(--ink);color:var(--dark-text)}
-.slide.dark::before{content:'';position:absolute;right:-260px;top:-260px;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(33,170,77,.26) 0%,transparent 65%);pointer-events:none}
-.slide.glow::after{content:'';position:absolute;right:-300px;top:-300px;width:980px;height:980px;border-radius:50%;background:radial-gradient(circle,rgba(33,170,77,.13) 0%,transparent 65%);pointer-events:none}
+.slide.alt{background-color:var(--paper2)}
+.slide.dark{--grid:rgba(230,239,225,.07);background-color:var(--ink);color:var(--on-ink)}
 .slide > *{position:relative;z-index:1}
 .center{justify-content:center}
 
-@keyframes up{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
-.slide.active .rv{animation:up .7s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--d,0) * 90ms)}
-@media (prefers-reduced-motion:reduce){.slide.active .rv{animation:none}.slide{transition:none}}
+@keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.slide.active .rv{animation:up .6s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--d,0) * 80ms)}
+
+/* маркер: главное выделено, как в распечатанной выписке */
+mark{color:inherit;padding:0 .1em;margin:0 -.04em;-webkit-box-decoration-break:clone;box-decoration-break:clone;
+  background:linear-gradient(100deg,transparent 0 .6%,var(--marker) 1.6% 98%,transparent 99.4%) no-repeat 0 62%/0% 74%;
+  transition:background-size .75s cubic-bezier(.6,0,.2,1) .55s}
+.slide.active mark{background-size:100% 74%}
+.dark mark{color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.slide.active .rv{animation:none}.slide{transition:none}mark{transition:none;background-size:100% 74%}}
 
 /* типографика */
-.kicker{font-size:24px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:22px}
-h1{font-family:var(--display);font-weight:700;font-size:136px;line-height:1.0;text-transform:uppercase;letter-spacing:.005em;text-wrap:balance}
-h2{font-family:var(--display);font-weight:700;font-size:84px;line-height:1.04;text-transform:uppercase;letter-spacing:.005em;margin-bottom:22px;text-wrap:balance}
-.acc{color:var(--accent)}
-.lead{font-size:34px;line-height:1.45;color:var(--gray);max-width:1280px}
+.kicker{font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:24px}
+.dark .kicker{color:#FF8A76}
+h1{font-family:var(--display);font-weight:400;font-size:128px;line-height:1.02;letter-spacing:-.01em;text-wrap:balance}
+h2{font-family:var(--display);font-weight:400;font-size:80px;line-height:1.06;letter-spacing:-.005em;margin-bottom:24px;text-wrap:balance}
+.lead{font-size:34px;line-height:1.45;color:var(--ink-soft);max-width:1300px}
 .lead b{color:var(--ink);font-weight:600}
-.dark .lead{color:var(--dark-muted)}
+.dark .lead{color:var(--on-ink-soft)}
 .dark .lead b{color:#fff}
 .mt{margin-top:auto}
 .sp-s{margin-top:28px}.sp-m{margin-top:48px}.sp-l{margin-top:64px}
-.tag{display:inline-block;font-size:20px;font-weight:600;letter-spacing:.04em;padding:9px 20px;border-radius:100px;border:1px solid var(--line);color:var(--gray);background:var(--bg)}
-.tag.green{border-color:var(--accent);color:var(--accent-dark);background:var(--accent-soft)}
-.dark .tag{background:transparent;border-color:var(--dark-line);color:var(--dark-muted)}
+.tag{display:inline-block;font-family:var(--mono);font-size:20px;font-weight:700;letter-spacing:.04em;padding:9px 18px;border-radius:8px;border:2px solid var(--ink);color:var(--ink)}
+.tag.green{background:var(--ink);color:var(--paper)}
+.tag.soft{border:1.5px solid var(--line);color:var(--ink-soft);font-weight:500}
 .row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-.demo-mark{position:absolute;right:132px;top:104px;font-size:19px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);border:1px dashed #BDBDBD;border-radius:100px;padding:8px 18px}
-.dark .demo-mark{color:var(--dark-muted);border-color:rgba(255,255,255,.3)}
+/* штамп «условный пример» */
+.demo-mark{position:absolute;right:132px;top:92px;font-family:var(--mono);font-size:20px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--red);border:3px solid var(--red);border-radius:10px;padding:8px 18px;transform:rotate(-5deg);opacity:.88}
 
 /* сетки и карточки */
 .grid{display:grid;gap:24px}
 .g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g5{grid-template-columns:repeat(5,1fr)}
-.card{background:var(--bg);border:1px solid var(--line);border-radius:22px;padding:36px 34px}
-.alt .card{border-color:transparent}
+.card{background:var(--sheet);border:1.5px solid var(--line);border-radius:14px;padding:36px 34px}
 .card .em{font-size:40px;line-height:1;margin-bottom:22px}
-.card h3{font-size:34px;font-weight:700;line-height:1.2;margin-bottom:14px}
-.card p{font-size:25px;line-height:1.5;color:var(--gray)}
+.card h3{font-size:32px;font-weight:700;line-height:1.2;margin-bottom:14px}
+.card p{font-size:24px;line-height:1.5;color:var(--ink-soft)}
 .card p b{color:var(--ink);font-weight:600}
-.card .n{font-family:var(--display);font-size:72px;font-weight:700;color:var(--accent);line-height:1;margin-bottom:18px}
-.dark .card{background:rgba(255,255,255,.04);border-color:var(--dark-line)}
+.card .n{font-family:var(--display);font-size:64px;color:var(--red);line-height:1;margin-bottom:18px}
+.dark .card{background:rgba(255,255,255,.05);border-color:var(--on-ink-line)}
 .dark .card h3{color:#fff}
-.dark .card p{color:var(--dark-muted)}
-.note{border-radius:18px;padding:24px 30px;font-size:27px;line-height:1.45;background:var(--ink);color:var(--dark-text)}
-.note b{color:#fff}
-.note.soft{background:var(--accent-soft);color:var(--ink);border:1px solid rgba(33,170,77,.3)}
-.note.soft b{color:var(--accent-dark)}
-.dark .note{background:rgba(255,255,255,.06);border:1px solid var(--dark-line)}
+.dark .card p{color:var(--on-ink-soft)}
+.dark .card .n{color:var(--marker)}
+.note{border-radius:12px;padding:24px 30px;font-size:27px;line-height:1.45;background:var(--ink);color:var(--on-ink)}
+.note b{color:var(--marker)}
+.note.soft{background:var(--marker-soft);color:var(--ink);border:1.5px solid #E7CC3E}
+.note.soft b{color:var(--ink)}
+.dark .note{background:rgba(255,255,255,.07);border:1.5px solid var(--on-ink-line)}
 
-/* обложка */
-.hero-top{display:flex;gap:14px;margin-bottom:56px}
-.hero-sub{font-size:38px;line-height:1.4;color:var(--gray);max-width:1180px;margin-top:40px}
-.hero-sub b{color:var(--ink)}
-.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:22px;overflow:hidden}
-.metric{background:var(--bg);padding:30px 18px;text-align:center}
-.metric .v{font-family:var(--display);font-size:64px;font-weight:700;color:var(--accent);line-height:1}
-.metric .l{font-size:22px;color:var(--gray);margin-top:10px}
+/* обложка: строка ведомости с итогом под двойной чертой */
+.hero-top{display:flex;gap:14px;margin-bottom:64px}
+.hero-sub{font-size:36px;line-height:1.42;color:var(--ink-soft);max-width:1240px;margin-top:40px}
+.hero-sub b{color:var(--ink);font-weight:600}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);border-top:2px solid var(--ink);border-bottom:7px double var(--ink)}
+.metric{padding:26px 24px 24px;border-right:1.5px solid var(--line)}
+.metric:last-child{border-right:0}
+.metric .v{font-family:var(--display);font-size:62px;line-height:1;color:var(--ink)}
+.metric .l{font-family:var(--mono);font-size:23px;color:var(--ink-soft);margin-top:12px;line-height:1.35}
 
 /* программа */
 .agenda{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:40px}
 .agenda .card{padding:44px 44px}
-.agenda .time{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--accent-dark);margin-bottom:14px}
-.agenda h3{font-size:40px}
+.agenda .time{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--red);margin-bottom:14px}
+.agenda h3{font-size:38px}
 .agenda ul{list-style:none;margin-top:26px;display:grid;gap:14px}
-.agenda li{font-size:28px;padding-left:34px;position:relative;color:var(--ink)}
-.agenda li::before{content:'';position:absolute;left:4px;top:15px;width:12px;height:12px;border-radius:50%;background:var(--accent)}
+.agenda li{font-size:28px;padding-left:36px;position:relative;color:var(--ink)}
+.agenda li::before{content:'';position:absolute;left:2px;top:18px;width:18px;height:3px;background:var(--red)}
 
 /* большой тезис */
-.thesis{font-family:var(--display);font-weight:700;font-size:156px;line-height:.98;text-transform:uppercase;color:#fff;text-wrap:balance}
+.thesis{font-family:var(--display);font-size:148px;line-height:1.02;color:#fff;text-wrap:balance}
 
 /* схемы-потоки */
-.flow{display:flex;align-items:stretch;gap:0}
-.node{flex:1;border:1px solid var(--line);background:var(--bg);border-radius:20px;padding:28px 26px;display:flex;flex-direction:column;gap:10px}
-.node .t{font-family:var(--mono);font-size:19px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-dark)}
-.node .h{font-size:30px;font-weight:700;line-height:1.2}
-.node .d{font-size:22px;line-height:1.45;color:var(--gray)}
-.node.hl{border:2px solid var(--accent);background:var(--accent-soft)}
-.arrow{width:56px;flex:none;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:40px;font-weight:700}
-.dark .node{background:rgba(255,255,255,.04);border-color:var(--dark-line)}
+.flow{display:flex;align-items:stretch}
+.node{flex:1;border:1.5px solid var(--line);background:var(--sheet);border-radius:14px;padding:28px 26px;display:flex;flex-direction:column;gap:10px}
+.node .t{font-family:var(--mono);font-size:18px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)}
+.node .h{font-size:29px;font-weight:700;line-height:1.2}
+.node .d{font-size:22px;line-height:1.45;color:var(--ink-soft)}
+.node.hl{border:2px solid #E0C02E;background:var(--marker-soft)}
+.arrow{width:56px;flex:none;display:flex;align-items:center;justify-content:center;color:var(--red);font-size:38px;font-weight:700}
+.dark .node{background:rgba(255,255,255,.05);border-color:var(--on-ink-line)}
 .dark .node .h{color:#fff}
-.dark .node .d{color:var(--dark-muted)}
-.dark .node .t{color:var(--accent)}
-.dark .node.hl{border-color:var(--accent);background:rgba(33,170,77,.12)}
+.dark .node .d{color:var(--on-ink-soft)}
+.dark .node .t{color:#FF8A76}
+.dark .node.hl{background:var(--marker);border-color:var(--marker)}
+.dark .node.hl .h{color:var(--ink)}
+.dark .node.hl .d{color:var(--ink-soft)}
+.dark .node.hl .t{color:var(--red)}
+.dark .arrow{color:var(--marker)}
 
 /* карта таблицы */
 .sheetmap{display:grid;grid-template-columns:1fr 64px 1fr 64px 1fr;align-items:center;margin-top:44px}
-.stack{display:grid;gap:18px}
 .side{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px}
 
 /* журнал */
-.ledger-wrap{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--bg);margin-top:36px}
+.ledger-wrap{border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:rgba(255,255,255,.7);margin-top:36px}
 table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
-.ledger th{font-family:var(--mono);font-size:18px;font-weight:700;letter-spacing:.06em;text-align:left;color:var(--gray);background:var(--bg2);padding:18px 20px;border-bottom:1px solid var(--line)}
-.ledger td{font-family:var(--mono);font-size:23px;padding:22px 20px;border-bottom:1px solid var(--line);white-space:nowrap}
+.ledger th{font-family:var(--mono);font-size:17px;font-weight:700;letter-spacing:.06em;text-align:left;color:var(--red);background:var(--paper);padding:18px 20px;border-bottom:2px solid var(--ink);border-right:1px solid var(--line)}
+.ledger td{font-family:var(--mono);font-size:23px;padding:22px 20px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);white-space:nowrap}
+.ledger th:last-child,.ledger td:last-child{border-right:0}
 .ledger tr:last-child td{border-bottom:0}
 .ledger .exp{color:var(--red);font-weight:700}
-.ledger .inc{color:var(--accent-dark);font-weight:700}
+.ledger .inc{color:var(--plus);font-weight:700}
 .ledger .id{font-weight:700}
-.ledger .cm{font-family:var(--text);color:var(--gray);white-space:normal}
+.ledger .cm{font-family:var(--text);color:var(--ink-soft);white-space:normal}
 
 /* сравнение */
 .vs{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:40px}
 .vs .card h3{display:flex;align-items:center;gap:14px}
 .vs ol{margin-top:18px;padding-left:34px;display:grid;gap:10px}
-.vs li{font-size:27px;line-height:1.45;color:var(--gray)}
-.vs .card.good{border:2px solid var(--accent)}
-.verdict{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);font-size:26px;font-weight:600}
+.vs li{font-size:27px;line-height:1.45;color:var(--ink-soft)}
+.vs .card.good{border:2px solid var(--ink);background:rgba(255,255,255,.8)}
+.verdict{margin-top:24px;padding-top:20px;border-top:1.5px solid var(--line);font-size:26px;font-weight:600}
 .verdict.bad{color:var(--red)}
-.verdict.ok{color:var(--accent-dark)}
+.verdict.ok{color:var(--plus)}
 
 /* телефон */
 .split{display:grid;grid-template-columns:1fr 600px;gap:90px;align-items:center;flex:1}
-.phone{width:600px;height:800px;border-radius:56px;background:#1f1f1f;padding:16px;box-shadow:0 30px 70px rgba(0,0,0,.2)}
-.screen{height:100%;border-radius:42px;background:#DDE8DF;overflow:hidden;display:flex;flex-direction:column}
+.phone{width:600px;height:800px;border-radius:56px;background:var(--ink);padding:16px;box-shadow:0 30px 70px rgba(21,32,90,.25)}
+.screen{height:100%;border-radius:42px;background:#DCE5EE;overflow:hidden;display:flex;flex-direction:column}
 .chat-head{background:#fff;padding:24px 28px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--line)}
-.ava{width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:30px}
+.ava{width:56px;height:56px;border-radius:50%;background:var(--ink);color:var(--marker);display:flex;align-items:center;justify-content:center;font-size:30px}
 .chat-head b{font-size:24px;display:block}
-.chat-head span{font-size:18px;color:var(--gray)}
+.chat-head span{font-size:18px;color:var(--ink-soft)}
 .msgs{flex:1;padding:28px 24px;display:flex;flex-direction:column;gap:18px;justify-content:flex-end}
 .bub{max-width:86%;border-radius:22px;padding:16px 20px;font-size:21px;line-height:1.45;background:#fff}
-.bub.me{align-self:flex-end;background:#E1F7CF}
+.bub.me{align-self:flex-end;background:#E1F4D6}
 .voice{display:flex;align-items:center;gap:14px}
-.voice i{font-style:normal;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px}
+.voice i{font-style:normal;width:44px;height:44px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px}
 .wave{display:flex;gap:4px;align-items:center}
-.wave s{display:block;width:5px;border-radius:3px;background:var(--accent-dark);text-decoration:none}
-.bub small{display:block;color:var(--gray);font-size:17px;margin-top:6px}
+.wave s{display:block;width:5px;border-radius:3px;background:var(--ink);text-decoration:none}
+.bub small{display:block;color:var(--ink-soft);font-size:17px;margin-top:6px}
 .bot-card b{display:block;font-size:22px;margin-bottom:6px}
 .bot-card .mono{font-family:var(--mono);font-size:19px}
 .bot-card .bar{height:10px;border-radius:5px;background:var(--line);margin:12px 0 6px;overflow:hidden}
-.bot-card .bar u{display:block;height:100%;width:62%;background:var(--accent)}
+.bot-card .bar u{display:block;height:100%;width:62%;background:var(--plus)}
 .checks{list-style:none;display:grid;gap:22px;margin-top:40px}
-.checks li{font-size:31px;line-height:1.4;padding-left:52px;position:relative}
-.checks li::before{content:'✓';position:absolute;left:0;top:2px;width:36px;height:36px;border-radius:50%;background:var(--accent-soft);color:var(--accent-dark);font-size:21px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.checks li{font-size:31px;line-height:1.4;padding-left:56px;position:relative}
+.checks li::before{content:'✓';position:absolute;left:0;top:3px;width:36px;height:36px;border-radius:8px;border:2px solid var(--ink);color:var(--plus);font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.6)}
 
 /* светофор */
 .lights{display:flex;gap:18px;flex-wrap:wrap}
 .pill{display:inline-flex;align-items:center;gap:10px;font-size:24px;font-weight:600;padding:12px 22px;border-radius:100px}
-.pill.g{background:var(--accent-soft);color:var(--accent-dark)}
-.pill.y{background:var(--amber-soft);color:#8A6212}
-.pill.r{background:var(--red-soft);color:#A8352D}
+.pill.g{background:#D3EAD8;color:#17613A}
+.pill.y{background:var(--marker-soft);color:#6E5200}
+.pill.r{background:#F7D8D2;color:#A12E22}
 
 /* вопросы аналитику */
 .qa{display:grid;grid-template-columns:repeat(2,1fr);gap:18px 28px;margin-top:36px}
-.q{display:flex;justify-content:space-between;align-items:center;gap:20px;background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:22px 28px}
-.alt .q{border-color:transparent}
+.q{display:flex;justify-content:space-between;align-items:center;gap:20px;background:var(--sheet);border:1.5px solid var(--line);border-radius:12px;padding:22px 28px}
 .q span{font-size:28px;font-weight:500}
-.q code{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--accent-dark);background:var(--accent-soft);padding:6px 12px;border-radius:8px;white-space:nowrap}
+.q code{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--ink);background:var(--marker);padding:6px 12px;border-radius:6px;white-space:nowrap}
 
 /* JSON и промпт */
-.code{font-family:var(--mono);font-size:24px;line-height:1.6;background:#262626;color:#E4E4E4;border:1px solid var(--dark-line);border-radius:20px;padding:30px 34px;white-space:pre-wrap}
-.code .k{color:#7FD89C}
-.code .s{color:#F2C879}
-.code .c{color:#8C8C8C}
+.code{font-family:var(--mono);font-size:24px;line-height:1.6;background:#0E1845;color:#E6EFE1;border:1.5px solid var(--on-ink-line);border-radius:14px;padding:30px 34px;white-space:pre-wrap}
+.code .k{color:var(--marker)}
+.code .s{color:#9FE0B5}
+.code .c{color:#8D96C2}
 
 /* план-факт */
-.budget th{font-size:20px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);text-align:left;padding:0 20px 16px;border-bottom:2px solid var(--ink)}
+.budget th{font-family:var(--mono);font-size:18px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);text-align:left;padding:0 20px 16px;border-bottom:2px solid var(--ink)}
 .budget td{font-size:28px;padding:20px 20px;border-bottom:1px solid var(--line)}
 .budget td.num{font-family:var(--mono);text-align:right;white-space:nowrap}
 .budget th.num{text-align:right}
 .budget .track{width:360px;height:14px;border-radius:7px;background:var(--line);overflow:hidden}
 .budget .track u{display:block;height:100%;border-radius:7px}
-.u-g{background:var(--accent)}.u-y{background:var(--amber)}.u-r{background:var(--red)}
+.u-g{background:var(--plus)}.u-y{background:#E3B21A}.u-r{background:var(--red)}
 .budget .over{color:var(--red);font-weight:700}
-.budget .under{color:var(--accent-dark);font-weight:700}
+.budget .under{color:var(--plus);font-weight:700}
 
 /* арифметика мелочей */
 .math{display:flex;align-items:center;gap:30px;margin-top:70px}
-.math .cell{flex:1;text-align:center;border-radius:26px;padding:50px 20px;background:var(--bg);border:1px solid var(--line)}
+.math .cell{flex:1;text-align:center;border-radius:16px;padding:50px 20px;background:var(--sheet);border:1.5px solid var(--line)}
 .math .cell.big{background:var(--ink);border-color:var(--ink)}
-.math .v{font-family:var(--display);font-size:120px;font-weight:700;line-height:1;color:var(--ink)}
-.math .big .v{color:var(--accent)}
-.math .l{font-size:28px;color:var(--gray);margin-top:14px}
-.math .big .l{color:var(--dark-muted)}
-.math .op{font-family:var(--display);font-size:64px;color:var(--accent)}
+.math .v{font-family:var(--display);font-size:112px;line-height:1;color:var(--ink)}
+.math .big .v{color:var(--marker)}
+.math .l{font-family:var(--mono);font-size:24px;color:var(--ink-soft);margin-top:18px}
+.math .big .l{color:var(--on-ink-soft)}
+.math .op{font-family:var(--display);font-size:60px;color:var(--red)}
 
 /* список вопросов */
 .prompts{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:20px 28px;margin-top:40px}
-.prompts li{font-size:29px;line-height:1.4;background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:26px 30px 26px 76px;position:relative}
-.prompts li::before{content:'?';position:absolute;left:24px;top:24px;width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;font-size:22px;display:flex;align-items:center;justify-content:center}
+.prompts li{font-size:29px;line-height:1.4;background:var(--sheet);border:1.5px solid var(--line);border-radius:12px;padding:26px 30px 26px 78px;position:relative}
+.prompts li::before{content:'?';position:absolute;left:24px;top:25px;width:36px;height:36px;border-radius:50%;background:var(--marker);color:var(--ink);font-family:var(--display);font-size:22px;display:flex;align-items:center;justify-content:center}
 
 /* заплати себе */
 .pay{display:grid;grid-template-columns:auto 1fr;gap:80px;align-items:center;margin-top:30px}
-.pay .v{font-family:var(--display);font-weight:700;font-size:300px;line-height:.9;color:var(--accent)}
-.pay .v small{display:block;font-size:56px;color:var(--dark-muted);letter-spacing:.02em}
+.pay .v{font-family:var(--display);font-size:280px;line-height:.92;color:var(--marker)}
+.pay .v small{display:block;font-family:var(--mono);font-size:34px;color:var(--on-ink-soft);letter-spacing:.02em;margin-top:18px}
 
 /* цикл */
 .cycle{position:relative;width:1000px;height:640px;margin:10px auto 0}
-.ring{position:absolute;left:50%;top:50%;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;border:3px dashed rgba(33,170,77,.45)}
-.hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;font-family:var(--display);font-size:44px;font-weight:700;text-transform:uppercase;line-height:1.05;color:var(--accent-dark)}
-.cnode{position:absolute;width:300px;transform:translate(-50%,-50%);text-align:center;background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:20px 18px;box-shadow:0 10px 30px rgba(48,48,48,.06)}
-.cnode b{display:block;font-family:var(--mono);font-size:18px;color:var(--accent-dark);margin-bottom:6px}
+.ring{position:absolute;left:50%;top:50%;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;border:3px dashed rgba(204,59,44,.45)}
+.hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;font-family:var(--display);font-size:42px;line-height:1.08;color:var(--ink)}
+.cnode{position:absolute;width:300px;transform:translate(-50%,-50%);text-align:center;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:20px 18px;box-shadow:0 10px 30px rgba(21,32,90,.08)}
+.cnode b{display:block;font-family:var(--mono);font-size:18px;color:var(--red);margin-bottom:6px}
 .cnode span{font-size:27px;font-weight:600}
 
 /* неделя за неделей */
-.weeks{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:50px;border-top:3px solid var(--ink)}
+.weeks{display:grid;grid-template-columns:repeat(4,1fr);margin-top:50px;border-top:3px solid var(--ink)}
 .week{padding:30px 30px 0 0;position:relative}
-.week::before{content:'';position:absolute;left:0;top:-12px;width:20px;height:20px;border-radius:50%;background:var(--accent);border:4px solid var(--bg)}
-.week .w{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--accent-dark);margin-top:10px}
-.week h3{font-size:33px;font-weight:700;line-height:1.25;margin:12px 0 10px}
-.week p{font-size:24px;line-height:1.5;color:var(--gray)}
+.week::before{content:'';position:absolute;left:0;top:-12px;width:20px;height:20px;border-radius:50%;background:var(--red);border:4px solid var(--paper)}
+.week .w{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--red);margin-top:10px}
+.week h3{font-size:32px;font-weight:700;line-height:1.25;margin:12px 0 10px}
+.week p{font-size:24px;line-height:1.5;color:var(--ink-soft)}
 
 /* финал */
-.brand{font-family:var(--display);font-size:40px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.brand{font-family:var(--mono);font-size:28px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--marker)}
 
 /* служебная панель */
-#chrome{position:absolute;left:0;right:0;bottom:0;height:72px;padding:0 132px;display:flex;align-items:center;justify-content:space-between;font-size:20px;color:var(--gray);z-index:5;pointer-events:none}
-#chrome .logo{font-family:var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
-#chrome .cnt{font-family:var(--mono);font-variant-numeric:tabular-nums}
-#stage.on-dark #chrome{color:var(--dark-muted)}
-#progress{position:absolute;left:0;bottom:0;height:6px;background:var(--accent);z-index:6;transition:width .35s ease}
+#chrome{position:absolute;left:0;right:0;bottom:0;height:72px;padding:0 132px 0 180px;display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:19px;color:var(--ink-soft);z-index:5;pointer-events:none}
+#chrome .logo{font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+#chrome .cnt{font-variant-numeric:tabular-nums}
+#stage.on-dark #chrome{color:var(--on-ink-soft)}
+#progress{position:absolute;left:0;bottom:0;height:6px;background:var(--red);z-index:6;transition:width .35s ease}
 #nav{position:fixed;right:16px;bottom:16px;display:flex;gap:8px;z-index:10;opacity:.25;transition:opacity .2s}
 @media (hover:hover) and (pointer:fine){#nav{opacity:0}}
 #nav:hover,#nav:focus-within{opacity:1}
-#nav button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:20px;cursor:pointer}
-#nav button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#nav button{width:44px;height:44px;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-size:20px;cursor:pointer}
+#nav button:focus-visible{outline:3px solid var(--red);outline-offset:2px}
 #ncnt{display:none}
 
 /* смартфон и планшет вертикально: один слайд на экран, панель листания внизу */
 @media (max-width:1023px), (orientation:portrait){
   html,body{height:auto}
-  body{overflow:auto;background:var(--bg)}
+  body{overflow:auto;background:var(--paper)}
   #stage{position:static;width:auto;height:auto;transform:none!important;box-shadow:none;overflow:visible}
   #chrome,#full{display:none}
   #progress{position:fixed;top:0;bottom:auto;height:4px;z-index:11}
-  #nav{left:0;right:0;bottom:0;justify-content:space-between;align-items:center;gap:0;opacity:1;padding:10px 16px max(10px,env(safe-area-inset-bottom));background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-top:1px solid var(--line)}
-  #nav button{width:56px;height:48px;border-radius:14px;font-size:22px;background:var(--bg);-webkit-tap-highlight-color:transparent}
+  #nav{left:0;right:0;bottom:0;justify-content:space-between;align-items:center;gap:0;opacity:1;padding:10px 16px max(10px,env(safe-area-inset-bottom));background:rgba(230,239,225,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-top:1.5px solid var(--line)}
+  #nav button{width:56px;height:48px;border-radius:12px;font-size:22px;-webkit-tap-highlight-color:transparent}
   #nav button:disabled{opacity:.3}
-  #next{background:var(--accent);border-color:var(--accent);color:#fff}
+  #next{background:var(--ink);border-color:var(--ink);color:var(--paper)}
   #ncnt{display:block;font-family:var(--mono);font-size:16px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
-  .slide{display:none;position:relative;inset:auto;opacity:1;visibility:visible;transition:none;padding:56px 40px 110px;overflow:hidden}
+  .slide{display:none;position:relative;inset:auto;opacity:1;visibility:visible;transition:none;padding:56px 40px 110px 52px;overflow:hidden;
+    background-image:linear-gradient(90deg,transparent 18px,var(--red) 18px 19.5px,transparent 19.5px 23px,var(--red) 23px 24.5px,transparent 24.5px),
+      repeating-linear-gradient(180deg,transparent 0 35px,var(--grid) 35px 36px)}
   .slide.active{display:flex;min-height:100vh;min-height:100svh}
-  .slide.dark::before{width:520px;height:520px;right:-200px;top:-200px}
-  .slide.glow::after{width:560px;height:560px;right:-220px;top:-220px}
   .mt{margin-top:32px}
   .sp-s{margin-top:18px}.sp-m{margin-top:28px}.sp-l{margin-top:36px}
 
-  .kicker{font-size:14px;margin-bottom:14px}
-  h1{font-size:clamp(46px,9vw,84px)}
-  h2{font-size:clamp(36px,7vw,60px);margin-bottom:16px}
-  .thesis{font-size:clamp(48px,10.5vw,96px)}
+  .kicker{font-size:13px;margin-bottom:14px}
+  h1{font-size:clamp(40px,8.4vw,80px)}
+  h2{font-size:clamp(30px,6.4vw,56px);margin-bottom:16px}
+  .thesis{font-size:clamp(30px,8.5vw,92px)}
   .lead{font-size:clamp(17px,2.6vw,22px)}
   .hero-top{flex-wrap:wrap;gap:8px;margin-bottom:32px}
   .hero-sub{font-size:clamp(18px,2.8vw,24px);margin-top:24px}
-  .tag{font-size:14px;padding:7px 14px}
-  .demo-mark{position:static;align-self:flex-start;font-size:12px;padding:6px 12px;margin-bottom:16px}
+  .tag{font-size:13px;padding:7px 12px;border-width:1.5px}
+  .demo-mark{position:static;align-self:flex-start;font-size:12px;padding:6px 12px;margin:4px 0 18px;border-width:2px}
 
   .grid{gap:14px}
   .g2,.g3,.g4,.g5{grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr))}
-  .card{padding:24px 22px;border-radius:18px}
+  .card{padding:24px 22px;border-radius:12px}
   .card .em{font-size:30px;margin-bottom:14px}
   .card h3{font-size:21px;margin-bottom:8px}
   .card p{font-size:16px}
-  .card .n{font-size:44px;margin-bottom:10px}
-  .note{font-size:17px;padding:18px 22px;border-radius:14px}
+  .card .n{font-size:40px;margin-bottom:10px}
+  .note{font-size:17px;padding:18px 22px;border-radius:10px}
 
-  .metrics{display:flex;flex-wrap:wrap;border-radius:18px}
-  .metric{flex:1 1 150px;padding:20px 12px}
-  .metric .v{font-size:40px}
-  .metric .l{font-size:14px}
+  .metrics{display:flex;flex-wrap:wrap;border-bottom-width:6px}
+  .metric{flex:1 1 140px;padding:18px 14px;border-bottom:1.5px solid var(--line)}
+  .metric .v{font-size:36px}
+  .metric .l{font-size:13px;margin-top:8px}
 
   .agenda{grid-template-columns:1fr;gap:14px;margin-top:24px}
   .agenda .card{padding:26px 24px}
   .agenda .time{font-size:18px}
-  .agenda h3{font-size:24px}
+  .agenda h3{font-size:23px}
   .agenda ul{margin-top:16px;gap:10px}
-  .agenda li{font-size:17px;padding-left:26px}
-  .agenda li::before{top:8px;width:9px;height:9px}
+  .agenda li{font-size:17px;padding-left:28px}
+  .agenda li::before{top:11px;width:14px;height:2px}
 
   .flow{flex-direction:column}
-  .node{padding:20px 20px;border-radius:16px;gap:6px}
-  .node .t{font-size:13px}
+  .node{padding:20px 20px;border-radius:12px;gap:6px}
+  .node .t{font-size:12px}
   .node .h{font-size:20px}
   .node .d{font-size:15px}
   .arrow{width:auto;height:36px;font-size:26px;transform:rotate(90deg)}
   .sheetmap{grid-template-columns:1fr;margin-top:24px}
   .side{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px;margin-top:14px}
 
-  .ledger-wrap{overflow-x:auto;margin-top:24px;border-radius:16px}
+  .ledger-wrap{overflow-x:auto;margin-top:24px;border-radius:10px}
   .ledger th{font-size:12px;padding:12px 14px}
   .ledger td{font-size:14px;padding:14px}
   .ledger .cm{white-space:nowrap}
@@ -331,42 +346,42 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
   .bot-card .mono{font-size:14px}
   .checks{gap:14px;margin-top:24px}
   .checks li{font-size:18px;padding-left:38px}
-  .checks li::before{width:26px;height:26px;font-size:15px}
+  .checks li::before{width:26px;height:26px;font-size:15px;border-radius:6px;top:0}
 
   .pill{font-size:15px;padding:8px 14px}
   .lights{gap:10px}
 
   .qa{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px;margin-top:24px}
-  .q{padding:14px 18px;border-radius:14px;gap:12px}
+  .q{padding:14px 18px;border-radius:10px;gap:12px}
   .q span{font-size:17px}
   .q code{font-size:12px}
 
-  .code{font-size:14px;padding:18px 20px;border-radius:14px;overflow-x:auto}
+  .code{font-size:14px;padding:18px 20px;border-radius:10px;overflow-x:auto}
 
   .budget{margin-top:20px}
-  .budget th{font-size:12px;padding:0 12px 10px}
+  .budget th{font-size:11px;padding:0 12px 10px}
   .budget td{font-size:16px;padding:12px}
   .budget .track{width:120px;height:10px}
   .budget .pill{font-size:13px;padding:5px 10px;white-space:nowrap}
 
   .math{flex-direction:column;gap:12px;margin-top:28px}
-  .math .cell{width:100%;padding:26px 16px;border-radius:18px}
-  .math .v{font-size:56px}
-  .math .l{font-size:16px;margin-top:8px}
-  .math .op{font-size:36px;transform:rotate(90deg)}
+  .math .cell{width:100%;padding:26px 16px;border-radius:12px}
+  .math .v{font-size:52px}
+  .math .l{font-size:14px;margin-top:10px}
+  .math .op{font-size:34px;transform:rotate(90deg)}
 
   .prompts{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px;margin-top:24px}
-  .prompts li{font-size:17px;padding:18px 20px 18px 58px;border-radius:14px}
-  .prompts li::before{left:18px;top:17px;width:28px;height:28px;font-size:16px}
+  .prompts li{font-size:17px;padding:18px 20px 18px 58px;border-radius:10px}
+  .prompts li::before{left:18px;top:17px;width:28px;height:28px;font-size:15px}
 
   .pay{grid-template-columns:1fr;gap:20px;margin-top:16px}
-  .pay .v{font-size:clamp(110px,24vw,180px)}
-  .pay .v small{font-size:22px;margin-top:8px}
+  .pay .v{font-size:clamp(100px,22vw,170px)}
+  .pay .v small{font-size:18px;margin-top:10px}
 
   .cycle{width:auto;height:auto;margin:24px 0 0;display:grid;gap:10px}
   .ring{display:none}
-  .hub{position:static;transform:none;text-align:left;font-size:26px;margin-bottom:6px}
-  .cnode{position:static;transform:none;width:auto;text-align:left;display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:14px}
+  .hub{position:static;transform:none;text-align:left;font-size:24px;margin-bottom:6px}
+  .cnode{position:static;transform:none;width:auto;text-align:left;display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:10px}
   .cnode b{font-size:15px;margin:0}
   .cnode span{font-size:18px}
 
@@ -377,11 +392,10 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
   .week h3{font-size:21px;margin:8px 0 6px}
   .week p{font-size:16px}
 
-  .brand{font-size:22px}
+  .brand{font-size:16px}
 }
 @media (max-width:600px){
-  .slide{padding:44px 16px 100px}
-  .slide.dark::before,.slide.glow::after{width:360px;height:360px;right:-160px;top:-160px}
+  .slide{padding:44px 16px 100px 40px}
   .budget th:nth-child(n+5),.budget td:nth-child(n+5){display:none}
   .budget td{font-size:15px;padding:12px 8px}
   .budget th{padding:0 8px 10px}
@@ -393,12 +407,11 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 <div id="stage">
 
 <!-- 1 · Обложка -->
-<section class="slide glow">
+<section class="slide">
   <div class="hero-top rv"><span class="tag green">Инвестиционный клуб Finance 1</span><span class="tag">19 сентября</span></div>
-  <div class="kicker rv" style="--d:1">Два выступления · 60 минут</div>
-  <h1 class="rv" style="--d:2">ИИ-финансист<br><span class="acc">семейного бюджета</span></h1>
-  <p class="hero-sub rv" style="--d:3">Как вести учёт голосом, разбирать расходы с&nbsp;помощью ИИ и&nbsp;находить деньги, которые утекают незаметно.<br><b>Спикер — Стас Панков, онлайн&#8209;школа ИИ&#8209;ВИЗАЦИЯ</b></p>
-  <div class="metrics mt rv" style="--d:4">
+  <h1 class="rv" style="--d:1">ИИ&#8209;финансист<br><mark>семейного бюджета</mark></h1>
+  <p class="hero-sub rv" style="--d:2">Как вести учёт голосом, разбирать расходы с помощью ИИ и находить деньги, которые утекают незаметно.<br><b>Спикер — Стас Панков, онлайн&#8209;школа ИИ&#8209;ВИЗАЦИЯ</b></p>
+  <div class="metrics mt rv" style="--d:3">
     <div class="metric"><div class="v">4</div><div class="l">шага системы</div></div>
     <div class="metric"><div class="v">2</div><div class="l">человека ведут учёт</div></div>
     <div class="metric"><div class="v">1,5+</div><div class="l">года веду учёт</div></div>
@@ -410,7 +423,7 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 <!-- 2 · Программа -->
 <section class="slide alt">
   <div class="kicker rv">Программа</div>
-  <h2 class="rv" style="--d:1">Два доклада подряд</h2>
+  <h2 class="rv" style="--d:1">Два выступления подряд</h2>
   <div class="agenda">
     <div class="card rv" style="--d:2">
       <div class="time">11:15–11:45</div>
@@ -428,20 +441,20 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 <!-- 3 · Тезис -->
 <section class="slide dark center">
   <div class="kicker rv">Часть 1 · ИИ как личный финансовый помощник</div>
-  <div class="thesis rv" style="--d:1">Нельзя анализировать<br><span class="acc">то, чего нет</span></div>
-  <p class="lead sp-l rv" style="--d:2">Вы не купите актив без отчётности. С&nbsp;личными деньгами правило то же: <b>сначала данные, потом выводы.</b></p>
+  <div class="thesis rv" style="--d:1">Нельзя анализировать <mark>то, чего нет</mark></div>
+  <p class="lead sp-l rv" style="--d:2">Актив без отчётности вы не купите. С личными деньгами так же: <b>сначала данные, потом выводы.</b></p>
 </section>
 
 <!-- 4 · Четыре шага -->
 <section class="slide">
   <div class="kicker rv">Система</div>
   <h2 class="rv" style="--d:1">Четыре шага по порядку</h2>
-  <p class="lead rv" style="--d:2">Каждый следующий шаг работает только на&nbsp;данных предыдущего.</p>
+  <p class="lead rv" style="--d:2">Каждый шаг опирается на данные предыдущего.</p>
   <div class="grid g4 sp-l">
-    <div class="card rv" style="--d:3"><div class="n">01</div><h3>Логирование</h3><p>Записываем каждую операцию в&nbsp;одну базу.</p></div>
-    <div class="card rv" style="--d:4"><div class="n">02</div><h3>Накопление</h3><p>Автоматизируем ввод, чтобы не&nbsp;бросить учёт через неделю.</p></div>
-    <div class="card rv" style="--d:5"><div class="n">03</div><h3>Анализ</h3><p>Минимум через полгода ищем закономерности и&nbsp;утечки.</p></div>
-    <div class="card rv" style="--d:6"><div class="n">04</div><h3>Заплати себе</h3><p>Первым платежом откладываем до&nbsp;10% дохода.</p></div>
+    <div class="card rv" style="--d:3"><div class="n">01</div><h3>Логирование</h3><p>Записываем каждую операцию в одну базу.</p></div>
+    <div class="card rv" style="--d:4"><div class="n">02</div><h3>Накопление</h3><p>Автоматизируем ввод, чтобы не бросить учёт через неделю.</p></div>
+    <div class="card rv" style="--d:5"><div class="n">03</div><h3>Анализ</h3><p>Когда накопится хотя бы полгода данных, ищем закономерности и утечки.</p></div>
+    <div class="card rv" style="--d:6"><div class="n">04</div><h3>Заплати себе</h3><p>Первым платежом откладываем до 10% дохода.</p></div>
   </div>
 </section>
 
@@ -451,29 +464,29 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
   <h2 class="rv" style="--d:1">Что записывать</h2>
   <div class="grid g5 sp-m">
     <div class="card rv" style="--d:2"><div class="em">💵</div><h3>Доходы</h3><p>Зарплата, клиенты, подработки. Каждое поступление отдельной строкой.</p></div>
-    <div class="card rv" style="--d:3"><div class="em">🧾</div><h3>Расходы</h3><p>Каждая трата с&nbsp;категорией и&nbsp;комментарием.</p></div>
-    <div class="card rv" style="--d:4"><div class="em">📈</div><h3>Активы</h3><p>Что приносит деньги или растёт в&nbsp;цене: крипта, акции, недвижимость.</p></div>
-    <div class="card rv" style="--d:5"><div class="em">⚖️</div><h3>Пассивы</h3><p>Кредиты, рассрочки, долги. Всё, что забирает деньги каждый месяц.</p></div>
-    <div class="card rv" style="--d:6"><div class="em">🧭</div><h3>Источники дохода</h3><p>Откуда приходят деньги и&nbsp;какой источник главный.</p></div>
+    <div class="card rv" style="--d:3"><div class="em">🧾</div><h3>Расходы</h3><p>Каждая трата с категорией и комментарием.</p></div>
+    <div class="card rv" style="--d:4"><div class="em">📈</div><h3>Активы</h3><p>То, что приносит деньги или дорожает: крипта, акции, недвижимость.</p></div>
+    <div class="card rv" style="--d:5"><div class="em">⚖️</div><h3>Пассивы</h3><p>Кредиты, рассрочки, долги. Всё, что каждый месяц забирает деньги.</p></div>
+    <div class="card rv" style="--d:6"><div class="em">🧭</div><h3>Источники дохода</h3><p>Откуда приходят деньги и какой источник главный.</p></div>
   </div>
-  <div class="note mt rv" style="--d:7"><b>Формат простой:</b> одна операция, одна строка. Всё в&nbsp;одной базе, а&nbsp;не в&nbsp;пяти приложениях.</div>
+  <div class="note mt rv" style="--d:7"><b>Правило одно:</b> одна операция — одна строка, и все строки лежат в одной базе.</div>
 </section>
 
 <!-- 6 · Устройство таблицы -->
 <section class="slide">
   <div class="kicker rv">Моя база</div>
-  <h2 class="rv" style="--d:1">Google-таблица из&nbsp;17 листов</h2>
-  <p class="lead rv" style="--d:2">Реальные суммы не&nbsp;показываю. Только устройство, которое можно повторить.</p>
+  <h2 class="rv" style="--d:1">Google-таблица из 17 листов</h2>
+  <p class="lead rv" style="--d:2">Реальные суммы не показываю, только устройство. Его можно повторить у себя.</p>
   <div class="sheetmap">
-    <div class="node hl rv" style="--d:3"><div class="t">PNL</div><div class="h">Журнал операций</div><div class="d">Сюда бот пишет каждую операцию. Одна строка на&nbsp;доход или расход.</div></div>
+    <div class="node hl rv" style="--d:3"><div class="t">PNL</div><div class="h">Журнал операций</div><div class="d">Сюда бот пишет каждую операцию: одна строка на доход или расход.</div></div>
     <div class="arrow rv" style="--d:4">→</div>
-    <div class="node rv" style="--d:5"><div class="t">12 листов</div><div class="h">Январь… декабрь</div><div class="d">План и&nbsp;факт по&nbsp;категориям, отклонение, разбивка по&nbsp;дням.</div></div>
+    <div class="node rv" style="--d:5"><div class="t">12 листов</div><div class="h">Январь… декабрь</div><div class="d">План и факт по категориям, отклонение, разбивка по дням.</div></div>
     <div class="arrow rv" style="--d:6">→</div>
-    <div class="node rv" style="--d:7"><div class="t">ANALYSIS</div><div class="h">Итоги года</div><div class="d">Доходы, расходы и&nbsp;остаток по&nbsp;месяцам, доли категорий.</div></div>
+    <div class="node rv" style="--d:7"><div class="t">ANALYSIS</div><div class="h">Итоги года</div><div class="d">Доходы, расходы и остаток по месяцам, доли категорий.</div></div>
   </div>
   <div class="side">
-    <div class="node rv" style="--d:8"><div class="t">МЕТА-ДАННЫЕ</div><div class="h">Справочник категорий</div><div class="d">Отдельные списки для доходов и&nbsp;расходов. Бот выбирает только из&nbsp;них.</div></div>
-    <div class="node rv" style="--d:9"><div class="t">SYSTEM</div><div class="h">Служебный лист бота</div><div class="d">Счётчик номеров записей. Номер выдаётся один раз и&nbsp;больше не&nbsp;повторяется.</div></div>
+    <div class="node rv" style="--d:8"><div class="t">МЕТА-ДАННЫЕ</div><div class="h">Справочник категорий</div><div class="d">Отдельные списки для доходов и расходов. Бот выбирает категорию только из них.</div></div>
+    <div class="node rv" style="--d:9"><div class="t">SYSTEM</div><div class="h">Служебный лист бота</div><div class="d">Счётчик номеров записей. Номер выдаётся один раз и больше не повторяется.</div></div>
   </div>
 </section>
 
@@ -482,37 +495,37 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
   <span class="demo-mark">Условный пример</span>
   <div class="kicker rv">Лист PNL</div>
   <h2 class="rv" style="--d:1">Одна строка журнала</h2>
-  <p class="lead rv" style="--d:2">Восемь колонок, и&nbsp;по&nbsp;ним можно ответить на&nbsp;любой вопрос о&nbsp;деньгах.</p>
+  <p class="lead rv" style="--d:2">Восемь колонок. По ним бот считает траты по категориям, месяцам и людям.</p>
   <div class="ledger-wrap rv" style="--d:3">
     <table class="ledger">
       <thead><tr><th>ID</th><th>ДАТА</th><th>ТИП</th><th>КАТЕГОРИЯ</th><th>SUM, USD</th><th>RAW SUM</th><th>COMMENT</th><th>ИСТОЧНИК</th></tr></thead>
       <tbody>
-        <tr><td class="id">R-0412</td><td>14.07.2026</td><td class="exp">РАСХОД</td><td>КОФЕ</td><td>$4,30</td><td>350 RUB</td><td class="cm">капучино с&nbsp;собой</td><td>Стас</td></tr>
-        <tr><td class="id">R-0413</td><td>14.07.2026</td><td class="exp">РАСХОД</td><td>ТАКСИ</td><td>$4,60</td><td>120 000 VND</td><td class="cm">поездка до&nbsp;рынка</td><td>Жена</td></tr>
+        <tr><td class="id">R-0412</td><td>14.07.2026</td><td class="exp">РАСХОД</td><td>КОФЕ</td><td>$4,30</td><td>350 RUB</td><td class="cm">капучино с собой</td><td>Стас</td></tr>
+        <tr><td class="id">R-0413</td><td>14.07.2026</td><td class="exp">РАСХОД</td><td>ТАКСИ</td><td>$4,60</td><td>120 000 VND</td><td class="cm">поездка до рынка</td><td>Жена</td></tr>
         <tr><td class="id">D-0031</td><td>15.07.2026</td><td class="inc">ДОХОД</td><td>ДОП ДОХОД</td><td>$500,00</td><td>500 USD</td><td class="cm">оплата проекта</td><td>Стас</td></tr>
       </tbody>
     </table>
   </div>
-  <div class="row mt rv" style="--d:4"><span class="tag green">Номер записи не&nbsp;меняется</span><span class="tag green">Сумма в&nbsp;USD и&nbsp;в&nbsp;исходной валюте</span><span class="tag green">Видно, кто записал</span></div>
+  <div class="row mt rv" style="--d:4"><span class="tag soft">Номер записи не меняется</span><span class="tag soft">Сумма в USD и в исходной валюте</span><span class="tag soft">Видно, кто записал</span></div>
 </section>
 
 <!-- 8 · Накопление -->
 <section class="slide">
   <div class="kicker rv">Шаг 2 · Накопление</div>
-  <h2 class="rv" style="--d:1">Ручной учёт<br>быстро бросают</h2>
+  <h2 class="rv" style="--d:1">Ручной учёт <mark>быстро бросают</mark></h2>
   <div class="vs">
     <div class="card rv" style="--d:2">
       <h3>✍️ Вручную</h3>
-      <ol><li>Открыть таблицу и&nbsp;найти нужный лист</li><li>Вспомнить категорию</li><li>Пересчитать валюту</li><li>Вписать сумму и&nbsp;комментарий</li></ol>
-      <div class="verdict bad">Каждая трата отнимает время, и&nbsp;учёт заканчивается.</div>
+      <ol><li>Открыть таблицу и найти нужный лист</li><li>Вспомнить категорию</li><li>Пересчитать валюту</li><li>Вписать сумму и комментарий</li></ol>
+      <div class="verdict bad">На каждую трату уходит время, и учёт бросают.</div>
     </div>
     <div class="card good rv" style="--d:3">
       <h3>🎙️ Голосом</h3>
-      <ol><li>Сказать фразу в&nbsp;Telegram</li><li>Бот сам выбирает категорию</li><li>Бот сам пересчитывает валюту</li><li>Бот сам записывает строку</li></ol>
-      <div class="verdict ok">Запись занимает несколько секунд, и&nbsp;учёт живёт.</div>
+      <ol><li>Сказать фразу в Telegram</li><li>Бот сам выбирает категорию</li><li>Бот сам пересчитывает валюту</li><li>Бот сам записывает строку</li></ol>
+      <div class="verdict ok">Запись занимает несколько секунд, поэтому учёт не бросаешь.</div>
     </div>
   </div>
-  <div class="note soft mt rv" style="--d:4"><b>Цель шага:</b> непрерывные данные минимум за&nbsp;полгода. Без них анализ превращается в&nbsp;гадание.</div>
+  <div class="note soft mt rv" style="--d:4"><b>Цель шага:</b> непрерывные данные хотя бы за полгода. Без них анализ превращается в гадание.</div>
 </section>
 
 <!-- 9 · Семейный бот -->
@@ -520,12 +533,12 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
   <div class="split">
     <div>
       <div class="kicker rv">Автоматизация</div>
-      <h2 class="rv" style="--d:1">Семейный бот<br>в&nbsp;Telegram</h2>
-      <p class="lead rv" style="--d:2">Мы с&nbsp;женой записываем доходы и&nbsp;расходы голосом. Бот ведёт журнал и&nbsp;отвечает на&nbsp;вопросы о&nbsp;бюджете.</p>
+      <h2 class="rv" style="--d:1">Семейный бот в Telegram</h2>
+      <p class="lead rv" style="--d:2">Мы с женой записываем доходы и расходы голосом. Бот ведёт журнал и отвечает на вопросы о бюджете.</p>
       <ul class="checks">
-        <li class="rv" style="--d:3">Понимает голос и&nbsp;обычный текст</li>
-        <li class="rv" style="--d:4">Карточку о&nbsp;каждой записи получают оба</li>
-        <li class="rv" style="--d:5">После траты показывает остаток по&nbsp;плану</li>
+        <li class="rv" style="--d:3">Понимает голос и обычный текст</li>
+        <li class="rv" style="--d:4">Карточку о каждой записи получаем оба</li>
+        <li class="rv" style="--d:5">После траты показывает остаток по плану</li>
         <li class="rv" style="--d:6">Чужим пользователям отказывает</li>
       </ul>
     </div>
@@ -534,17 +547,17 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
         <div class="chat-head"><div class="ava">₿</div><div><b>Семейный финансист</b><span>бот · условный пример</span></div></div>
         <div class="msgs">
           <div class="bub me">
-            <div class="voice"><i>▶</i><div class="wave"><s style="height:14px"></s><s style="height:26px"></s><s style="height:18px"></s><s style="height:32px"></s><s style="height:22px"></s><s style="height:12px"></s><s style="height:28px"></s><s style="height:16px"></s><s style="height:24px"></s><s style="height:10px"></s></div><span style="font-size:17px;color:#6F6F6F">0:04</span></div>
+            <div class="voice"><i>▶</i><div class="wave"><s style="height:14px"></s><s style="height:26px"></s><s style="height:18px"></s><s style="height:32px"></s><s style="height:22px"></s><s style="height:12px"></s><s style="height:28px"></s><s style="height:16px"></s><s style="height:24px"></s><s style="height:10px"></s></div><span style="font-size:17px;color:#46507F">0:04</span></div>
             <small>«Кофе, триста пятьдесят рублей»</small>
           </div>
           <div class="bub bot-card">
             <b>✅ Записал R-0412</b>
             <div class="mono">КОФЕ · $4,30 · 350 RUB</div>
             <div class="bar"><u></u></div>
-            <small>🟢 Остаток по&nbsp;категории в&nbsp;пределах плана</small>
+            <small>🟢 Остаток по категории в пределах плана</small>
           </div>
-          <div class="bub me">Сколько потратили на&nbsp;такси в&nbsp;июле?</div>
-          <div class="bub bot-card"><b>🚕 Такси · июль</b><small>Сумма, число поездок и&nbsp;средний чек приходят одной карточкой</small></div>
+          <div class="bub me">Сколько потратили на такси в июле?</div>
+          <div class="bub bot-card"><b>🚕 Такси · июль</b><small>Сумма, число поездок и средний чек приходят одной карточкой</small></div>
         </div>
       </div>
     </div>
@@ -555,19 +568,19 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 <section class="slide dark">
   <div class="kicker rv">Под капотом</div>
   <h2 class="rv" style="--d:1">Что внутри бота</h2>
-  <p class="lead rv" style="--d:2">Сценарии собраны в&nbsp;n8n. Путь одного голосового сообщения:</p>
+  <p class="lead rv" style="--d:2">Сценарии собраны в n8n. Так проходит одно голосовое сообщение:</p>
   <div class="flow sp-m">
     <div class="node rv" style="--d:3"><div class="t">Telegram</div><div class="h">Голос или текст</div><div class="d">Пишут двое членов семьи</div></div>
     <div class="arrow rv" style="--d:3">→</div>
-    <div class="node rv" style="--d:4"><div class="t">n8n</div><div class="h">Проверка доступа</div><div class="d">Остальным вежливый отказ</div></div>
+    <div class="node rv" style="--d:4"><div class="t">n8n</div><div class="h">Проверка доступа</div><div class="d">Остальным бот вежливо отказывает</div></div>
     <div class="arrow rv" style="--d:4">→</div>
-    <div class="node rv" style="--d:5"><div class="t">Whisper</div><div class="h">Голос в&nbsp;текст</div><div class="d">Распознавание речи</div></div>
+    <div class="node rv" style="--d:5"><div class="t">Whisper</div><div class="h">Голос в текст</div><div class="d">Распознавание речи</div></div>
     <div class="arrow rv" style="--d:5">→</div>
     <div class="node hl rv" style="--d:6"><div class="t">ИИ-агент</div><div class="h">Запись или вопрос?</div><div class="d">Решает, кому отдать задачу</div></div>
   </div>
   <div class="grid g2 sp-m">
-    <div class="node rv" style="--d:7"><div class="t">Запись → логгер</div><div class="h">Категория, тип, курс валюты</div><div class="d">Строка в&nbsp;листе PNL и&nbsp;карточка обоим супругам с&nbsp;остатком по&nbsp;плану</div></div>
-    <div class="node rv" style="--d:8"><div class="t">Вопрос → аналитик</div><div class="h">Расчёт по&nbsp;журналу</div><div class="d">Итоги, категории, динамика, план и&nbsp;факт. Ответ приходит карточкой</div></div>
+    <div class="node rv" style="--d:7"><div class="t">Запись → логгер</div><div class="h">Категория, тип, курс валюты</div><div class="d">Строка в листе PNL и карточка обоим супругам с остатком по плану</div></div>
+    <div class="node rv" style="--d:8"><div class="t">Вопрос → аналитик</div><div class="h">Расчёт по журналу</div><div class="d">Итоги, категории, динамика, план и факт. Ответ приходит карточкой</div></div>
   </div>
 </section>
 
@@ -576,44 +589,44 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
   <div class="kicker rv">Логгер</div>
   <h2 class="rv" style="--d:1">Запись без рутины</h2>
   <div class="grid g4 sp-m">
-    <div class="card rv" style="--d:2"><div class="em">➕</div><h3>Записать</h3><p>Определяет категорию и&nbsp;тип операции. Сумму переводит в&nbsp;доллары по&nbsp;текущему курсу.</p></div>
+    <div class="card rv" style="--d:2"><div class="em">➕</div><h3>Записать</h3><p>Определяет категорию и тип операции. Сумму переводит в доллары по текущему курсу.</p></div>
     <div class="card rv" style="--d:3"><div class="em">✏️</div><h3>Исправить</h3><p><b>«Измени R-0412: категория рестораны».</b> Меняет категорию, сумму, дату или комментарий.</p></div>
-    <div class="card rv" style="--d:4"><div class="em">🗑️</div><h3>Удалить</h3><p><b>«Удали последнюю»</b> или <b>«удали R-0412»</b>. Номера других записей не&nbsp;сдвигаются.</p></div>
-    <div class="card rv" style="--d:5"><div class="em">🎯</div><h3>Сверить с&nbsp;планом</h3><p>После каждой траты показывает, сколько осталось по&nbsp;категории.</p></div>
+    <div class="card rv" style="--d:4"><div class="em">🗑️</div><h3>Удалить</h3><p><b>«Удали последнюю»</b> или <b>«удали R-0412»</b>. Номера других записей не сдвигаются.</p></div>
+    <div class="card rv" style="--d:5"><div class="em">🎯</div><h3>Сверить с планом</h3><p>После каждой траты показывает, сколько осталось по категории.</p></div>
   </div>
-  <div class="lights mt rv" style="--d:6"><span class="pill g">🟢 в&nbsp;пределах плана</span><span class="pill y">🟡 потрачено больше 80%</span><span class="pill r">🔴 план превышен</span></div>
+  <div class="lights mt rv" style="--d:6"><span class="pill g">🟢 в пределах плана</span><span class="pill y">🟡 потрачено больше 80%</span><span class="pill r">🔴 план превышен</span></div>
 </section>
 
 <!-- 12 · Аналитик -->
 <section class="slide alt">
   <div class="kicker rv">Аналитик</div>
   <h2 class="rv" style="--d:1">Вопросы обычным языком</h2>
-  <p class="lead rv" style="--d:2">Спрашиваем так, как спросили бы у&nbsp;бухгалтера. Бот сам понимает, что посчитать.</p>
+  <p class="lead rv" style="--d:2">Спрашиваем так же, как спросили бы бухгалтера. Что посчитать, бот решает сам.</p>
   <div class="qa">
-    <div class="q rv" style="--d:3"><span>«Сколько потратили в&nbsp;июле?»</span><code>итоги</code></div>
+    <div class="q rv" style="--d:3"><span>«Сколько потратили в июле?»</span><code>итоги</code></div>
     <div class="q rv" style="--d:3"><span>«На что уходит больше всего?»</span><code>категории</code></div>
-    <div class="q rv" style="--d:4"><span>«Сколько в&nbsp;среднем стоит такси?»</span><code>средний чек</code></div>
-    <div class="q rv" style="--d:4"><span>«Сравни этот месяц с&nbsp;прошлым»</span><code>динамика</code></div>
-    <div class="q rv" style="--d:5"><span>«Кто больше потратил на&nbsp;подарки?»</span><code>по людям</code></div>
-    <div class="q rv" style="--d:5"><span>«Где у&nbsp;нас перерасход?»</span><code>план и факт</code></div>
+    <div class="q rv" style="--d:4"><span>«Сколько в среднем стоит такси?»</span><code>средний чек</code></div>
+    <div class="q rv" style="--d:4"><span>«Сравни этот месяц с прошлым»</span><code>динамика</code></div>
+    <div class="q rv" style="--d:5"><span>«Кто больше потратил на подарки?»</span><code>по людям</code></div>
+    <div class="q rv" style="--d:5"><span>«Где у нас перерасход?»</span><code>план и факт</code></div>
     <div class="q rv" style="--d:6"><span>«Покажи операции дороже $50»</span><code>поиск</code></div>
-    <div class="q rv" style="--d:6"><span>«Сколько осталось на&nbsp;рестораны?»</span><code>остаток</code></div>
+    <div class="q rv" style="--d:6"><span>«Сколько осталось на рестораны?»</span><code>остаток</code></div>
   </div>
 </section>
 
 <!-- 13 · Модель не считает -->
 <section class="slide dark">
   <div class="kicker rv">Главный принцип</div>
-  <h2 class="rv" style="--d:1">Модель не&nbsp;считает</h2>
-  <p class="lead rv" style="--d:2">Языковая модель хорошо понимает вопрос, но&nbsp;может ошибиться в&nbsp;арифметике. Поэтому <b>суммы считает код</b>, и&nbsp;цифры не&nbsp;«плывут».</p>
+  <h2 class="rv" style="--d:1">Модель <mark>не считает</mark></h2>
+  <p class="lead rv" style="--d:2">Языковая модель хорошо понимает вопрос, но может ошибиться в арифметике. Поэтому <b>суммы считает код</b>, и цифры не «плывут».</p>
   <div class="flow sp-m">
-    <div class="node rv" style="--d:3"><div class="t">Шаг 1</div><div class="h">Вопрос</div><div class="d">«Где перерасход в&nbsp;июле?»</div></div>
+    <div class="node rv" style="--d:3"><div class="t">Шаг 1</div><div class="h">Вопрос</div><div class="d">«Где перерасход в июле?»</div></div>
     <div class="arrow rv" style="--d:3">→</div>
-    <div class="node hl rv" style="--d:4"><div class="t">Шаг 2 · LLM</div><div class="h">Задание в&nbsp;JSON</div><div class="d">Период, фильтры, что посчитать</div></div>
+    <div class="node hl rv" style="--d:4"><div class="t">Шаг 2 · LLM</div><div class="h">Задание в JSON</div><div class="d">Период, фильтры, что посчитать</div></div>
     <div class="arrow rv" style="--d:4">→</div>
-    <div class="node rv" style="--d:5"><div class="t">Шаг 3 · код</div><div class="h">Точный расчёт</div><div class="d">По&nbsp;строкам журнала и&nbsp;плану</div></div>
+    <div class="node rv" style="--d:5"><div class="t">Шаг 3 · код</div><div class="h">Точный расчёт</div><div class="d">По строкам журнала и плану</div></div>
     <div class="arrow rv" style="--d:5">→</div>
-    <div class="node rv" style="--d:6"><div class="t">Шаг 4</div><div class="h">Карточка</div><div class="d">Ответ в&nbsp;Telegram</div></div>
+    <div class="node rv" style="--d:6"><div class="t">Шаг 4</div><div class="h">Карточка</div><div class="d">Ответ в Telegram</div></div>
   </div>
   <pre class="code sp-m rv" style="--d:7"><span class="c">// условный пример задания, которое модель отдаёт коду</span>
 { <span class="k">"intent"</span>: <span class="s">"budget"</span>, <span class="k">"period"</span>: <span class="s">"2026-07"</span>, <span class="k">"type"</span>: <span class="s">"РАСХОД"</span>, <span class="k">"show"</span>: <span class="s">"over_plan"</span> }</pre>
@@ -624,23 +637,23 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
   <div class="kicker rv">Стек</div>
   <h2 class="rv" style="--d:1">На чём собран бот</h2>
   <div class="grid g3 sp-m">
-    <div class="card rv" style="--d:2"><div class="em">⚙️</div><h3>n8n</h3><p>Сценарии и&nbsp;агенты. Работает на&nbsp;своём сервере.</p></div>
-    <div class="card rv" style="--d:3"><div class="em">🧠</div><h3>OpenAI</h3><p>GPT понимает фразу и&nbsp;вопрос. Whisper распознаёт голос.</p></div>
-    <div class="card rv" style="--d:4"><div class="em">📊</div><h3>Google Sheets</h3><p>База данных, план и&nbsp;отчёты в&nbsp;одном месте.</p></div>
-    <div class="card rv" style="--d:5"><div class="em">✈️</div><h3>Telegram</h3><p>Интерфейс для всей семьи. Ничего не&nbsp;нужно устанавливать.</p></div>
-    <div class="card rv" style="--d:6"><div class="em">💱</div><h3>Курсы валют</h3><p>Сервис exchangerate-api переводит траты в&nbsp;доллары.</p></div>
-    <div class="card rv" style="--d:7"><div class="em">🔐</div><h3>Доступ</h3><p>Записывать и&nbsp;спрашивать могут только двое. Ключи хранятся на&nbsp;сервере.</p></div>
+    <div class="card rv" style="--d:2"><div class="em">⚙️</div><h3>n8n</h3><p>Сценарии и агенты. Работает на моём сервере.</p></div>
+    <div class="card rv" style="--d:3"><div class="em">🧠</div><h3>OpenAI</h3><p>GPT понимает фразу и вопрос. Whisper распознаёт голос.</p></div>
+    <div class="card rv" style="--d:4"><div class="em">📊</div><h3>Google Sheets</h3><p>База данных, план и отчёты в одном месте.</p></div>
+    <div class="card rv" style="--d:5"><div class="em">✈️</div><h3>Telegram</h3><p>Интерфейс для всей семьи: пишем боту в обычном мессенджере.</p></div>
+    <div class="card rv" style="--d:6"><div class="em">💱</div><h3>Курсы валют</h3><p>Сервис exchangerate-api переводит траты в доллары.</p></div>
+    <div class="card rv" style="--d:7"><div class="em">🔐</div><h3>Доступ</h3><p>Записывать и спрашивать могут только двое. Ключи хранятся на сервере.</p></div>
   </div>
 </section>
 
 <!-- 15 · Демо -->
 <section class="slide dark center">
   <div class="kicker rv">Демо</div>
-  <div class="thesis rv" style="--d:1">Показываю<br><span class="acc">вживую</span></div>
+  <div class="thesis rv" style="--d:1">Показываю <mark>вживую</mark></div>
   <div class="grid g4 sp-l">
     <div class="card rv" style="--d:2"><div class="n">1</div><p>Записываю трату голосом</p></div>
-    <div class="card rv" style="--d:3"><div class="n">2</div><p>Исправляю запись по&nbsp;номеру</p></div>
-    <div class="card rv" style="--d:4"><div class="n">3</div><p>Спрашиваю, как идём по&nbsp;плану</p></div>
+    <div class="card rv" style="--d:3"><div class="n">2</div><p>Исправляю запись по номеру</p></div>
+    <div class="card rv" style="--d:4"><div class="n">3</div><p>Спрашиваю, как идём по плану</p></div>
     <div class="card rv" style="--d:5"><div class="n">4</div><p>Открываю таблицу</p></div>
   </div>
 </section>
@@ -648,58 +661,58 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 <!-- 16 · Границы -->
 <section class="slide alt">
   <div class="kicker rv">Границы</div>
-  <h2 class="rv" style="--d:1">Чего ИИ-помощник не&nbsp;делает</h2>
+  <h2 class="rv" style="--d:1">Чего ИИ-помощник не делает</h2>
   <div class="grid g2 sp-m">
-    <div class="card rv" style="--d:2"><div class="em">🧑‍💼</div><h3>Не&nbsp;заменяет советника</h3><p>Решения об&nbsp;инвестициях принимаете вы. Бот показывает факты о&nbsp;ваших деньгах.</p></div>
-    <div class="card rv" style="--d:3"><div class="em">🧮</div><h3>Не&nbsp;считает в&nbsp;чате</h3><p>Цифры из&nbsp;переписки с&nbsp;моделью перепроверяйте в&nbsp;таблице.</p></div>
-    <div class="card rv" style="--d:4"><div class="em">🏦</div><h3>Не&nbsp;трогает деньги</h3><p>Бот записывает операции, но&nbsp;не&nbsp;платит и&nbsp;не&nbsp;переводит.</p></div>
-    <div class="card rv" style="--d:5"><div class="em">🛡️</div><h3>Не&nbsp;получает лишнего</h3><p>Номера карт, пароли, коды из&nbsp;СМС и&nbsp;паспорт в&nbsp;чат не&nbsp;отправляем.</p></div>
+    <div class="card rv" style="--d:2"><div class="em">🧑‍💼</div><h3>Не заменяет советника</h3><p>Решения об инвестициях принимаете вы. Бот показывает факты о ваших деньгах.</p></div>
+    <div class="card rv" style="--d:3"><div class="em">🧮</div><h3>Не считает в чате</h3><p>Цифры из переписки с моделью перепроверяйте в таблице.</p></div>
+    <div class="card rv" style="--d:4"><div class="em">🏦</div><h3>Не трогает деньги</h3><p>Бот записывает операции, но не платит и не переводит.</p></div>
+    <div class="card rv" style="--d:5"><div class="em">🛡️</div><h3>Не получает лишнего</h3><p>Номера карт, пароли, коды из СМС и паспорт в чат не отправляем.</p></div>
   </div>
 </section>
 
 <!-- 17 · Старт завтра -->
 <section class="slide">
   <div class="kicker rv">Итог части 1</div>
-  <h2 class="rv" style="--d:1">С&nbsp;чего начать завтра</h2>
+  <h2 class="rv" style="--d:1">С чего начать завтра</h2>
   <div class="grid g4 sp-m">
-    <div class="card rv" style="--d:2"><div class="n">1</div><h3>Таблица</h3><p>Журнал операций плюс справочник категорий.</p></div>
-    <div class="card rv" style="--d:3"><div class="n">2</div><h3>Категории</h3><p>Начните с&nbsp;короткого списка и&nbsp;дополняйте по&nbsp;ходу.</p></div>
+    <div class="card rv" style="--d:2"><div class="n">1</div><h3>Таблица</h3><p>Журнал операций и справочник категорий.</p></div>
+    <div class="card rv" style="--d:3"><div class="n">2</div><h3>Категории</h3><p>Начните с короткого списка и дополняйте по ходу.</p></div>
     <div class="card rv" style="--d:4"><div class="n">3</div><h3>30 дней</h3><p>Записывайте каждую операцию. Хоть голосовой заметкой.</p></div>
-    <div class="card rv" style="--d:5"><div class="n">4</div><h3>Автоматизация</h3><p>Переведите ввод на&nbsp;голос: бот в&nbsp;n8n или готовый сервис.</p></div>
+    <div class="card rv" style="--d:5"><div class="n">4</div><h3>Автоматизация</h3><p>Переведите ввод на голос: бот в n8n или готовый сервис.</p></div>
   </div>
-  <div class="note mt rv" style="--d:6"><b>Дальше:</b> как превратить накопленные строки в&nbsp;решения и&nbsp;найти деньги, которые утекают.</div>
+  <div class="note mt rv" style="--d:6"><b>Дальше:</b> как превратить накопленные строки в решения и найти деньги, которые утекают.</div>
 </section>
 
 <!-- 18 · Часть 2 -->
 <section class="slide dark center">
   <div class="kicker rv">Часть 2 · 11:45</div>
-  <h1 class="rv" style="--d:1;color:#fff">Анализ расходов<br><span class="acc">и&nbsp;скрытые точки экономии</span></h1>
+  <h1 class="rv" style="--d:1;color:#fff">Анализ расходов и <mark>скрытые точки экономии</mark></h1>
   <p class="lead sp-l rv" style="--d:2">Шаг 3 системы. Данные накоплены, <b>теперь задаём им вопросы.</b></p>
 </section>
 
 <!-- 19 · Полгода -->
 <section class="slide">
   <div class="kicker rv">Шаг 3 · Анализ</div>
-  <h2 class="rv" style="--d:1">Почему нужно<br>минимум полгода</h2>
+  <h2 class="rv" style="--d:1">Почему нужно хотя бы полгода</h2>
   <div class="grid g3 sp-m">
-    <div class="card rv" style="--d:2"><div class="em">🌦️</div><h3>Сезонность</h3><p>Отпуск, праздники и&nbsp;подарки бьют по&nbsp;отдельным месяцам.</p></div>
-    <div class="card rv" style="--d:3"><div class="em">🧳</div><h3>Разовые траты</h3><p>Один крупный платёж искажает месяц, но&nbsp;почти не&nbsp;меняет картину года.</p></div>
-    <div class="card rv" style="--d:4"><div class="em">🔁</div><h3>Привычки</h3><p>Регулярные мелкие траты видны только на&nbsp;длинной дистанции.</p></div>
+    <div class="card rv" style="--d:2"><div class="em">🌦️</div><h3>Сезонность</h3><p>Отпуск, праздники и подарки бьют по отдельным месяцам.</p></div>
+    <div class="card rv" style="--d:3"><div class="em">🧳</div><h3>Разовые траты</h3><p>Один крупный платёж искажает месяц, но почти не меняет картину года.</p></div>
+    <div class="card rv" style="--d:4"><div class="em">🔁</div><h3>Привычки</h3><p>Регулярные мелкие траты видны только на длинной дистанции.</p></div>
   </div>
-  <div class="note soft mt rv" style="--d:5"><b>Месяц в&nbsp;минусе не&nbsp;катастрофа.</b> Решения принимаем по&nbsp;году целиком, как по&nbsp;портфелю.</div>
+  <div class="note soft mt rv" style="--d:5"><b>Месяц в минусе не катастрофа.</b> Решения принимаем по году целиком, как по портфелю.</div>
 </section>
 
 <!-- 20 · Термины -->
 <section class="slide alt">
   <div class="kicker rv">Язык инвестора</div>
   <h2 class="rv" style="--d:1">Семейный бюджет как P&amp;L</h2>
-  <p class="lead rv" style="--d:2">В&nbsp;каждом месячном листе пять показателей.</p>
+  <p class="lead rv" style="--d:2">В каждом месячном листе пять показателей.</p>
   <div class="grid g5 sp-m">
-    <div class="card rv" style="--d:3"><h3>План</h3><p>Сколько готовы потратить по&nbsp;категории за&nbsp;месяц.</p></div>
-    <div class="card rv" style="--d:4"><h3>Факт</h3><p>Сколько потратили на&nbsp;самом деле.</p></div>
-    <div class="card rv" style="--d:5"><h3>Отклонение</h3><p>На&nbsp;сколько процентов факт ушёл от&nbsp;плана.</p></div>
+    <div class="card rv" style="--d:3"><h3>План</h3><p>Сколько готовы потратить по категории за месяц.</p></div>
+    <div class="card rv" style="--d:4"><h3>Факт</h3><p>Сколько потратили на самом деле.</p></div>
+    <div class="card rv" style="--d:5"><h3>Отклонение</h3><p>На сколько процентов факт ушёл от плана.</p></div>
     <div class="card rv" style="--d:6"><h3>Маржа</h3><p>Какая доля дохода осталась после всех расходов.</p></div>
-    <div class="card rv" style="--d:7"><h3>Burn-rate</h3><p>Какая доля дохода ушла на&nbsp;расходы.</p></div>
+    <div class="card rv" style="--d:7"><h3>Burn-rate</h3><p>Какая доля дохода ушла на расходы.</p></div>
   </div>
 </section>
 
@@ -707,31 +720,31 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 <section class="slide">
   <span class="demo-mark">Условные цифры</span>
   <div class="kicker rv">Месячный лист</div>
-  <h2 class="rv" style="--d:1">Как читать план и&nbsp;факт</h2>
+  <h2 class="rv" style="--d:1">Как читать план и факт</h2>
   <table class="budget sp-s rv" style="--d:2">
     <thead><tr><th>Категория</th><th class="num">План</th><th class="num">Факт</th><th class="num">Отклонение</th><th>Исполнение</th><th>Статус</th></tr></thead>
     <tbody>
-      <tr><td>Еда и&nbsp;продукты</td><td class="num">$500</td><td class="num">$430</td><td class="num under">−14%</td><td><div class="track"><u class="u-g" style="width:86%"></u></div></td><td><span class="pill y">🟡 86%</span></td></tr>
+      <tr><td>Еда и продукты</td><td class="num">$500</td><td class="num">$430</td><td class="num under">−14%</td><td><div class="track"><u class="u-g" style="width:86%"></u></div></td><td><span class="pill y">🟡 86%</span></td></tr>
       <tr><td>Рестораны</td><td class="num">$150</td><td class="num">$210</td><td class="num over">+40%</td><td><div class="track"><u class="u-r" style="width:100%"></u></div></td><td><span class="pill r">🔴 140%</span></td></tr>
       <tr><td>Такси</td><td class="num">$60</td><td class="num">$95</td><td class="num over">+58%</td><td><div class="track"><u class="u-r" style="width:100%"></u></div></td><td><span class="pill r">🔴 158%</span></td></tr>
       <tr><td>Подписки</td><td class="num">$50</td><td class="num">$48</td><td class="num under">−4%</td><td><div class="track"><u class="u-y" style="width:96%"></u></div></td><td><span class="pill y">🟡 96%</span></td></tr>
       <tr><td>Спорт</td><td class="num">$80</td><td class="num">$40</td><td class="num under">−50%</td><td><div class="track"><u class="u-g" style="width:50%"></u></div></td><td><span class="pill g">🟢 50%</span></td></tr>
     </tbody>
   </table>
-  <p class="lead mt rv" style="--d:3">Смотрим не&nbsp;на&nbsp;одну красную строку, а&nbsp;на&nbsp;категории, которые краснеют <b>несколько месяцев подряд.</b></p>
+  <p class="lead mt rv" style="--d:3">Одна красная строка ещё ничего не значит. Смотрим на категории, которые краснеют <b>несколько месяцев подряд.</b></p>
 </section>
 
 <!-- 22 · Утечки -->
 <section class="slide alt">
   <div class="kicker rv">Скрытые точки экономии</div>
-  <h2 class="rv" style="--d:1">Где прячутся утечки</h2>
+  <h2 class="rv" style="--d:1">Где прячутся <mark>утечки</mark></h2>
   <div class="grid g3 sp-m">
-    <div class="card rv" style="--d:2"><div class="em">🔄</div><h3>Подписки</h3><p>Сервисы и&nbsp;нейросети списывают деньги тихо. Раз в&nbsp;квартал проверяйте, чем пользуетесь.</p></div>
-    <div class="card rv" style="--d:3"><div class="em">☕</div><h3>Мелочь каждый день</h3><p>Кофе, вода, такси. По&nbsp;отдельности копейки, за&nbsp;год заметная сумма.</p></div>
-    <div class="card rv" style="--d:4"><div class="em">🗂️</div><h3>«Прочие расходы»</h3><p>Растёт эта категория, значит, учёт теряет точность. Разберите её.</p></div>
-    <div class="card rv" style="--d:5"><div class="em">📉</div><h3>Хронический перерасход</h3><p>Категория третий месяц выше плана: меняйте либо план, либо привычку.</p></div>
-    <div class="card rv" style="--d:6"><div class="em">🎁</div><h3>Спонтанные траты</h3><p>Рестораны и&nbsp;подарки легко уходят за&nbsp;план, если лимит не&nbsp;виден.</p></div>
-    <div class="card rv" style="--d:7"><div class="em">🔁</div><h3>Забытые платежи</h3><p>Автопродления, дубли и&nbsp;оплата за&nbsp;то, чем уже не&nbsp;пользуетесь.</p></div>
+    <div class="card rv" style="--d:2"><div class="em">🔄</div><h3>Подписки</h3><p>Сервисы и нейросети списывают деньги тихо. Раз в квартал проверяйте, чем пользуетесь.</p></div>
+    <div class="card rv" style="--d:3"><div class="em">☕</div><h3>Мелочь каждый день</h3><p>Кофе, вода, такси. По отдельности мелочь, за год заметная сумма.</p></div>
+    <div class="card rv" style="--d:4"><div class="em">🗂️</div><h3>«Прочие расходы»</h3><p>Если эта категория растёт, учёт теряет точность. Разберите её.</p></div>
+    <div class="card rv" style="--d:5"><div class="em">📉</div><h3>Хронический перерасход</h3><p>Категория третий месяц выше плана? Меняйте либо план, либо привычку.</p></div>
+    <div class="card rv" style="--d:6"><div class="em">🎁</div><h3>Спонтанные траты</h3><p>Рестораны и подарки легко уходят за план, если лимит не виден.</p></div>
+    <div class="card rv" style="--d:7"><div class="em">🔁</div><h3>Забытые платежи</h3><p>Автопродления, дубли и оплата того, чем уже не пользуетесь.</p></div>
   </div>
 </section>
 
@@ -741,26 +754,26 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
   <div class="kicker rv">Эффект латте</div>
   <h2 class="rv" style="--d:1">Арифметика мелочей</h2>
   <div class="math">
-    <div class="cell rv" style="--d:2"><div class="v">$5</div><div class="l">в&nbsp;день на&nbsp;кофе</div></div>
+    <div class="cell rv" style="--d:2"><div class="v">$5</div><div class="l">в день на кофе</div></div>
     <div class="op rv" style="--d:3">→</div>
-    <div class="cell rv" style="--d:4"><div class="v">$150</div><div class="l">за&nbsp;30 дней</div></div>
+    <div class="cell rv" style="--d:4"><div class="v">$150</div><div class="l">за 30 дней</div></div>
     <div class="op rv" style="--d:5">→</div>
-    <div class="cell big rv" style="--d:6"><div class="v">$1&nbsp;825</div><div class="l">за&nbsp;365 дней</div></div>
+    <div class="cell big rv" style="--d:6"><div class="v">$1 825</div><div class="l">за 365 дней</div></div>
   </div>
-  <p class="lead mt rv" style="--d:7">Найдите в&nbsp;журнале свою главную мелочь и&nbsp;умножьте на&nbsp;год. <b>Бот сделает это одним вопросом.</b></p>
+  <p class="lead mt rv" style="--d:7">Найдите в журнале свою главную мелочь и умножьте на год. <b>Бот посчитает это по одному вопросу.</b></p>
 </section>
 
 <!-- 24 · Что спросить -->
 <section class="slide alt">
   <div class="kicker rv">Практика</div>
-  <h2 class="rv" style="--d:1">Что спросить у&nbsp;ИИ</h2>
+  <h2 class="rv" style="--d:1">Что спросить у ИИ</h2>
   <ul class="prompts">
-    <li class="rv" style="--d:2">Какие три категории выросли сильнее всего за&nbsp;полгода?</li>
+    <li class="rv" style="--d:2">Какие три категории выросли сильнее всего за полгода?</li>
     <li class="rv" style="--d:3">Найди платежи, которые повторяются каждый месяц.</li>
-    <li class="rv" style="--d:4">В&nbsp;каких категориях мы стабильно выходим за&nbsp;план?</li>
-    <li class="rv" style="--d:5">Сколько мы тратим в&nbsp;будний день и&nbsp;в&nbsp;выходной?</li>
-    <li class="rv" style="--d:6">Какие траты выросли вместе с&nbsp;доходом?</li>
-    <li class="rv" style="--d:7">Сколько отложим за&nbsp;год, если сократим рестораны на&nbsp;20%?</li>
+    <li class="rv" style="--d:4">В каких категориях мы стабильно выходим за план?</li>
+    <li class="rv" style="--d:5">Сколько мы тратим в будний день и в выходной?</li>
+    <li class="rv" style="--d:6">Какие траты выросли вместе с доходом?</li>
+    <li class="rv" style="--d:7">Сколько отложим за год, если сократим рестораны на 20%?</li>
   </ul>
 </section>
 
@@ -777,31 +790,31 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 <span class="k">4.</span> Предложи 5 конкретных мест для экономии и оцени эффект в месяц.
 
 <span class="s">Не придумывай данные. Если чего-то не хватает, спроси.</span></pre>
-  <div class="note mt rv" style="--d:3"><b>Перед загрузкой</b> удалите номера карт и&nbsp;счетов, имена и&nbsp;адреса. Итоговые суммы перепроверьте в&nbsp;таблице.</div>
+  <div class="note mt rv" style="--d:3"><b>Перед загрузкой</b> удалите номера карт и счетов, имена и адреса. Итоговые суммы перепроверьте в таблице.</div>
 </section>
 
 <!-- 26 · Привычки -->
 <section class="slide">
   <div class="kicker rv">Финансовые привычки</div>
-  <h2 class="rv" style="--d:1">План и&nbsp;факт<br>как трекер привычек</h2>
-  <p class="lead rv" style="--d:2">Бюджет на&nbsp;следующий месяц строим по&nbsp;фактам прошлых месяцев, а&nbsp;не&nbsp;по&nbsp;ощущениям. В&nbsp;конце месяца отвечаем на&nbsp;три вопроса:</p>
+  <h2 class="rv" style="--d:1">План и факт как трекер привычек</h2>
+  <p class="lead rv" style="--d:2">Бюджет на следующий месяц строим по фактам прошлых месяцев. В конце месяца отвечаем на три вопроса:</p>
   <div class="grid g3 sp-m">
-    <div class="card rv" style="--d:3"><div class="n">?</div><h3>Уложились в&nbsp;план?</h3><p>Смотрим маржу месяца и&nbsp;светофор по&nbsp;категориям.</p></div>
-    <div class="card rv" style="--d:4"><div class="n">?</div><h3>Где вышли за&nbsp;рамки?</h3><p>И&nbsp;главное, почему: разовая трата или привычка.</p></div>
-    <div class="card rv" style="--d:5"><div class="n">?</div><h3>Что меняем?</h3><p>Правим лимиты на&nbsp;следующий месяц или меняем поведение.</p></div>
+    <div class="card rv" style="--d:3"><div class="n">?</div><h3>Уложились в план?</h3><p>Смотрим маржу месяца и светофор по категориям.</p></div>
+    <div class="card rv" style="--d:4"><div class="n">?</div><h3>Где вышли за рамки?</h3><p>И почему: разовая трата или привычка.</p></div>
+    <div class="card rv" style="--d:5"><div class="n">?</div><h3>Что меняем?</h3><p>Правим лимиты на следующий месяц или меняем поведение.</p></div>
   </div>
 </section>
 
 <!-- 27 · Заплати себе -->
 <section class="slide dark">
-  <div class="kicker rv">Шаг 4 · Золотое правило</div>
+  <div class="kicker rv">Шаг 4</div>
   <h2 class="rv" style="--d:1">Заплати себе</h2>
   <div class="pay">
-    <div class="v rv" style="--d:2">10%<small>до&nbsp;10% дохода</small></div>
+    <div class="v rv" style="--d:2">10%<small>до 10% дохода</small></div>
     <div>
-      <p class="lead rv" style="--d:3"><b>Откладываем первым платежом</b>, до&nbsp;всех остальных трат. Не&nbsp;то, что осталось в&nbsp;конце месяца.</p>
-      <p class="lead sp-s rv" style="--d:4">В&nbsp;моей таблице «Заплати себе» стоит первой категорией расходов. Так отложенные деньги видны в&nbsp;плане.</p>
-      <div class="note sp-m rv" style="--d:5"><b>Мой вариант:</b> биткоин с&nbsp;горизонтом 30 лет. Это личный пример, не&nbsp;инвестиционная рекомендация.</div>
+      <p class="lead rv" style="--d:3"><b>Откладываем первым платежом</b>, до всех остальных трат. Не то, что осталось в конце месяца.</p>
+      <p class="lead sp-s rv" style="--d:4">В моей таблице «Заплати себе» стоит первой категорией расходов, поэтому отложенные деньги видны в плане.</p>
+      <div class="note sp-m rv" style="--d:5"><b>Мой вариант:</b> биткоин с горизонтом 30 лет. Это личный пример, не инвестиционная рекомендация.</div>
     </div>
   </div>
 </section>
@@ -809,13 +822,13 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 <!-- 28 · Цикл -->
 <section class="slide alt">
   <div class="kicker rv">Вся система</div>
-  <h2 class="rv" style="--d:1">Цикл на&nbsp;каждый месяц</h2>
+  <h2 class="rv" style="--d:1">Цикл на каждый месяц</h2>
   <div class="cycle rv" style="--d:2">
     <div class="ring"></div>
     <div class="hub">Семейный<br>бюджет</div>
     <div class="cnode" style="left:50%;top:6%"><b>01</b><span>Записали голосом</span></div>
     <div class="cnode" style="left:88%;top:36%"><b>02</b><span>Накопили данные</span></div>
-    <div class="cnode" style="left:74%;top:88%"><b>03</b><span>Разобрали с&nbsp;ИИ</span></div>
+    <div class="cnode" style="left:74%;top:88%"><b>03</b><span>Разобрали с ИИ</span></div>
     <div class="cnode" style="left:26%;top:88%"><b>04</b><span>Поправили план</span></div>
     <div class="cnode" style="left:12%;top:36%"><b>05</b><span>Заплатили себе</span></div>
   </div>
@@ -824,20 +837,20 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 <!-- 29 · 30 дней -->
 <section class="slide">
   <div class="kicker rv">Домашнее задание</div>
-  <h2 class="rv" style="--d:1">План на&nbsp;30 дней</h2>
+  <h2 class="rv" style="--d:1">План на 30 дней</h2>
   <div class="weeks">
-    <div class="week rv" style="--d:2"><div class="w">Неделя 1</div><h3>Таблица и&nbsp;категории</h3><p>Журнал операций, справочник, месячный лист с&nbsp;планом.</p></div>
-    <div class="week rv" style="--d:3"><div class="w">Неделя 2</div><h3>Запись всех операций</h3><p>Каждый доход и&nbsp;каждая трата, без исключений.</p></div>
-    <div class="week rv" style="--d:4"><div class="w">Неделя 3</div><h3>Ввод голосом</h3><p>Бот в&nbsp;n8n или готовый сервис, чтобы учёт не&nbsp;бросить.</p></div>
-    <div class="week rv" style="--d:5"><div class="w">Неделя 4</div><h3>Первый план</h3><p>Лимиты на&nbsp;месяц вперёд и&nbsp;правило «Заплати себе».</p></div>
+    <div class="week rv" style="--d:2"><div class="w">Неделя 1</div><h3>Таблица и категории</h3><p>Журнал операций, справочник, месячный лист с планом.</p></div>
+    <div class="week rv" style="--d:3"><div class="w">Неделя 2</div><h3>Запись всех операций</h3><p>Каждый доход и каждая трата, без исключений.</p></div>
+    <div class="week rv" style="--d:4"><div class="w">Неделя 3</div><h3>Ввод голосом</h3><p>Бот в n8n или готовый сервис, чтобы не бросить учёт.</p></div>
+    <div class="week rv" style="--d:5"><div class="w">Неделя 4</div><h3>Первый план</h3><p>Лимиты на месяц вперёд и правило «Заплати себе».</p></div>
   </div>
-  <div class="note soft mt rv" style="--d:6"><b>Через полгода</b> у&nbsp;вас будут данные для настоящего анализа.</div>
+  <div class="note soft mt rv" style="--d:6"><b>Через полгода</b> у вас будут данные для настоящего анализа.</div>
 </section>
 
 <!-- 30 · Финал -->
 <section class="slide dark center">
   <div class="brand rv">ИИ-ВИЗАЦИЯ</div>
-  <h1 class="rv sp-s" style="--d:1;color:#fff">Спасибо!<br><span class="acc">Ваши вопросы</span></h1>
+  <h1 class="rv sp-s" style="--d:1;color:#fff">Спасибо!<br><mark>Ваши вопросы</mark></h1>
   <p class="lead sp-l rv" style="--d:2">Записали, накопили, разобрали, <b>заплатили себе.</b></p>
 </section>
 
